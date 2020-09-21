@@ -66,38 +66,122 @@
 	translator::$countries;
 
 ##تغییر زبان
-در صورتیکه بخواهید زبان پیشفرض را تنظیم و یا تغییر دهید میتوانید از متد `setLang` کلاس `translator` استفاده کنید .این متد  در پارامتر خود، یک کد دوحرفی از زبان را دریافت میکند . در صورتیکه کد زبان مشخص شده در کد زبان های مجاز نباشد،با پرتاب استثنایی از جنس `packages\base\translator\InvalidLangCode`  از ادامه روند جلوگیری خواهد کرد .
+در صورتیکه بخواهید زبان پیشفرض را تنظیم و یا تغییر دهید میتوانید از متد `setLang` کلاس `translator` استفاده کنید .این متد  در پارامتر خود، کد زبان کامل را دریافت میکند . در صورتیکه کد زبان مشخص شده در کد زبان های مجاز نباشد،با پرتاب استثنایی از جنس `packages\base\translator\InvalidLangCode`  از ادامه روند جلوگیری خواهد کرد .
+
+> کد زبان کامل از کد زبان دو حرفی_کد کشور دو حرفی تشکیل میشود 
+
+**مثال:** 
+>en_US , fa_IR
+
 
 ##استفاده از نوشته ها
 برای استفاده از نوشته ها در میان کد ها، باید از متد `trans` استفاده کنید . پارامتر اول این متد، نام کلید و در پارامتر دوم آرایه ای از کلید-مقدار ها دریافت میکند .
 در صورتیکه پارامتری در نوشته وجود داشته باشد، این متد پارامتر را در کلید آرایه مشخص شده در پارامتر دوم جستجو کرده و مقدار آن را جایگزین فرانویسه در نوشته خواهد کرد .
 
+> پارامتر دوم به ما این امکان را میدهد که متن مورد نظر را به‌صورت داینامیک ایجاد کنیم.
+
 	translator::trans(name, params);
 
-مثال1
+ برای اسان و سریع تر شدن برنامه نویسی تابع `t(name, params)` در namespace اصلی تعریف شده است که دقیقا همان وظیفه ی متد `trans()` را دارد. 
+
+> **توجه :** در صورتی که نام کلید وارد شده در فایل ذخیره - نوشته وجود نداشته باشد مقدار رشته ای خالی بر میگرداند.
+
+
+
+فایل ذخیره-نوشته fa_IR.json :
+```json
+{
+	"rtl": true,
+    "phrases":{
+		"title": "جی سرور",
+        "description": "قدرت گرفته از <a href=\"{url}\"> جی سرور </a>" ,
+		"month.period": "ماه {period} برای",
+    }
+}
+```
+
+نمونه یک فایل ذخیره-نوشته en_US.json :
+```json
+{
+	"phrases":{
+		"title": "Jeyserver",
+        "description": "powered by <a href=\"{url}\"> Jeyserver </a>",
+		"month.period": "for {period} month",
+    }
+}
+```
+
+مثال 1 : 
+( url: test.com/fa )
 ```php
 <?php
-use \packages\base\translator;
+use packages\base\translator;
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title><?php echo translator::trans("title"); ?></title>
+	/* output 
+		 جی‌سرور
+	*/
 </head>
 </html>
 ```
-مثال 2
+
+
+مثال 2 : 
+( url: test.com/en )
 ```php
-<?php
-use \packages\base\translator;
-?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?php echo t("title"); ?></title>
+	
+	/* output 
+		Jeyserver
+	*/
+</head>
+</html>
+```
+
+
+مثال 3 :
+( url: test.com/en )
+```php
 <!DOCTYPE html>
 <html>
 <body>
-<?php echo translator::trans("description", array("url" => base\url()); ?>
+
+<?php echo t("month.period", array("period" => 6); ?>
+
 /* output
-powered by <a href="/">Jeyserver</a> , open license framwork
-\*/
+	for 6 month
+*/
+
+</body>
+</html>
+
+```
+
+
+مثال 4 :
+( url: test.com/fa )
+```php
+<?php
+use packages\base;
+?>
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<?php echo t("description", array("url" => base\url()); ?>
+
+/* output
+	قدرت گرفته از <a href="/"> جی‌سرور </a>
+*/
+
 </body>
 </html>
 
