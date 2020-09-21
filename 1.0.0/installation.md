@@ -30,14 +30,16 @@ git clone https://github.com/yeganemehr/PhpParser.git
 
  نمونه ای از فایل autoloader.json :
 ```json
-{
-	"classes":["user"],
-	"file":"libraries/users/users.php"
-},
-{
-	"classes":["controllers\\Main"],
-	"file":"controllers/Main.php"
-}
+[
+	{
+		"classes":["Users"],
+		"file":"libraries/users/users.php"
+	},
+	{
+		"classes":["controllers/Main"],
+		"file":"controllers/Main.php"
+	}
+]
 ```
 
 > این روش هم باعث ایجاد لیست طولانی از فایل ها میشود برای جلوگیری از اتلاف وقت از پکیج PhpParser استفاده میکنیم.
