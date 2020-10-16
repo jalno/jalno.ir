@@ -1,29 +1,29 @@
 # مترجم
-  با استفاده از  کلاس `packages\base\translator` که متد های آن  برای راحتی استفاده به صورت ایستا و `static` نوشته است  بدون تکرار کد ها، میتوانید نوشته های درون وبسایت را به صورت چندزبانه در آورید .برای این منظور نوشته های سایت  در درون فایل های دیگری با فرم `json`  نوشته میشوند.  با استفاده از کلاس `translator` میتوان نوشته های فایل های ذخیره-نوشته را به صورت چند باره در میان کد ها استفاده کرد .  با استفاده از کد زبان و یا کد کشور در آدرس ( به صورت جزعی از آدرس و یا به صورت یک پارامتر در آدرس) فریم ورک به صورت خودکار فایل ذخیره-نوشته متناظر با آن زبان و یا کشور را بارگزاری خواهد کرد . همچنین در تولید آدرس در صورتیکه از متد `base\url` استفاده کنید، این متد به صورت خودکار زبان پیشفرض را در آدرس ها قرار میدهد .
+  با استفاده از  کلاس `packages\base\Translator` که متد های آن  برای راحتی استفاده به صورت ایستا و `static` نوشته است  بدون تکرار کد ها، می‌توانید نوشته های درون وبسایت را به صورت چندزبانه در آورید .برای این منظور نوشته های سایت درون فایل های دیگری با فرم `json`  نوشته می‌شوند.  با استفاده از کلاس `Translator` می‌توان نوشته های فایل های ذخیره-نوشته را به صورت چند باره در میان کد ها استفاده کرد .  با استفاده از کد زبان و یا کد کشور در آدرس ( به صورت جزئی از آدرس و یا به صورت یک پارامتر در آدرس) فریم ورک به صورت خودکار فایل ذخیره-نوشته متناظر با آن زبان و یا کشور را بارگزاری خواهد کرد . همچنین در تولید آدرس در صورتیکه از متد `base\url` استفاده کنید، این متد به صورت خودکار زبان پیشفرض را در آدرس ها قرار می‌دهد .
 
 نمونه یک فایل ذخیره-نوشته
 ```json
 {
 	"author": {
-		"name" : "Jeyserver",
-		"website" : "https://www.jeyserver.com/"
+		"name" : "Jalno contributors",
+		"website" : "https://jalno.ir/"
 	},
-    "rtl": true,
-    "phrases":{
-        "title": "Jeyserver framwork docs",
-        "description": "powered by <a href=\"{url}\">Jeyserver</a> , open license framwork"
-    }
+	"rtl": true,
+	"phrases":{
+		"title": "Jalno framwork docs",
+		"description": "Powered by <a href=\"{url}\">Jalno</a> , open license framwork"
+	}
 }
 ```
 
 ### تنظیمات زبان 
 
 برای کار با زبان ها در ابتدا باید تنظیماتی را در فایل `config.php` که در مسیر `packages/base/libraries/config`قرار دارد انجام دهیم. 
-در این فایل تنظیمات مربوط به `زبان پیش فرض` و `تغییر زبان` و `مخفف وارد کردن زبان` را میتوانیم انجام دهیم.
+در این فایل تنظیمات مربوط به زبان پیش فرض و تغییر زبان و مخفف وارد کردن زبان را می‌توانیم انجام دهیم.
 
 
 #### زبان پیش فرض :
-با استفاده از  آپشن `packages.base.translator.defaultlang` میتوانیم زبان پیش فرض سایت را مشخص کنیم. مقدار وارد شده باید کد زبان کامل باشد.
+با استفاده از  آپشن `packages.base.translator.defaultlang` می‌توانیم زبان پیش فرض سایت را مشخص کنیم. مقدار وارد شده باید کد زبان کامل باشد.
 
 اگر این آپشن مقدار دهی نشود, هر کد زبان کاملی را میپذیرد.
 
@@ -35,13 +35,13 @@
 
 #### تغییر زبان :
 با استفاده از آپشن `packages.base.translator.changelang` مشخص میکنیم کاربر از چه روشی زبان را مشخص کند.
-سه مقدار میتواند داشته باشد :
+سه مقدار می‌تواند داشته باشد :
 
 | مقدار      |                             کاربرد                             |
 |---------------------------------------------|-------------------------------------------|
 | uri                           |      زبان در ابتدای ادرس اضافه میشود |
 | parameter           |  انتهای آدرس اضافه میشود           |
-| خالی باشد                 | کاربر نمیتواند بطور مستقیم زبان را تغییر دهد             |
+| خالی باشد                 | کاربر نمی‌تواند بطور مستقیم زبان را تغییر دهد             |
 
 **مثال uri :**
 ````
@@ -59,23 +59,22 @@
 ````
 
 #### مخفف وارد کردن زبان : 
-با استفاده از آپشن `packages.base.translator.changelang.type` امکان مخفف وارد کردن زبان را در آدرس میدهد .
+با استفاده از آپشن `packages.base.translator.changelang.type` امکان مخفف وارد کردن زبان را در آدرس می‌دهد .
 آپشن مقادیر `short` , `complete` میگیرد.
 
 **مثال** 
 ````
-'packages.base.translator.changelang.type' => 'short'  // fa
-'packages.base.translator.changelang.type' => 'complete'    //fa_IR
+'packages.base.translator.changelang.type' => 'short'  		// /fa/contactus
+'packages.base.translator.changelang.type' => 'complete'    // /fa_IR/contactus
 ````
 
 ## معرفی فایل های ذخیره-نوشته
 فایل ذخیره-نوشته باید برای استفاده به فرم ورک معرفی شده و مشخص شوند هر فایل برای کدام کد زبان خواهد بود .
-در صورتی که فایل ذخیره نوشته در رابط کاربری `frontent` استفاده شود ، معرفی  در فایل `theme.json` و در غیر اینصورت در فایل `package.json`  انجام خواهد شد .
+در صورتی که فایل ذخیره نوشته در رابط کاربری `frontend` استفاده شود ، معرفی  در فایل `theme.json` و در غیر اینصورت در فایل `package.json`  انجام خواهد شد .
 
 نمونه فایل package.json
 ```json
 {
-	"permissions": "*",
 	"languages": {
 		"fa_IR": "langs/fa_IR.json"
 	}
@@ -85,16 +84,16 @@
 نمونه فایل theme.json
 ```json
 {
-    "name": "frontname",
-    "title": "Site Frontend",
+	"name": "frontname",
+	"title": "Site Frontend",
 	"version": "1.0.0",
 	"languages": {
 		"fa_IR": "langs/fa_IR.json"
 	}
 }
 ```
+در این دو فایل بلوک کد زیر باعث تعریف زبان های آن قالب یا پکیج خواهد شد:
 
-نمونه معرفی فایل ذخیره-نوشته
 ```json
 "languages": {
 	"fa_IR" : "langs/fa_IR.json"
@@ -109,17 +108,17 @@
 ```
 
 ## کد زبان های مجاز
-در کلاس `translator` کد زبان های مجاز به صورت دو حرفی از  قبل در متغیر ایستایی به نام `allowlangs` ذخیره شده است .
+در کلاس `Translator` کد زبان های مجاز به صورت دو حرفی از  قبل در متغیر ایستایی به نام `allowlangs` ذخیره شده است .
 
-	translator::$allowlangs;
+	Translator::$allowlangs;
 
 ## کد کشور های مجاز
 کد کشور های مجاز در قالب یک آرایه به صورت دوحرفی در متغیری با نام `countries` ذخیره شده است .
 
-	translator::$countries;
+	Translator::$countries;
 
 ## تغییر زبان
-در صورتیکه بخواهید زبان پیشفرض را تنظیم و یا تغییر دهید میتوانید از متد `setLang` کلاس `translator` استفاده کنید .این متد  در پارامتر خود، کد زبان کامل را دریافت میکند . در صورتیکه کد زبان مشخص شده در کد زبان های مجاز نباشد،با پرتاب استثنایی از جنس `packages\base\translator\InvalidLangCode`  از ادامه روند جلوگیری خواهد کرد .
+در صورتیکه بخواهید زبان یک صفحه را تنظیم و یا تغییر دهید می‌توانید از متد `setLang` کلاس `Translator` استفاده کنید .این متد  در پارامتر خود، کد زبان کامل را دریافت میکند . در صورتیکه کد زبان مشخص شده در کد زبان های مجاز نباشد،با پرتاب استثنایی از جنس `packages\base\Translator\InvalidLangCode`  از ادامه روند جلوگیری خواهد کرد .
 
 **کد زبان کامل** از کد زبان دو حرفی_کد کشور دو حرفی تشکیل میشود.
 
@@ -127,47 +126,47 @@
 ```php
 <?php
 namespace packages\my_package\controllers;
-use packages\base\{response, controller, translator};
-use packages\my_package\views;
+use packages\base\{Response, Controller, View, Translator};
+use themes\my_theme\views;
 
 class Main extends controller {
 	
-	public function index(): response {
-		
-		translator::setLang("en_US");
-		$view = view::byName(views\index::class);
-        $response = new response(true);
-        $response->setView($view);
-        return $response;
-    }
+	public function index(): Response {
+		Translator::setLang("en_US");
+		$view = View::byName(views\Home::class);
+		$this->response->setView($view);
+		return $this->response;
+	}
 }
 ```
-به دلیل تفاوتی که در املای لهجه های مختلف (مانند بریتانیایی و آمریکایی  ) وجود دارد; در جالنو امکان تعریف فایل ذخیره نوشته بصورت مجزا برای هرکدام وجود دارد. مانند en_GB و en_US
+به دلیل تفاوتی که در املای لهجه ها و گویش های مختلف (مانند بریتانیایی و آمریکایی  یا فارسی ایران و فارسی تاجیک) وجود دارد؛ در جالنو امکان تعریف فایل ذخیره نوشته بصورت مجزا برای هرکدام وجود دارد. مانند en_GB و en_US
 
 ## استفاده از نوشته ها
 برای استفاده از نوشته ها در میان کد ها، باید از متد `trans` استفاده کنید . پارامتر اول این متد، نام کلید و در پارامتر دوم آرایه ای از کلید-مقدار ها دریافت میکند .
 در صورتیکه پارامتری در نوشته وجود داشته باشد، این متد پارامتر را در کلید آرایه مشخص شده در پارامتر دوم جستجو کرده و مقدار آن را جایگزین فرانویسه در نوشته خواهد کرد .
-پارامتر دوم به ما این امکان را میدهد که متن مورد نظر را به‌صورت داینامیک ایجاد کنیم.
-````
-translator::trans(name, params);
-````
+پارامتر دوم به ما این امکان را می‌دهد که متن مورد نظر را به‌صورت داینامیک ایجاد کنیم.
 
-برای اسان و سریع تر شدن برنامه نویسی تابع `t(name, params)` در namespace اصلی تعریف شده است که دقیقا همان وظیفه ی متد `trans()` را دارد. 
+```php
+Translator::trans(string $name, array $params = []): string;
+```
 
-از این تابع میتوان در تمامی فایل ها (controller, view, html, process) استفاده کرد.
+برای اسان و سریع تر شدن برنامه نویسی تابع `t(string $name, array $params = []): string` در namespace اصلی تعریف شده است که دقیقا همان وظیفه ی متد `trans()` را دارد. 
 
-همچنین این تابع نیاز به use کردن  ندارد; در هر قسمت از کد قابل صدا زدن میباشد.
+از این تابع می‌توان در تمامی فایل ها (controller, view, html, process) استفاده کرد.
+
+همچنین این تابع نیاز به use کردن  ندارد در هر قسمت از کد قابل صدا زدن میباشد.
 
 
 فایل ذخیره-نوشته fa_IR.json :
 ```json
 {
 	"rtl": true,
-    "phrases":{
-		"title": "جی سرور",
-        "description": "قدرت گرفته از <a href=\"{url}\"> جی سرور </a>" ,
-		"month.period": "ماه {period} برای",
-    }
+	"phrases":{
+		"title": "جالنو",
+		"description": "قدرت گرفته از <a href=\"{url}\"> جالنو </a>" ,
+		"support.period": "پشتیبانی رسمی تا {month} ماه",
+		"log.invoice.edit": "کاربر <span class=\"tooltips\" title=\"#{user_id}\">{user_name}</span>  صورتحساب را ویرایش کرد ",
+	}
 }
 ```
 
@@ -175,10 +174,11 @@ translator::trans(name, params);
 ```json
 {
 	"phrases":{
-		"title": "Jeyserver",
-        "description": "powered by <a href=\"{url}\"> Jeyserver </a>",
-		"month.period": "for {period} month",
-    }
+		"title": "Jalno",
+		"description": "Powered by <a href=\"{url}\"> Jalno </a>",
+		"support.period": "Official support for {month} months",
+		"log.invoice.edit": "<span class=\"tooltips\" title=\"#{user_id}\">{user_name}</span> just edited the invoice.",
+	}
 }
 ```
 
@@ -186,15 +186,16 @@ translator::trans(name, params);
 ( url: test.com/fa )
 ```php
 <?php
-use packages\base\translator;
+use packages\base\Translator;
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php echo translator::trans("title"); ?></title>
-	/* output 
-		 جی‌سرور
+	<title><?php echo Translator::trans("title"); ?></title>
+	/*
+	output:
+	<title>جالنو</title>
 	*/
 </head>
 </html>
@@ -208,9 +209,9 @@ use packages\base\translator;
 <html>
 <head>
 	<title><?php echo t("title"); ?></title>
-	
-	/* output 
-		Jeyserver
+	/*
+	output:
+	<title>Jalno</title>
 	*/
 </head>
 </html>
@@ -224,15 +225,15 @@ use packages\base\translator;
 <html>
 <body>
 
-<?php echo t("month.period", array("period" => 6); ?>
+<?php echo t("support.period", array("period" => 6); ?>
 
-/* output
-	for 6 month
+/*
+Output:
+Official support for 6 months
 */
 
 </body>
 </html>
-
 ```
 
 
@@ -249,8 +250,9 @@ use packages\base;
 
 <?php echo t("description", array("url" => base\url()); ?>
 
-/* output
-	قدرت گرفته از <a href="/"> جی‌سرور </a>
+/*
+Output:
+قدرت گرفته از <a href="/"> جالنو </a>
 */
 
 </body>
@@ -258,32 +260,25 @@ use packages\base;
 
 ```
 
-**مثال 5 :** controller
+**مثال 5 :** استفاده از مترجم در Controller
 ```php
 <?php
-/*نمونه فایل ذخیره نوشته
-{
-	"phrases":{
-		"log.invoiceEdit": "کاربر <span class=\"tooltips\" title=\"#{user_id}\">{user_name}</span>  صورتحساب را ویرایش کرد ",
-	}
-}
-*/
-
 namespace packages\package_name\controllers;
-use packages\base\{response, controller, date};
+
+use packages\base\{Response, Controller, Date};
 use package\package_name\{Log, User, Invoice};
-class Invoice extends controller {
+
+class Invoice extends Controller {
 	
-	public function update($data): response {
-		
-		$user = User::byId($data["userId"]);
-		$invoice = Invoice::byId($data["invoiceId"]);
+	public function update($data): Response {
+
+		$user = (new User)->byId($data["userId"]);
+		$invoice = (new Invoice)->byId($data["invoiceId"]);
 
 		if($user and $invoice) {
-
 			$log = new Log();
-			$log->user = t("log.invoiceEdit", ['user_name' => $user->getFullName(), 'user_id' => $user->id]);
-			$log->date = date::time();
+			$log->user = t("log.invoice.edit", ['user_name' => $user->getFullName(), 'user_id' => $user->id]);
+			$log->date = Date::time();
 			$log->invoice = $invoice->id;
 			$log->save();
 		}
@@ -291,39 +286,43 @@ class Invoice extends controller {
 		return $this->response;
 	}
 }
-?>
 ```
-برای مشاهده نمونه کد های بیشتر از کنترلرها میتوانید به  [این](https://github.com/Jalno/userpanel/blob/master/controllers/users.php) .فایل مراجعه کنید.
+برای مشاهده نمونه کد های بیشتر از استفاده مترجم در کنترلرها می‌توانید به  [کنترلر مدیریت کاربران در Userpanel](https://github.com/Jalno/userpanel/blob/master/controllers/Users.php) فایل مراجعه کنید.
 
-**مثال 6 :** view
+**مثال 6 :** استفاده از مترجم در View
 ```php
-use packages\my_package\Authorization;
-use \themes\clipone\navigation;
-use \themes\clipone\navigation\menuItem;
+<?php
+namespace themes\clipone\views;
 
-class ContactUs extends packages\userpanel\view {
+use packages\userpanel\Authorization;
+use themes\clipone\Navigation;
+use function packages\userpanel\url;
 
-	function __beforeLoad(){
+class ContactUs extends \packages\userpanel\View {
+
+	public static function onSourceLoad() {
+		if (!Authorization::is_accessed("contact_us")) {
+			return;
+		}
+		$contactUs = Navigation::getByName("contact-us");
+		if ($contactUs) {
+			return;
+		}
+		$contactUs = new Navigation\MenuItem("contact-us");
+		$contactUs->setTitle(t("contactus"));
+		$contactUs->setIcon('fa fa-envelope-open');
+		$contactUs->setURL(url('contact-us'));
+		$contactUs->setPriority(400);
+		Navigation::addItem($contactUs);
+	}
+
+	public function __beforeLoad() {
 		$this->setTitle(array(
 			t("contactus"),
 			t("comments")
 		));
 		$this->addBodyClass('contact-us');
-		navigation::active("contact-us");
-	}
-
-	public static function onSourceLoad(){
-        if(Authorization::is_accessed("contact_us")){
-            $contactUs = Navigation::getByName("contact-us");
-            if (!$contactUs) {
-				$contactUs = new menuItem("contact-us");
-	            $contactUs->setTitle(t("contactus"));
-	            $contactUs->setIcon('fa fa-envelope-open');
-	            $contactUs->setURL(userpanel\url('contact-us'));
-	            $contactUs->setPriority(400);
-				Navigation::addItem($contactUs);
-            }
-        }
+		Navigation::active("contact-us");
 	}
 }
 ```
@@ -367,4 +366,4 @@ class Classroom extends Process {
 }
 
 ```
-برای مشاهده نمونه کد های بیشتر از process ها میتوانید به  [این](https://github.com/Jalno/userpanel/blob/master/processes/FixEditUserLogs.php) .فایل مراجعه کنید.
+برای مشاهده نمونه کد های بیشتر از process ها می‌توانید به  [این](https://github.com/Jalno/userpanel/blob/master/processes/FixEditUserLogs.php) .فایل مراجعه کنید.
