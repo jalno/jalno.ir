@@ -327,8 +327,24 @@ class ContactUs extends \packages\userpanel\View {
 }
 ```
 
-**مثال 7 :** process
+
+**مثال 7 :** استفاده از مترجم در process
 ```php
+<?php
+use packages\base\Process;
+use package\package_name\Classroom as ClassroomDB;
+
+class Classroom extends Process {
+
+	public function insert($data) {
+		
+		$classroom = new ClassroomDB();
+		$classroom->title = t("class.title", "title" => $data["title"], "group" => $data["group"]);
+		$classroom->teacher = $data["teacher"];
+		$classroom->save();
+	}
+}
+
 /*نمونه فایل ذخیره نوشته
 {
 	"phrases":{
@@ -337,33 +353,5 @@ class ContactUs extends \packages\userpanel\View {
 }
 */
 
-<?php
-use packages\base\Process;
-use package\package_name\Classroom as ClassroomDB;
-
-class Classroom extends Process {
-
-	public function insert() {
-		$inputRules = array(
-			"title" => array(
-				"type" => "string",
-			),
-			"group" => array(
-				"type" => "string",
-			),
-			"teacher" => array(
-				"type" => "string",
-			)
-		);
-		
-		$inputs = $this->checkinputs($inputRules);
-		
-		$classroom = new ClassroomDB();
-		$classroom->title = t("class.title", "title" => $inputs["title"], "group" => $inputs["group"]);
-		$classroom->teacher = $inputs["teacher"];
-		$classroom->save();
-	}
-}
-
 ```
-برای مشاهده نمونه کد های بیشتر از process ها می‌توانید به  [این](https://github.com/Jalno/userpanel/blob/master/processes/FixEditUserLogs.php) .فایل مراجعه کنید.
+برای مشاهده نمونه کد های بیشتر از استفاده مترجم درprocess ها می‌توانید به  [این](https://github.com/Jalno/userpanel/blob/master/processes/FixEditUserLogs.php) .فایل مراجعه کنید.
