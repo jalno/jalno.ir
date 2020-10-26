@@ -394,7 +394,7 @@ if(!$user) {
 ]
 ```
 
-در مثال فوق تمامی آدرس هایی که با userpanel , news شروع شوند و با اکسپشن های NotFound و یا NoViewException برخورد کنند به کنترلر تعریف شده در handler فرستاده میشوند.
+در مثال فوق تمامی آدرس هایی که با userpanel , news شروع شوند و با استثنا های NotFound و یا NoViewException برخورد کنند به کنترلر تعریف شده در handler فرستاده میشوند.
 
 ## middleware
 
