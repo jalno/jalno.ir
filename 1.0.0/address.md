@@ -171,7 +171,7 @@ echo url("users", ["id" => 1]);
 use function packages\base\url;
 
 
-echo base\url("login", ["@lang" => "fa"], true);
+echo url("login", ["@lang" => "fa"], true);
 /**
  * Output is:
  * https://domain.com/fa/login  or
