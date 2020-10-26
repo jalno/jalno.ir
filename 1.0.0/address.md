@@ -361,7 +361,7 @@ class User extends controller {
         if($user) {
             $user->delete();
 			$this->response->setStatus(true);
-            $this->response->go(base\url('users'));
+            $this->response->Go(base\url('users'));
             /*
                 /en/users
             */
