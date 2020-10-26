@@ -404,7 +404,7 @@ class User extends controller {
         $formdata = $this->checkinputs($inputs);
         $user = new User($formdata);
         $user->save();
-        $this->response->go(base\url('user/view/'.$user->id));
+        $this->response->Go(base\url('user/view/'.$user->id));
         /*
             /user/view/1?%40lang=en_US
         */
