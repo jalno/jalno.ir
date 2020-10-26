@@ -103,7 +103,8 @@
 ]
 ```
 
-میتوان url را بصورت `function packages\base\url` در فایل مورد استفاده معرفی کرد.
+میتوان url را بصورت `function packages\base\url` در فایل مورد استفاده معرفی کرد.   
+
 **مثال 1**
 ```php
 <?php
