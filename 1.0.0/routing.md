@@ -472,7 +472,7 @@ class CheckAccess {
 ```json
 [
   {
-    "path": ["news", { "name": "post", "regex": "/^\\d+$/" }],
+    "path": ["news", { "type": "dynamic", "name": "post", "regex": "/^\\d+$/" }],
     "controller": "controllers/News@view",
     "method": "get",
     "absolute": true
