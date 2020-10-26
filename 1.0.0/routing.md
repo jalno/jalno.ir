@@ -9,7 +9,7 @@
 `config.php` که در مسیر `packages/base/libraries/config` قرار دارد مراجعه نمایید.
 
 ### تنظیم دامنه
-زمانی که سایت بجر دامنه اصلی دارای زیر دامنه هایی نیز باشد باید دامنه و تمامی زیر دامنه ها در آپشن `packages.base.router.defaultDomain` معرفی شوند.
+زمانی که میخواهید سایت بجر دامنه اصلی از طریق دامنه یا زیر دامنه های دیگر باز شود باید دامنه ها و یا زیر دامنه ها را در آپشن `packages.base.router.defaultDomain` معرفی شوند.   
 
 ```php
 'packages.base.router.defaultDomain' => ['panel.domain.com', 'domain.com']
