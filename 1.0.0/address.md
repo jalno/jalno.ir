@@ -204,7 +204,7 @@ echo base\url("login", ["@hostname" => "domain.com"], true);
 use function packages\base\url;
 
 
-echo base\url("login", ["@hostname" => "domain.com"], false);
+echo url("login", ["@hostname" => "domain.com"], false);
 /**
  * Output is:
  * /en/login?%40hostname=domain.com  or
