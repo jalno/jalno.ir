@@ -291,7 +291,7 @@ class News extends controller {
   }
 ]
 ```
-**توجه :** در مثال فوق اگر دامنه بصورت `"domain":["news.yourdomain.com"]` تعریف شود و سایت با آدرس yourdomain.com/news/1 جستجو شود، چون دامنه yourdomain.com برای آن تعریف نشده است اکسپشن notFound دریافت میکنیم.
+**توجه :** در مثال فوق اگر دامنه بصورت `"domain":["news.yourdomain.com"]` تعریف شود و سایت با آدرس yourdomain.com/news/1 جستجو شود، چون دامنه yourdomain.com برای آن تعریف نشده است استثنای notFound دریافت میکنیم.
 
 ## پروتکل
 
