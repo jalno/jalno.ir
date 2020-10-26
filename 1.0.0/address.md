@@ -460,7 +460,7 @@ echo url("login", ["@hostname" => "newdomain.com"], true);
  * https://newdomain.com/en/login  or
  * https://newdomain.com/login/?lang=en   or
  * https://newdomain.com/login     // if the Site isn't multi languages
-
+ */
 ```
 
 
