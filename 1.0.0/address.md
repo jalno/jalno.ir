@@ -446,7 +446,7 @@ echo url("login", [], true);
  * https://domain.com/en/login  or
  * https://domain.com/login/?lang=en   or
  * https://domain.com/login     // if the Site isn't multi languages
-
+ */
 ```
 
 **مثال 3**
