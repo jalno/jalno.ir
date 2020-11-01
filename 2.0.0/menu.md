@@ -4,7 +4,7 @@
 	- [نصب و راه اندازی](installation.md)
 	- [پیکربندی و تنظیمات](options.md)
 	- [ساختار بسته ها](package.md)
-+ __[مفاهیم معماری](#clickable)__
++ __[معماری](#clickable)__
 	- [چرخه زندگی](lifecycle.md)
 	- [بارگذاری خودکار](autoloader.md)
 + __[مفاهیم پایه](#clickable)__
