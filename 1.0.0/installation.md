@@ -1,50 +1,70 @@
-# بارگذارنده خودکار
-همانطور که میدانید در php لازم است تا برنامه نویس برای استفاده از توابع و کلاس هایی که در فایل دیگری ذخیره شده اند آن هارا include کند و این کار علاوه بر خسته کننده بودن مشکلاتی نیز بوجود خواهد آورد. بنابراین فریمورک این قابلیت را ایجاد نموده تا برنامه نویس فارغ از دغدغه فرخوانی فایل های مورد نیاز صرفا بر روی خودِ برنامه تمرکز کند.   
-یک بارگذارنده ی خودکار برای قسمت backend در پوشه ی اصلی و دیگری در هر قالب در قسمت ظاهری برنامه تعریف می شوند. فایل بارگذارنده ی خودکار در پوشه ی اصلی در فایل `package.json` و فایل بارگذارنده ی خودکار هر قالب در فایل معرف قالب، `theme.json`  در کلیدی با عنوان `autoload` تعریف خواهد شد .   
-نمونه فایل package.json
-```json
-{
-    "permissions": "*",
-	"autoload": "autoloader.json"
-}
+# نصب و راه اندازی
+
+نصب جالنو واقعا ساده است، فقط شامل سه مرحله است:
+
+### آخرین نسخه را دانلود کنید
+
+آخرین نسخه این فریم-ورک را میتونید همیشه از شاخه اصلی مخزنش دانلود کنید: [دانلود ZIP](https://github.com/jalno/base/archive/master.zip)
+
+یا اینکه مخزن را بصورت کامل کلون کنید:
+
+```bash
+git clone https://github.com/jalno/base.git
 ```
 
-نمونه فایل theme.json
-```json
-{
-    "name": "frontname",
-    "title": "Site Frontend",
-    "version": "1.0.0",
-	"autoload": "autoloader.json"
-}
+### یک پایگاه داده بسازید
+
+اگر پروژه را بر روی رایانه شخصیتون راه اندازی میکنید، از طریق `PHPMyAdmin`  یک پایگاه داده جدید بسازید، یا در غیر اینصورت به پنل میزبانیتون مراجعه کنید.سپس دستورات زیر را در پایگاه داده درون ریزی کنید:
+
+```sql
+CREATE TABLE `base_cache` (
+	`name` varchar(255) NOT NULL,
+	`value` text NOT NULL,
+	`expire_at` int(10) unsigned NOT NULL,
+	PRIMARY KEY (`name`),
+	KEY `expire_at` (`expire_at`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `base_processes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) COLLATE utf8_persian_ci NOT NULL,
+	`pid` int(11) DEFAULT NULL,
+	`start` int(11) DEFAULT NULL,
+	`end` int(11) DEFAULT NULL,
+	`parameters` text COLLATE utf8_persian_ci,
+	`response` text COLLATE utf8_persian_ci,
+	`progress` int(11) DEFAULT NULL,
+	`status` tinyint(4) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+
+CREATE TABLE `options` (
+	`name` varchar(255) NOT NULL,
+	`value` text NOT NULL,
+	`autoload` tinyint(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `options` (`name`, `value`, `autoload`) VALUES
+('packages.base.routing.www', 'nowww', 1),
+('packages.base.routing.scheme', 'http', 1);
 ```
 
-شما برای استفاده از قابلیت یک فایل با ساختار json ایجاد کرده و آدرس فایل  و کلاس های موجود در آن معرفی میکنید.
+### اتصال را برقرار کنید
 
-مثال
-```json
-{
-    "files":[
-        {
-            "classes":["controllers\\Main"],
-            "file":"controllers/Main.php"
-        },
-        {
-            "classes":["views\\homePage"],
-            "file":"views/homePage.php"
-        },
-        {
-            "classes":["views\\notfound"],
-            "file":"views/notfound.php"
-        },
-        {
-            "classes":["controllers\\News"],
-            "file":"controllers/News.php"
-        },
-        {
-            "classes":["views\\news\\show"],
-            "file":"views/news/show.php"
-        }
-    ]
-}
+فایل `packages/base/libraries/config/config.php` را با یک ویرایشگر متن باز کنید و در قسمت `packages.base.loader.db` مشخصات اتصال به پایگاه داده را وارد کنید. برای مثال:
+
+```php
+<?php
+namespace packages\base;
+$options = array(
+	'packages.base.loader.db' => array(
+		'type' => 'mysql',
+		'host' => '127.0.0.1',
+		'user' => 'root',
+		'pass' => 'myComplexPassword',
+		'dbname' => 'jalno'
+	)
+...
 ```
+
