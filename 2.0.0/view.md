@@ -3,7 +3,7 @@
 در فریمورک برای ظاهر، کلاس `packages\base\view` ایجاد شده است. باید در قسمت frontend  کلاس‌ هایی برای ظاهر ایجاد شود. باید از کلاس ظاهر از کلاس `packages\base\view` ارث بری کند.
 ظاهر رابط بین کنترلر و قالب است.
 
-**توجه :** میتوانید مطابق ورژن قبل ظاهر را در دو قسمت backend و frontend تعریف کنید است. این دو قسمت از طریق رابطه ی پدر-فرزندی به یکدیگر متصل میشوند.
+**توجه :** میتوانید مطابق ورژن قبل ظاهر را در دو قسمت backend و frontend تعریف کنید. این دو قسمت از طریق رابطه ی پدر-فرزندی به یکدیگر متصل میشوند.
 برای منظم بودن فایل ها، بهتر است تا در هر قسمت یک پوشه با نام views ایجاد شود و فایل های مرتبط با آن قسمت در آن تعریف شود.
 
 ```php
@@ -67,7 +67,7 @@ class show extends parentView {
     }
     
     /**
-     * اگر کلاس ظاهر در backend ایجاد شده باشد متدهای زیر در آن فایل تعریف می‌شوند. 
+     * اگر کلاس ظاهر در backend ایجاد شده باشد متدهای زیر در فایل backend تعریف می‌شوند. 
      */
     public function setPost(post $post) {
         $this->setData($post, "post");
@@ -78,16 +78,16 @@ class show extends parentView {
     }
 }
 ```
-در مثال فوق اگر در backend نیز ظاهر تعریف شده باشد باید از فایل متناظر در backend ارث بری کند.
+در مثال فوق اگر در backend نیز ظاهر تعریف شده باشد باید این کلاس از فایل متناظر در backend ارث بری کند.
 
 
 متد `__beforeLoad()` به صورت خودکار و قبل از بارگذاری قسمت قالب برنامه صدا زده خواهد شد .
 
-برای ارتباط قسمت ظاهری و قسمت قالب (قسمتی که HTML را شامل می شود) نیاز هست تا در پوشه‌ای به نام html فایلی متناظر با فایل کلاس view ایجاد شود.
+برای ارتباط قسمت ظاهری و قسمت قالب (قسمتی که HTML را شامل می شود) نیاز است تا در پوشه‌ای به نام html فایلی متناظر با فایل کلاس view ایجاد شود.
 
 **توجه :** نام فایل قالب باید با نام فایل view یکسان باشد.
 
-همچنین نیاز هست تا در فایل `theme.json` در پوشه ی frontend نام پوشه کلاس‌ها (views) تحت عنوان کلید autoload معرفی شود.
+همچنین لازم است تا در فایل `theme.json` که در پوشه‌ی frontend قرار دارد، نام پوشه کلاس‌ها (views) تحت عنوان کلید autoload معرفی شود.
 
 ##### برای اطلاعات بیشتر به صفحه ی [بارگذاری خودکار]( autoloader.md) مراجعه کنید.
 
@@ -105,7 +105,7 @@ class show extends parentView {
 ```
 
 ## قسمت backend 
-برای ظاهر فایل در پوشه ی اصلی پکیج تعریف می شود(بهتر است یک پوشه با نام views برای فایل های این قسمت ایجاد کنید
+برای ظاهر فایل در پوشه‌ی اصلی پکیج تعریف می شود(بهتر است یک پوشه با نام views برای فایل های این قسمت ایجاد کنید
 ). این فایل به وسیله ی رابطه ی پدر-فرزندی به فایل `packages\base\view` متصل است .
 
 نمونه فایل
@@ -161,16 +161,16 @@ class News extends controller {
         if (!$post) {
             throw new NotFound();
         }
-        $response = new response(true);
         $view = View::byName(views\news\show::class);
         $view->setPost($post);
-        $response->setView($view);
+        $this->response->setView($view);
         return $this->response;
     }
 }
 ```
 در مثال فوق چون ظاهر فقط قسمت frontend تعریف شده است namespace کلاس view بصورت themes\theme_name\views استفاده شده است.
 
+متد setPost در کلاس ظاهر تعریف شده است.
 
 **مثال 2 :** نمونه فایل کنترلر (درصورت تعریف backend)
 ```php
@@ -202,7 +202,11 @@ class News extends controller {
 آرگومان ورودی این متد رشته میباشد. همچنین میتوانید آرایه‌ای از رشته ها نیز به متد بدهید، بطور خودکار عناصر آرایه به رشته تبدیل می‌شود.
 متد setTitle در متد `__beforeLoad` فراخوانی می‌شود. 
 
-تنظیم نام باعث می‌شود یکبار نام را مشخص کنید و هر در قسمت از سایت لازم بود از آن استفاده کنید. این این روش از امکان ناهماهنگی نوشتن نام سایت در قسمت‌های مختلف جلوگیری میکند.
+تنظیم نام باعث می‌شود یکبار نام را مشخص کنید و هر در قسمت از سایت لازم بود از آن استفاده کنید. این روش از امکان ناهماهنگی نوشتن نام سایت در قسمت‌های مختلف جلوگیری میکند.
+
+برای بهبود کدنویسی میتوانید از مترجم ها و فایل‌های ذخیره نوشته استفاده کنید. با استفاده از فایل های ذخیره نوشته مجبور به نوشتن متن‌‌ها در بین کدها نخواهید بود
+
+##### برای اطلاعات بیشتر به صفحه ی [مترجم](translator.md) مراجعه کنید.
 
 **1 مثال**
 ```php
@@ -215,6 +219,11 @@ class ContactUs extends Form {
     function __beforeLoad(){ 
         $this->setTitle('تماس با ما');
         
+        /**
+         * استفاده از مترجم
+         * 
+         * $this->setTitle(t(title.contactUs));
+         */
     }
 }
 ```
@@ -369,9 +378,15 @@ class Index extends View {
 
 با فراخوانی متد `clearAssets` علاوه بر کدهای css کدهای js نیز حذف می‌شوند.
 
+همچنین با فراخوانی متد `getCSSAssets` فایل‌های css .اضافه شده به صفحه در دسترس میباشند
+
 ```php
 function __beforeLoad(){ 
-    $this->removeCSS("bodyStyle");
+
+    if(isset($this->getData('bg'))) {
+        $this->removeCSS("bodyStyle");
+    }
+
     /**
      * $this->clearCSSAssets();
      * $this->clearAssets();
@@ -410,6 +425,8 @@ function __beforeLoad(){
 
 با فراخوانی متد `clearAssets` علاوه بر کدهای js کدهای css نیز حذف می‌شوند.
 
+همچنین با فراخوانی متد `getJSAssets` فایل‌های js اضافه شده به صفحه در دسترس میباشند
+
 ```php
 function __beforeLoad(){ 
     $this->removeJS("indexJS");
@@ -440,7 +457,7 @@ function __beforeLoad(){
 }
 ```
 
-## افزودن و دریافت داده
+## انتقال داده 
 با فراخوانی متد `setData` میتوانید داده ای را تنظیم و هر زمان به آن لازم داشتید با فراخوانی متد `getData` به آن دسترسی داشته باشید. 
 
 متد `setData` دو آرگومان ورودی میگیرد. آرگومان اول داده مورد نظر است، داده ها از هر نوع داده‌ای میتوانند باشند و آرگومان دوم کلید برای داده است که آرگومان دوم اختیاریست.
@@ -495,3 +512,88 @@ function __beforeLoad(){
     
 }
 ```
+
+## خطاها
+برای نمایش خطاهایی که لازم است در قالب نمایش داده شود متد `addError` تعریف شده است. این یک آرگومان ورودی میگیرد که شئ از کلاس `packages\base\view\Error` می‌باشد.
+
+###### برای اطلاعات بیشتر به صفحه  [خطا ظاهر](viewError.md) مراجعه کنید.
+
+خطاهای ثبت شده را با متد‌‌‌های `getError` و `getErrors` میتوانید دریافت کنید. 
+متد getError یک شئ از کلاس Error برمی‌گرداند که اولین خطا ثبت شده است و متد getErrors آرایه‌ای از اشیا کلاس Error که تمامی خطاهای ثبت شده است را برمیگرداند.
+
+**مثال 1 :** نمونه فایل کنترلر
+```php
+use packages\base\{View, Http};
+use packages\base\view\Error;
+use packages\my_package\Classroom;
+use packages\my_package\Student;
+use themes\my_theme\views;
+
+function addStudentToClass() {
+    
+    $view = View::byName(views\AddStudent::class);
+    $this->response->setView($view);
+    
+    if(Http::is_post()){
+        $inputRules = [
+            'student' => [
+                'type' => 'int'
+            ]
+        ];
+        $this->response->setStatus(false);
+        $inputs = $this->checkinputs($inputRules);
+        
+        $student = Student::byId($inputs['student']);
+        if(!$student->status) {
+            $error = new Error();
+            $error->setMessage("وضعیت دانش آموز وارد شده غیرفعال است");
+            $view->addError($error);
+            return $this->response;
+        }
+
+        $obj = new Classroom();
+        $obj->student = $student->id;
+        $obj->save();
+    }
+    return $this->response;
+}
+```
+در مثال فوق اگر وضعیت کاربر غیر فعال باشد شئ‌ از کلاس Error ایجاد میشود، در این کلاس متد setMessage برای مشخص کردن متن خطا تعریف شده است.
+نهایتا شئ ایجاد شده از کلاس Error به متد addError برای نمایش خطا در قالب داده می‌شود.
+
+
+**مثال 2 :** نمایش خطا در قالب
+```php
+<body>
+    <?php
+    if($this->getError()) {
+        $error = $this->getError()->jsonSerialize();
+        echo '<div class="alert alert-danger" role="alert">
+                <strong>'. $error["message"]. '</strong>
+            </div>';
+    }
+    ?>
+
+```
+در کلاس Error متغیر‌های کلاس با سطح protected تعریف شده‌اند.
+با فراخوانی متد jsonSerialize میتوانید به متغیر‌‌ها دسترسی داشته باشید. خروجی این متد آرایه‌ای از متغیرهای تعریف شده در کلاس می‌باشد. متن پیام خطا در کلید message ذخیره شده است.
+
+
+## افزودن فایل‌های ظاهری
+برای افزودن فایل های ظاهری(css و js) به قالب که در فایل theme.json در کلید assets تنظیم شده‌اند. از متد `setSource` استفاده میشود. متد یک آرگومان ورودی میگیرد که شئ از کلاس `packages\base\frontend\Source` است.
+
+زمانی که متد setView در کنترلر فراخوانی می‌شود، فایل theme.json قالب خوانده می‌شود و قسمت assets برای پیدا کردن فایل های css و  js جستجو میشود و به صفحه اضافه می‌شود.
+
+با استفاده از پکیج `node_webpack`قبل از باز شدن صفحه، پکیج تمامی اقدامات فوق را حذف کرده و فایل های نهایی webpack را جایگزین میکند.
+
+###### برای اطلاعات بیشتر به صفحه [node_webpack](node_webpack.md) مراجعه کنید.
+
+با فراخوانی متد `getSource()` شئ از کلاس `packages\base\frontend\Source` برمیگردد که مشخصات قالب مانند نام تعیین شده در فایل theme.json، پوشه قالب ، فایل های استایل و جاوااسکریپت، مشخصات مترجم ها و رویدادهای قالب در آن مشخص شده است.
+
+```php
+$this->getSource();
+```
+
+## دریافت اطلاعات کامل ظاهر
+میتوانید با فراخوانی متد `dynamicData` اطلاعات ظاهر از جمله title, description, فایل و پوشه قالب، محل ذخیره فایل‌های ‌‌assets و ارورهای ثبت شده و تمامی اطلاعات توضیح داده شده در فوق که میتوانید برای ظاهر تعریف کنید در دسترس هستند. خروجی متد dynamicData شئ از کلاس `packages\base\frontend\events\throwDynamicData` میباشد.
+
