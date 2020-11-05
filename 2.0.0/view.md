@@ -9,7 +9,7 @@
 ```php
 <?php
 namespace themes\package_theme\views;
-use backages\base\View;
+use packages\base\View;
 
 class index extends View {
     
@@ -55,7 +55,7 @@ class UsersList extends Listview {
 ```php
 <?php
 namespace themes\theme_name\views\news;
-use backages\base\View as parentView;
+use packages\base\View as parentView;
 // use packages\package_name\views\news\show as parentView;
 use packages\package_name\Post;
 
@@ -142,7 +142,7 @@ class show extends View {
 
 ##### برای اطلاعات بیشتر به صفحه ی [کنترلر](controller.md) مراجعه کنید
 
-هر کنترلر با استفاده از کلاس `backages\base\view` و متد `byName`  یک ظاهر و در نتیجه یک قالب را فراخوانی میکند. اگر namespace داده شده به متد byName نادرست باشد
+هر کنترلر با استفاده از کلاس `packages\base\view` و متد `byName`  یک ظاهر و در نتیجه یک قالب را فراخوانی میکند. اگر namespace داده شده به متد byName نادرست باشد
 این کلاس با پرتاب یک استثناء از جنس کلاس `packages\base\NoViewException` از ادامه ی روند برنامه جلوگیری خواهد کرد.
 
 
@@ -516,7 +516,7 @@ function __beforeLoad(){
 ## خطاها
 برای نمایش خطاهایی که لازم است در قالب نمایش داده شود متد `addError` تعریف شده است. این یک آرگومان ورودی میگیرد که شئ از کلاس `packages\base\view\Error` می‌باشد.
 
-###### برای اطلاعات بیشتر به صفحه  [خطا ظاهر](viewError.md) مراجعه کنید.
+###### برای اطلاعات بیشتر به صفحه  [خطا ظاهر](view_error.md) مراجعه کنید.
 
 خطاهای ثبت شده را با متد‌‌‌های `getError` و `getErrors` میتوانید دریافت کنید. 
 متد getError یک شئ از کلاس Error برمی‌گرداند که اولین خطا ثبت شده است و متد getErrors آرایه‌ای از اشیا کلاس Error که تمامی خطاهای ثبت شده است را برمیگرداند.
@@ -567,17 +567,47 @@ function addStudentToClass() {
 <body>
     <?php
     if($this->getError()) {
-        $error = $this->getError()->jsonSerialize();
+        $error = $this->getError()->getMessage();
         echo '<div class="alert alert-danger" role="alert">
-                <strong>'. $error["message"]. '</strong>
+                <strong>'. $error. '</strong>
             </div>';
     }
     ?>
 
 ```
-در کلاس Error متغیر‌های کلاس با سطح protected تعریف شده‌اند.
-با فراخوانی متد jsonSerialize میتوانید به متغیر‌‌ها دسترسی داشته باشید. خروجی این متد آرایه‌ای از متغیرهای تعریف شده در کلاس می‌باشد. متن پیام خطا در کلید message ذخیره شده است.
 
+برای سهولت نمایش خطاها در قالب میتوانید از متد `getErrorsHTML()` که در پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده است استفاده کنید. 
+برای استفاده از متد getErrorsHTML باید کلاس ظاهر از `themes\clipone\viewTrait` استفاده کند.
+
+**نمونه فایل view**
+```php
+<?php
+namespace themes\package_theme\views;
+use packages\base\View;
+use themes\clipone\viewTrait;
+
+class index extends View {
+    use viewTrait;
+    
+}
+```
+
+**مثال 3**
+```php
+<div class="container">
+    <?php
+        $errorcode = $this->getErrorsHTML();
+        if($errorcode){
+    ?>
+    <div class="row">
+        <div class="col-xs-12"><?php echo $errorcode; ?></div>
+    </div>
+    <?php
+        }
+    ?>
+</div>
+```
+در مثال فوق هر تعداد خطا که ثبت شده باشد نمایش داده میشود. پکیج طبق نوع هر خطا متن آن را در کلاس‌های alert متناسب با آن نمایش میدهد.
 
 ## افزودن فایل‌های ظاهری
 برای افزودن فایل های ظاهری(css و js) به قالب که در فایل theme.json در کلید assets تنظیم شده‌اند. از متد `setSource` استفاده میشود. متد یک آرگومان ورودی میگیرد که شئ از کلاس `packages\base\frontend\Source` است.
