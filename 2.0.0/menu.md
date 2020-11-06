@@ -13,10 +13,10 @@
 	- [مترجم](translator.md)
 	- [کنترلر](controller.md)
 	- [ظاهر](view.md)
-	- [قالب](frontend.md)
 	- [پاسخ](response.md)
 	- [اعتبار سنجی](validation.md)
 + __[ظاهر](#clickable)__
+	- [قالب](frontend.md)
 	- [Webpack](webpack.md)
 	- [NPM](npm.md)
 	- [Node Webpack](node_webpack.md)
@@ -29,6 +29,7 @@
 	- [حافظه موقت](cache.md)
 	- [زمان](date.md)
 	- [روند](process.md)
+	- [کار با پوشه ها](directory.md)
 + __[پایگاه داده](#clickable)__
 	- [ارتباط مستقیم](db.md)
 	- [ارتباط شئ گرا](dbObject.md)

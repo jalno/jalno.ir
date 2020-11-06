@@ -4,10 +4,10 @@
 
 | نام کلاس                                     | موقعیت نگهداری دایرکتوری                                |
 |---------------------------------------------|-------------------------------------------|
-| packages\base\IO\Directory\loca                  |      دایرکتوری های محلی
-| packages\base\IO\Directory\tmp                   | دایرکتوری های موقت             |
-| packages\base\IO\Directory\ftp                   |        دایرکتوری های ریموت                  |
-| packages\base\IO\Directory\sftp                  |               دایرکتوری های ریموت                    |
+| packages\base\IO\Directory\Local                  |      [دایرکتوری های محلی](#local_directories)
+| packages\base\IO\Directory\Tmp                   | [دایرکتوری های محلی موقت](#local_template_directory)             |
+| packages\base\IO\Directory\Ftp                   |        [دایرکتوری های ریموت](#ftp_directories)                  |
+| packages\base\IO\Directory\Sftp                  |        [دایرکتوری های ریموت](#sftp_directories)                    |
 
 
 
