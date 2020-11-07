@@ -31,6 +31,7 @@
 	- [زمان](date.md)
 	- [روند](process.md)
 	- [کار با پوشه ها](directory.md)
+	- [لاگ ها](log.md)
 + __[پایگاه داده](#clickable)__
 	- [ارتباط مستقیم](db.md)
 	- [ارتباط شئ گرا](dbObject.md)
