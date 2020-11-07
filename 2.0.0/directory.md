@@ -4,10 +4,10 @@
 
 | نام کلاس                                     | موقعیت نگهداری دایرکتوری                                |
 |---------------------------------------------|-------------------------------------------|
-| packages\base\IO\Directory\Local                  |      [دایرکتوری های محلی](#local_directories)
-| packages\base\IO\Directory\Tmp                   | [دایرکتوری های محلی موقت](#local_template_directory)             |
-| packages\base\IO\Directory\Ftp                   |        [دایرکتوری های ریموت](#ftp_directories)                  |
-| packages\base\IO\Directory\Sftp                  |        [دایرکتوری های ریموت](#sftp_directories)                    |
+| <div class="display-block ltr">packages\base\IO\Directory\Local</div>                  |      [دایرکتوری های محلی](#local_directories)
+| <div class="display-block ltr">packages\base\IO\Directory\Tmp</div>                   | [دایرکتوری های محلی موقت](#local_template_directory)             |
+| <div class="display-block ltr">packages\base\IO\Directory\Ftp</div>                   |        [دایرکتوری های ریموت](#ftp_directories)                  |
+| <div class="display-block ltr">packages\base\IO\Directory\Sftp</div>                  |        [دایرکتوری های ریموت](#sftp_directories)                    |
 
 
 
@@ -20,29 +20,29 @@ __توجه__: یک شی از کلاس Directory حتما به آدرس یک دا
 
 | نام متد                                     | شرح عملکرد                                |
 |---------------------------------------------|-------------------------------------------|
-| copyTo(directory $dest):  bool                   | کپی محتویات یک دایرکتوری در یک دایرکتوری دیگر       |
-| copyFrom(directory $source):  bool               | کپی محتویات از یک دایرکتوری دیگر              |
-| delete(): mixed                             | حذف دایرکتوری از دیسک                          |
-| rename(string $newName):  bool              | تغییر نام                                 |
-| move(directory $dest):  bool                     | انتقال یک دایرکتوری به یک دایرکتوری دیگر            |
-| make():bool                                  | ایجاد دایرکتوری                    |
-| files(bool $recursively):array                 | لیست فایل های موجود در دایرکتوری                     |
-| items(bool $recursively):array               | لیست آیتم های موجود در دایرکتوری                     |
-| directories(bool $recursively):array              | لیست دایرکتوری های موجود در دایرکتوری                     |
-| file(string $name)                           |         فایلی را به دایرکتوری نسبت میدهد            |
-| directory(string $name)                           |                 پوشه ای را به دایرکتوری نسبت میدهد     |
-| size():  int                                | محاسبه حجم یک دایرکتوری                        |
-| getPath(): string                           | دریافت آدرس یک دایرکتوری                       |
-| isEmpty(): bool                             | مشخص کننده اینکه آیا دایرکتوری خالی است یا خیر  |
-| getDirectory(): Directory                            | دسترسی به پوشه حاوی این دایرکتوری را فراهم می‌کند. |
-| exists(): bool                              | بررسی وضعیت وجود دایرکتوری                     |
+| <div class="display-block ltr">copyTo(directory $dest):  bool</div>                   | کپی محتویات یک دایرکتوری در یک دایرکتوری دیگر       |
+| <div class="display-block ltr">copyFrom(directory $source):  bool</div>               | کپی محتویات از یک دایرکتوری دیگر              |
+| <div class="display-block ltr">delete(): mixed                             | حذف دایرکتوری از دیسک                          |
+| <div class="display-block ltr">rename(string $newName):  bool</div>              | تغییر نام                                 |
+| <div class="display-block ltr">move(directory $dest):  bool</div>                     | انتقال یک دایرکتوری به یک دایرکتوری دیگر            |
+| <div class="display-block ltr">make(): bool</div>                                  | ایجاد دایرکتوری                    |
+| <div class="display-block ltr">files(bool $recursively): array</div>                 | لیست فایل های موجود در دایرکتوری                     |
+| <div class="display-block ltr">items(bool $recursively): array</div>               | لیست آیتم های موجود در دایرکتوری                     |
+| <div class="display-block ltr">directories(bool $recursively): array</div>             | لیست دایرکتوری های موجود در دایرکتوری                     |
+| <div class="display-block ltr">file(string $name): File</div>                           |         فایلی را به دایرکتوری نسبت میدهد            |
+| <div class="display-block ltr">directory(string $name): Directory</div>                           |                 پوشه ای را به دایرکتوری نسبت میدهد     |
+| <div class="display-block ltr">size():  int</div>                                | محاسبه حجم یک دایرکتوری بر مبنای بیت                        |
+| <div class="display-block ltr">getPath(): string</div>                           | دریافت آدرس یک دایرکتوری                       |
+| <div class="display-block ltr">isEmpty(): bool</div>                             | مشخص کننده اینکه آیا دایرکتوری خالی است یا خیر  |
+| <div class="display-block ltr">getDirectory(): Directory</div>                            | دسترسی به پوشه حاوی این دایرکتوری را فراهم می‌کند. |
+| <div class="display-block ltr">exists(): bool</div>                              | بررسی وضعیت وجود دایرکتوری                     |
 
 ### [متغیر ها](#directory_variables)
 
 | نام       | شرح                             |
 |-----------|---------------------------------|
-| basename  | نام پوشه در آن ذخیره شده است.   |
-| directory | مسیر پوشه در آن ذخیره شده است.  |
+| <div class="display-block ltr">basename</div>  | نام پوشه در آن ذخیره شده است.   |
+| <div class="display-block ltr">directory</div> | مسیر پوشه در آن ذخیره شده است.  |
 
 __توجه__: متغیر های کلاس Directory در تمامی نوع ها به صورت مستقیم قابل دسترسی هستند.
 
@@ -195,7 +195,7 @@ namespace package\packagename\controllers;
 use packages\base\{Controller, Response, IO\Directory, view\Error, Packages};
 
 class Directories extends Controller {
-    public function UploadViewFTP(): Response {
+    public function UploadViaFTP(): Response {
         $inputs = $this->checkInputs(array(
             "src" => array(
                 "type" => "string",
@@ -261,7 +261,7 @@ namespace package\packagename\controllers;
 use packages\base\{Controller, Response, IO\Directory, view\Error, Packages};
 
 class Directories extends Controller {
-    public function UploadViewSFTP(): Response {
+    public function UploadViaSFTP(): Response {
         $inputs = $this->checkInputs(array(
             "src" => array(
                 "type" => "string",
