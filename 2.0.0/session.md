@@ -12,12 +12,12 @@
 
 | متد	  |							 کاربرد							 |
 |---------------------------------------------|-------------------------------------------|
-| start(): void						  |	   [شروع نشست](#start_session) |
-| set(string $key, mixed $value): void				 | [تعریف متغیر و یا ذخیره اطلاعات](#store_data)			  |
-| get(string $key): mixed				 | [گرفتن متغییر و یا دریافت اطلاعات](#get_data)			  |
-| unset(string $key): void		   |  [پاک کردن اطلاعات](#unset_data) |
-| destroy(): void				| [از بین بردن نشست](#destroy)			 |
-| getID(): ?string		   |  [دریافت شناسه ی یکتای نشست](#get_session_id)		   |
+| <div class="display-block ltr">start(): void</div>						  |	   [شروع نشست](#start_session) |
+| <div class="display-block ltr">set(string $key, mixed $value): void</div>				 | [تعریف متغیر و یا ذخیره اطلاعات](#store_data)			  |
+| <div class="display-block ltr">get(string $key): mixed</div>				 | [گرفتن متغییر و یا دریافت اطلاعات](#get_data)			  |
+| <div class="display-block ltr">unset(string $key): void</div>		   |  [پاک کردن اطلاعات](#unset_data) |
+| <div class="display-block ltr">destroy(): void</div>				| [از بین بردن نشست](#destroy)			 |
+| <div class="display-block ltr">getID(): ?string</div>		   |  [دریافت شناسه ی یکتای نشست](#get_session_id)		   |
 
 ## [روش های ذخیره سازی](#session_methods)
 
@@ -69,9 +69,6 @@ __نکته__: در صورتیکه مقدار برابر true باشد، با ت�
 
 **مثال 1**
 ```php
-/* 
-'autostart' => false
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -79,7 +76,9 @@ use themes\my_theme\views;
 use packages\base\{Response, Controller, Session, View};
 
 class Panel extends Controller {
-
+	/* 
+	'autostart' => false
+	*/
 	public function index(): Response {
 		Session::start();
 		if (!Session::get("login")) {
@@ -111,9 +110,6 @@ class Panel extends Controller {
 
 **مثال 2**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -121,6 +117,9 @@ use themes\my_theme\views;
 use packages\base\{Response, Controller, Session, View};
 
 class Main extends Controller {
+	/*
+	'autostart' => true
+	*/
 	public function index(): Response {
         if (!Session::get("login")) {
             $this->response->Go(base\url("login"));
@@ -153,9 +152,6 @@ class Main extends Controller {
 
 **مثال**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -164,6 +160,9 @@ use packages\my_package\User;
 use packages\base\{Response, Controller, Session, View, Http, view\Error};
 
 class Main extends Controller {
+	/* 
+	'autostart' => true
+	*/
 	public function login(): Response {
 		$view = view::byName(views\Login::class);
 		$this->response->setView($view);
@@ -202,9 +201,6 @@ class Main extends Controller {
 
 **مثال**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -212,6 +208,9 @@ use themes\my_theme\views;
 use packages\base\{Response, Controller, Session, View};
 
 class Main extends Controller {
+	/* 
+	'autostart' => true
+	*/
 	public function panel(): Response {
 		if (!Session::get("login")) {
 			$this->response->Go(base\url("login"));
@@ -232,9 +231,6 @@ class Main extends Controller {
 
 **مثال 1:**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -242,6 +238,9 @@ use function packages\base\url;
 use packages\base\{Response, Controller, Session};
 
 class User extends Controller {
+	/* 
+	'autostart' => true
+	*/
 	function logout(): Response {
 		Session::unset("login");
 		Session::unset("userID");
@@ -253,9 +252,6 @@ class User extends Controller {
 ```
 **مثال 2:**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -264,7 +260,10 @@ use packages\my_package\ContactUs;
 use packages\base\{Response, Controller, Session, View, InputValidationException};
 
 class Main extends Controller {
-	function contactUs(): Response {
+	/* 
+	'autostart' => true
+	*/
+	public function contactUs(): Response {
 		$view = view::byName(views\ContactUs::class);
 		$this->response->setView($view);
 		if (Http::is_post()) {
@@ -305,9 +304,6 @@ class Main extends Controller {
 
 **مثال :**
 ```php
-/* 
-'autostart' => true
-*/
 <?php
 namespace packages\my_package\controllers;
 
@@ -315,6 +311,9 @@ use function packages\base\url;
 use packages\base\{Response, Controller, Session};
 
 class Panel extends controller {
+	/* 
+	'autostart' => true
+	*/
 	public function logOut(): Response {
 		Session::destroy();
 		$this->response->Go(url("login"));
@@ -328,17 +327,16 @@ class Panel extends controller {
 هر نشست دارای کلید یکتا بوده و میتوان از این کلید یکتا برای موارد گوناگون مانند ایجاد سبد خرید استفاده کرد. این کلید از طریق متد `getID` قابل دسترسی است.
 
 **مثال:**
-```php
-/**
- * Autostart is ON
- */ 
+```php 
 <?php
 namespace packages\carjer;
 
 use packages\base\{db\dbObject, Session, Date, Http};
 
 class Cart extends dbObject {
-
+	/* 
+	'autostart' => true
+	*/
 	public static function getCart(): Cart {
 		$id = Session::getID();
 		$cart = (new Cart)->byId($id);
