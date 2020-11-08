@@ -100,7 +100,7 @@ public function getUsers() {
 ```php
 $user = new User();
 $user->pageLimit = $this->items_per_page;
-$users = $user->paginate($this->page, ["userpanel_users.*"]);
+$users = $user->paginate($this->page);
 
 $view->pages = $users->totalPages;
 $view->thisPage = http::$request["get"]["page"] ? http::$request["get"]["page"] : 1;
