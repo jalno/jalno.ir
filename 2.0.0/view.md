@@ -484,8 +484,21 @@ function aboutus(){
 ```
 
 ## تنظیم فایل
-با فراخوانی متد `setFile` میتوانید فایلی را تنظیم کنید. و با فراخوانی متد `getFile` به آن دسترسی داشته باشید این فایل جایگزین صفحه قالب اصلی می‌شود.
-آرگومان ورودی متد setFile شئ از کلاس File میباشد.
+از طریق متد `setFile` هر view میتواند صفحه ی HTML را برای بارگذاری معرفی کند. البته استفاده مستقیم از متد نیاز نبوده و فرم ورک میتواند از طرق زیر فایل HTML را شناسایی و فعال کند:
+### فایل HTML دقیقا هم نام با view
+یعنی اگر فایل View شما `frontend/views/posts/View.php` باشد، فایل HTML آن باید در مسیر `frontend/html/posts/` و با نام `View.php` باشد.
+### تعریف فایل در کلاس View 
+آدرس فایل HTML را نسبت به شاخه اصلی قالب ( مکانی فایل معرف قالب `theme.json` قرار دارد ) در متغیری با نام `$file` در کلاس view معرفی شود.
+
+```php
+<?php
+namespace themes\theme_name\views\posts;
+
+use packages\base\View;
+
+class show extends View {
+    protected $file = 'html/view-post.php';
+}
 
 **نکته :** اگر متد setFile در کنترلر فراخوانی شود دیگر نیاز به فراخوانی متد getFile نیست; بطور خودکار فایل جایگزین قالب  می‌شود.
 
