@@ -1,10 +1,10 @@
 # ظاهر
-
-در فریمورک برای ظاهر، کلاس `packages\base\view` ایجاد شده است. باید در قسمت frontend  کلاس‌ هایی برای ظاهر ایجاد شود. باید از کلاس ظاهر از کلاس `packages\base\view` ارث بری کند.
 ظاهر رابط بین کنترلر و قالب است.
+در فریمورک برای ظاهر، کلاس `packages\base\view` ایجاد شده است. باید در قسمت frontend  کلاس‌ هایی برای ظاهر ایجاد کنید. این کلاس‌ها باید از کلاس `packages\base\view` ارث بری کنند.
+
 
 **توجه :** میتوانید مطابق ورژن قبل ظاهر را در دو قسمت backend و frontend تعریف کنید. این دو قسمت از طریق رابطه ی پدر-فرزندی به یکدیگر متصل میشوند.
-برای منظم بودن فایل ها، بهتر است تا در هر قسمت یک پوشه با نام views ایجاد شود و فایل های مرتبط با آن قسمت در آن تعریف شود.
+برای منظم بودن فایل ها، بهتر است تا در هر قسمت یک پوشه با نام views ایجاد شود و فایل های مرتبط با آن قسمت در آن تعریف شود. اگر ظاهر را در دوقسمت تعریف کنید، باید در فایل theme.json پوشه قالب در کلید `views` ارتباط بین ظاهر backend و frontend را مشخص کنید.
 
 ```php
 <?php
@@ -18,6 +18,7 @@ class index extends View {
 ```
 
 اگر صفحه مورد نظر دارای فرم باشد باید کلاس view از کلاس `packages\base\views\form` ارث بری کند . 
+
 __برای اطلاعات بیشتر به صفحه [فرم](form.md) مراجعه کنید.__
 
 ```php
@@ -32,7 +33,8 @@ class add extends Form {
 ```
 
 اگر صفحه دارای لیست باشد که لازم به صفحه‌بندی دارد، باید کلاس view از کلاس `packages\base\views\listview` ارث بری کند.
-__برای اطلاعات بیشتر به صفحه [صفحه‌بندی](listTrait.md) مراجعه کنید.__
+
+__برای اطلاعات بیشتر به صفحه [صفحه‌بندی](pagination.md) مراجعه کنید.__
 
 ```php
 <?php
@@ -49,8 +51,32 @@ class UsersList extends Listview {
 
 __برای اطلاعات بیشتر به صفحه ی [قالب](frontend.md) مراجعه کنید.__
 
-این فایل در پوشه ی معرفی شده به عنوان بخش قالب ایجاد می شود (بهتر است یک پوشه با نام views برای فایل های این قسمت ایجاد کنید).
+این فایل در پوشه‌ی معرفی شده به عنوان بخش قالب ایجاد می شود (بهتر است یک پوشه با نام views برای فایل های ظاهر این قسمت ایجاد کنید).
 
+برای ارتباط قسمت ظاهری و قسمت قالب (قسمتی که HTML را شامل می شود) نیاز است تا در پوشه‌ای به نام html فایلی متناظر با فایل کلاس view ایجاد شود.
+
+**توجه :** نام فایل قالب باید با نام فایل view یکسان باشد.
+
+همچنین لازم است تا در فایل `theme.json` که در پوشه‌ی frontend قرار دارد، نام پوشه کلاس‌های ظاهر (views) تحت عنوان کلید autoload معرفی شود.
+
+در ظاهر میتوانید متد `__beforeLoad()` را تعریف کنید. این متد به صورت خودکار قبل از بارگذاری قسمت قالب برنامه صدا زده خواهد شد.
+
+__برای اطلاعات بیشتر به صفحه ی [بارگذاری خودکار]( autoloader.md) مراجعه کنید.__
+
+
+**نمونه فایل theme.json**
+```json
+{
+    "name": "theme_name",
+    "title": "Site Frontend",
+    "version": "1.0.0",
+	"autoload": {
+        "directories": ["views"]
+    }
+}
+```
+
+**توجه :** در namespace کلاس ظاهر باید از نامی که در فایل theme.json تعیین شده است استفاده شود.
 
 ```php
 <?php
@@ -81,34 +107,44 @@ class show extends parentView {
 در مثال فوق اگر در backend نیز ظاهر تعریف شده باشد باید این کلاس از فایل متناظر در backend ارث بری کند.
 
 
-متد `__beforeLoad()` به صورت خودکار و قبل از بارگذاری قسمت قالب برنامه صدا زده خواهد شد .
+## قسمت backend 
+برای ظاهر قسمت bsckend، فایلی در پوشه‌ی اصلی پکیج تعریف می شود(بهتر است یک پوشه با نام views برای فایل‌های این قسمت ایجاد کنید
+). این فایل به وسیله ی رابطه ی پدر-فرزندی به فایل `packages\base\view` متصل است .
 
-برای ارتباط قسمت ظاهری و قسمت قالب (قسمتی که HTML را شامل می شود) نیاز است تا در پوشه‌ای به نام html فایلی متناظر با فایل کلاس view ایجاد شود.
+نام پوشه این فایل (views) باید در فایل `package.json` پکیج اصلی تحت عنوان کلید autoload معرفی شود.
 
-**توجه :** نام فایل قالب باید با نام فایل view یکسان باشد.
-
-همچنین لازم است تا در فایل `theme.json` که در پوشه‌ی frontend قرار دارد، نام پوشه کلاس‌ها (views) تحت عنوان کلید autoload معرفی شود.
-
-##### برای اطلاعات بیشتر به صفحه ی [بارگذاری خودکار]( autoloader.md) مراجعه کنید.
-
-
-**نمونه فایل theme.json**
+**نمونه فایل package.json**
 ```json
 {
-    "name": "theme_name",
-    "title": "Site Frontend",
-    "version": "1.0.0",
+    "routing": "routing.json",
+	"frontend": ["frontend"],
 	"autoload": {
-        "directories": ["views"]
-    }
+		"directories": ["controllers", "Models", "views"]
+	}
 }
 ```
 
-## قسمت backend 
-برای ظاهر فایل در پوشه‌ی اصلی پکیج تعریف می شود(بهتر است یک پوشه با نام views برای فایل های این قسمت ایجاد کنید
-). این فایل به وسیله ی رابطه ی پدر-فرزندی به فایل `packages\base\view` متصل است .
+**نکته :** میتوانید قسمت backend را ایجاد نکنید و در کنترلر بخش ظاهر را مستقیما از قالب فراخوانی کنید.
 
-نمونه فایل
+اگر از view قسمت backend استفاده کنید **باید** در تنظیمات قالب (فایلtheme.json) در کلید `views` ارتباط دو ظاهر backaend و frontend را مشخص کنید.
+
+**نمونه کلید views در فایل theme.json**
+```json
+"views":[
+    {
+        "name":"/themes/theme_name/views/login",
+        "parent":"/packages/my_package/views/login",
+        "file":"login.php"
+    },
+    {
+        "name":"/themes/theme_name/views/dashboard",
+        "parent":"/packages/my_package/views/dashboard",
+        "file":"dashboard.php"
+    },
+]
+```
+
+**نمونه فایل ظاهر در backend**
 ```php
 <?php
 namespace packages\package_name\views\news;
@@ -126,17 +162,6 @@ class show extends View {
 }
 ```
 
-نام پوشه این فایل (views) باید در فایل `package.json` پکیج اصلی تحت عنوان کلید autoload معرفی شود.
-
-```json
-{
-    "routing": "routing.json",
-	"frontend": ["frontend"],
-	"autoload": {
-		"directories": ["controllers", "Models", "views"]
-	}
-}
-```
 
 ## فراخوانی ظاهر
 
@@ -168,7 +193,7 @@ class News extends controller {
     }
 }
 ```
-در مثال فوق چون ظاهر فقط قسمت frontend تعریف شده است namespace کلاس view بصورت themes\theme_name\views استفاده شده است.
+در مثال فوق معرفی کلاس view سمت frontend با استفاده از namespace قالب آن  ( یعنی `themes\theme_name\views` ) انجام شده است.
 
 متد setPost در کلاس ظاهر تعریف شده است.
 
@@ -194,7 +219,7 @@ class News extends controller {
     }
 }
 ```
-در مثال فوق چون ظاهر در دو قسمت frontend و backend تعریف شده است namespace کلاس view بصورت packages\package_name\views استفاده شده است.
+در مثال فوق معرفی کلاس view سمت backend با استفاده از namespace پکیج آن  ( یعنی `packages\package_name\views` ) انجام شده است.
 
 
 ## تنظیم نام صفحه
@@ -222,7 +247,7 @@ class ContactUs extends Form {
         /**
          * استفاده از مترجم
          * 
-         * $this->setTitle(t(title.contactUs));
+         * $this->setTitle(t("title.contactUs"));
          */
     }
 }
@@ -458,19 +483,33 @@ function __beforeLoad(){
 ```
 
 ## انتقال داده 
-با فراخوانی متد `setData` میتوانید داده ای را تنظیم و هر زمان به آن لازم داشتید با فراخوانی متد `getData` به آن دسترسی داشته باشید. 
+با فراخوانی متد `setData($data, $key)` میتوانید داده ای را تنظیم و هر زمان به آن نیاز داشتید با فراخوانی متد `getData()` به آن دسترسی داشته باشید. 
 
 متد `setData` دو آرگومان ورودی میگیرد. آرگومان اول داده مورد نظر است، داده ها از هر نوع داده‌ای میتوانند باشند و آرگومان دوم کلید برای داده است که آرگومان دوم اختیاریست.
 
+در این روش برای تعریف چند مقدار لازم است چندبار متد setData فراخوانی شود. برای جلوگیری از تکرار کدها میتوانید آرگومان اول را بصورت آرایه کلید - مقدار مقدار دهی کنید. کلیدهای آرایه کلید داده و مقادیر آن مقدارهای داده میباشند. در این روش لازم به تعریف آرگومان دوم نیست. اگر به آرگومان اول آرایه داده شود و آرگومان دوم مقدار دهی شود، تمامی آرایه برای آن کلید در نظر گرفته می‌شود.
+
+
 **مثال 1:** نمونه فایل کنترلر
 ```php
-use packages\my_package\Aboutus;
+<?php
+namespace packages\package_name\controllers;
+use \packages\base\{Response, Controller, View, NotFound};
+use \packages\package_name\Post;
+use themes\theme_name\views;
 
-function aboutus(){
-    $view = View::byName(views\main\Aboutus::class);
-    $view->setData(AboutUs::getOne(), "about-us");
-    $this->response->setView($view);
-    return $this->response;
+class News extends controller {
+
+	public function view($data): Response {
+        $post = Post::byId($data["post_id"]);
+        if (!$post) {
+            throw new NotFound();
+        }
+        $view = View::byName(views\news\show::class);
+        $view->setData($post, "post");
+        $this->response->setView($view);
+        return $this->response;
+    }
 }
 ```
 
@@ -498,31 +537,6 @@ use packages\base\View;
 
 class show extends View {
     protected $file = 'html/view-post.php';
-}
-
-**نکته :** اگر متد setFile در کنترلر فراخوانی شود دیگر نیاز به فراخوانی متد getFile نیست; بطور خودکار فایل جایگزین قالب  می‌شود.
-
-**مثال 1 :** نمونه فایل کنترلر
-```php
-use packages\my_package\Post;
-
-function posts(){
-    $view = View::byName(views\Post::class);
-    $posts = Post::get()
-    if(!$posts) {
-        $view->setFile(new File\Local("packages/my_package/frontend/no-content.html"));
-    }
-    $this->response->setView($view);
-    return $this->response;
-}
-```
-
-
-**مثال 2 :** نمونه فایل view
-```php
-function __beforeLoad(){ 
-    $this->setFile(new File\Local("packages/my_package/frontend/no-content.html"));
-    
 }
 ```
 
@@ -629,7 +643,7 @@ class index extends View {
 
 با استفاده از پکیج `node_webpack`قبل از باز شدن صفحه، پکیج تمامی اقدامات فوق را حذف کرده و فایل های نهایی webpack را جایگزین میکند.
 
-###### برای اطلاعات بیشتر به صفحه [node_webpack](node_webpack.md) مراجعه کنید.
+__برای اطلاعات بیشتر به صفحه [node_webpack](node_webpack.md) مراجعه کنید.__
 
 با فراخوانی متد `getSource()` شئ از کلاس `packages\base\frontend\Source` برمیگردد که مشخصات قالب مانند نام تعیین شده در فایل theme.json، پوشه قالب ، فایل های استایل و جاوااسکریپت، مشخصات مترجم ها و رویدادهای قالب در آن مشخص شده است.
 
