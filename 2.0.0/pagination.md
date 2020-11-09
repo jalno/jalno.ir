@@ -1,8 +1,10 @@
-# صفجه‌بندی
+# صفحه‌بندی
 
 سطرهایی که از پایگاه داده طبق کوئری ارسال شده دریافت می‌شود گاها بسیار زیاد بوده و نمایش تمامی آن‌‌ها در یک صفحه باعث ازدحام می‌شود. برای بهبود کارایی و ux باید سطرها صفحه‌بندی شده نمایش داده شود. برای صفحه بندی سطرها در فریمورک کلاس `packages\base\views\Listview` ایجاد شده است. 
 
-برای استفاده از متدهای صفحه‌بندی‌ باید کلاس view از کلاس `packages\base\views\Listview` ارث بری کند و یا `packages\base\views\traits\listTrait` در کلاس استفاده شود.
+برای استفاده از متدهای صفحه‌بندی‌ باید کلاس view از کلاس `packages\base\views\Listview` ارث بری کند و یا `packages\base\views\traits\ListTrait` در کلاس استفاده شود.
+
+ با ارث بری از کلاس Listview  در زمان پاسخ به درخواست های API و JSON اطلاعات بصورت خودکار به JSON تبدیل شده و به همراه اطلاعات مورد نیاز در صفحه بندی برگردانده میشوند.
 
 
 **مثال :** ارث بری از کلاس
@@ -47,10 +49,11 @@ class usersList extends View {
 **مثال :** نمونه فایل کنترلر
 ```php
 <?php
+namespace packages\my_package\controllers;
 use packages\userpanel\Controller;
 use packages\base\View;
 use themes\package_theme\views;
-use packages\my_packages\User;
+use packages\my_package\User;
 
 class Users extends Controller {
     function usersList() {
@@ -70,7 +73,8 @@ class Users extends Controller {
 ?>
 ```
 در مثال فوق سطرها با استفاده از متد paginate با تعداد مشخص از پایگاه داده دریافت میشوند.
-pageLimit تعداد سطری است که از پایگاه داده دریافت می‌شود را مشخص میکند. items_per_page در کنترلر پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده و برابر 25 می‌باشد.
+pageLimit تعداد سطری که از پایگاه داده دریافت می‌شود را مشخص میکند. items_per_page در کنترلر پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده و برابر 25 می‌باشد.
+
 __برای اطلاعات بیشتر به صفحه [پایگاه داده](dbObject.md) مراجعه کنید.__
 
 سطرهای دریافتی از پایگاه داده بصورت آرایه در $users ذخیره می‌شود.
@@ -78,6 +82,18 @@ __برای اطلاعات بیشتر به صفحه [پایگاه داده](dbObj
 $this->page در کنترلر پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده است و شماره صفحه‌ای که درآن هستیم، در آن ذخیره شده است.
 
 شماره صفحه‌ای که در $this->page ذخیره شده است، مطابق پارامتر page در آدرس url می‌باشد.
+
+کد زیر بخشی از متد سازنده کنترلر یوزرپنل است که مقداردهی متغیرهای توضیح داده شده در فوق را انجام می‌دهد.
+```php
+public function __construct() {
+    
+    $this->page = Http::getURIData('page');
+    $this->items_per_page = Http::getURIData('ipp');
+    if($this->page < 1)$this->page = 1;
+    if($this->items_per_page < 1)$this->items_per_page = 25;
+    DB::pageLimit($this->items_per_page);
+}
+```
 
 $user->totalCount تعداد کل سطرهای موجود در پایگاه داده می‌باشد.
 
@@ -139,8 +155,8 @@ $view->thisPage = http::$request["get"]["page"] ? http::$request["get"]["page"] 
             $active = $i == $this->thisPage ? 'active' : '';
             echo '
                 <li class="page-item ' . $active .'">
-                    <a class="page-link" href="?page='. $i. '">'.  $i . '</a>
-                </li>';
+                    <a class="page-link" href="?'. http_build_query(["page" => $i]). '">'.  $i . '</a>'.
+                '</li>';
         }
         ?>
     </ul>
