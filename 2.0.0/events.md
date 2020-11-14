@@ -47,31 +47,41 @@ namespace مربوط به هر event را در کلید `name` و شنونده �
 
 **نمونه فایل کنترلر**
 ```php
+<?php
+namespace packages\my_package\controllers;
 use packages\my_package\events\Email;
 use packages\my_package\User;
+use packages\base\{View, Http, Controller};
 
+class Users extends Controller {
 
-public function insert() {
-    $rules = array(
-        'name' => array(
-            'type' => 'string',
-        ),
-        'lastname' => array(
-            'type' => 'string',
-            'optional' => true,
-        ),
-        'email' => array(
-            'type' => 'email',
-        )
-    );
-    $inputs = $this->checkInputs($rules);
-    $user = new User($inputs);
-    $user->save();
+    public function insert() {
+        $view = View::byName(views\users\Insert::class);
+        $this->response->setView($view);
+        
+        if(Http::is_post()) {
+            $rules = array(
+                'name' => array(
+                    'type' => 'string',
+                ),
+                'lastname' => array(
+                    'type' => 'string',
+                    'optional' => true,
+                ),
+                'email' => array(
+                    'type' => 'email',
+                )
+            );
+            $inputs = $this->checkInputs($rules);
+            $user = new User($inputs);
+            $user->save();
 
-    $emailEvent = new Email($user);
-    $emailEvent->trigger();
+            $emailEvent = new Email($user);
+            $emailEvent->trigger();
+        }
 
-    return $this->response;
+        return $this->response;
+    }
 }
 ```
 در مثال فوق کاربر ثبت شده به شئ رویداد Email داده میشود.
@@ -89,7 +99,7 @@ public function insert() {
 namespace packages\my_package\events;
 
 use packages\base\Event;
-use packages\userpanel\{User};
+use packages\my_package\User;
 use packages\notifications\Notifiable;
 
 class Email extends Event {
@@ -147,5 +157,4 @@ class Email {
         mail($this->userEmail, $subject, $body, self::SENDER);
     }
 }
-
 ```
