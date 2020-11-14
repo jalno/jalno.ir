@@ -9,7 +9,7 @@
 | سطح   | کاربرد                                      |
 | ----- | ------------------------------------------- |
 | success | پیام تایید                       |
-| warning  | خطاهایی که روند اجرای برنامه را متوقف نمیکنند    |
+| warning  | خطاهایی که روند اجرای برنامه را متوقف نمیکنند اما نیاز به بررسی و یا حساسیت بیشتری دارند   |
 | fatal  | خطاهایی که باید روند اجرای برنامه متوقف شود    |
 | notice | اعلام مشکلاتی که در برنامه وجود دارد  |
 
@@ -17,8 +17,9 @@
 
 ### مشخص کردن نوع خطا 
 برای مشخص کردن نوع خطا از متد `setType` استفاده می‌شود.
-در کلاس برای خطاها ثابت‌های `SUCCESS` , `WARNING` , `FATAL` , `NOTICE` تعریف شده است.
-آرگومان ورودی این متد میتواند یکی از ثابت‌های فوق باشد. 
+در کلاس برای خطاها ثابت‌های `SUCCESS` , `WARNING` , `FATAL` , `NOTICE` تعریف شده است که در هر کدام از ثابت ها عنوان نوع خطا بصورت رشته ذخیره شده است. (const SUCCESS = 'success')
+
+آرگومان ورودی متد setType رشته است و میتواند یکی از انواع خطا باشد. 
 اگر ورودی متد به غیر از موارد فوق باشد استثنا type پرتاب می‌شود. 
 
 همچنین متد `getType` نوع خطا را بصورت رشته برمیگرداند.
@@ -46,40 +47,46 @@ $error->setMessage('This is error message!');
 
 ## انتقال داده
 علاوه بر متن پیام خطا میتوانید داده هایی نیز مشخص کنید. با فراخوانی متد `setData` میتوانید داده‌ها را ثبت کنید. 
-متد setData دو آرگومان ورودی میگیرد. آرگومان اول مقدار داده ( که از هر نوع داده‌ای میتواند باشد) میگیرد و آرگومان دوم، کلید مقدار تعریف شده می‌باشد، آرگومان دوم اختیاری است. 
+متد setData دو آرگومان ورودی میگیرد. آرگومان اول مقدار داده ( از هر نوع داده‌ای میتواند باشد) و آرگومان دوم، کلید داده می‌باشد.
 
-متد `getData` داده های ثبت شده را برمیگرداند. متد یک آرگومان ورودی میگیرد که نام کلیدی است که زمان تنظیم داده‌ها تعیین شده است. درصورتی که به متد آرگومان ورودی داده نشود آرایه‌ای از تمامی داده‌های ثبت شده را برمیگرداند.
+ برای اضافه کردن چند داده باید متد setData چندین بار فراخوانی شود. برای جلوگیری از کد اضافه میتوانید به آرگومان اول یک آرایه کلید-مقدار دهید.
+درصورتی که آرگومان دوم نیز مقداردهی شود، تمامی آرایه برای آن کلید در نظر گرفته میشود.
+
+متد `getData` داده های ثبت شده را برمیگرداند. متد یک آرگومان ورودی میگیرد که نام کلیدی است که زمان تنظیم داده‌ها تعیین شده است. درصورتی که به متد آرگومان ورودی داده نشود آرایه‌ای از تمامی داده‌های ثبت شده برمیگرداند.
 
 
 **مثال**
 ```php
 <?php
+namespace packages\my_package\controllers;
 use packages\base\{View, NotFound, Controller};
 use packages\base\view\Error;
-use packages\my_package\User;
+use packages\my_package\{Student, ClassRoom as ModalClassroom, ClassStudent};
 use themes\my_theme\views;
 
-class Users extends Controller {
-    function insert($data) {
-        $user = User::byId($data['id']);
-        if(!$user) {
+class Classrooms extends Controller {
+
+    function addStudent($data) {
+        $student = Student::byId($data['student']);
+        $classroom = ModalClassroom::byId($data['classroom']);
+        if(!$student or !$classroom) {
             throw new NotFound();
-            
         }
-
-        $view = View::byName(views\user\Insert::class);
+        $view = View::byName(views\classroom\AddStudent::class);
         $this->response->setView($view);
-
-        if(!$user->status) {
+        if($classroom->status == ModalClassRoom::finished) {
             $error = new Error();
-            $error->setData($user->id, 'userId');
-            $error->setData($user, 'userObj');
-            $error->setMessage("وضعیت کاربر غیر فعال است.")
+            $error->setData($classroom->id, 'classroomId');
+            $error->setData($classroom, 'classroomObj');
+            $error->setMessage("کلاس پایان یافته است!");
             $view->addError($error);
             return $this->response;
         }
-
-        ....
+        $classStudent = new ClassStudent();
+        $classStudent->class = $classroom->id;
+        $classStudent->student = $student->id;
+        $classStudent->save();
+        return $this->response;
     }
 }
 ?>
@@ -96,62 +103,65 @@ class Users extends Controller {
 همچنین برای دریافت کدخطا ثبت شده میتوانید متد `getCode` را فراخوانی کنید.
 
 ```php
+<?php
+namespace packages\my_package\controllers;
 use packages\base\{View, Controller, Http},
 use packages\base\view\Error;
 use packages\my_package\HostPlan;
 use themes\my_theme\views;
 
+class Hosts extends Controller {
 
-public function order($data){
-    $view = view::byName(Views\Order::class);
+    public function order($data){
+        $view = view::byName(views\hosts\Order::class);
 
-    if(Http::is_post()){
-        $this->response->setStatus(false);
-        $inputsRules = [
-            'tld' => [
-                'type' => ['number', 'string'],
-            ],
-            'hostPlan' => [
-                'type' => 'number',
-                'optional' => true
-            ]
-        ];
-        try{
-            $inputs = $this->checkinputs($inputsRules);
-            
-            if(isset($inputs['hostPlan'])){
-                if(!$inputs['hostPlan'] = HostPlan::byId($inputs['hostPlan'])){
-                    throw new hostPlanException();
+        if(Http::is_post()){
+            $this->response->setStatus(false);
+            $inputsRules = [
+                'tld' => [
+                    'type' => ['number', 'string'],
+                ],
+                'hostPlan' => [
+                    'type' => 'number',
+                    'optional' => true
+                ]
+            ];
+            try{
+                $inputs = $this->checkinputs($inputsRules);
+                
+                if(isset($inputs['hostPlan'])){
+                    if(!$inputs['hostPlan'] = HostPlan::byId($inputs['hostPlan'])){
+                        throw new hostPlanException();
+                    }
                 }
+
+                if($inputs["tld"] == 0){
+                    throw new tldTransferDeniedException('tld');
+                }   
+            }catch(hostPlanException $e){
+                $error = new Error();
+                $error->setCode('hostPlanException');
+                /**
+                 * or
+                 * $error = new Error("hostPlanException");
+                 */
+                $view->addError($error);
+
+            }catch(tldTransferDeniedException $e){
+                $error = new Error();
+                $error->setCode('tldTransferDeniedException');
+                /**
+                 * or
+                 * $error = new Error('tldTransferDeniedException');
+                 */
+                $view->addError($error);
             }
-
-            if($inputs["tld"] == 0){
-			    throw new tldTransferDeniedException('tld');
-            }   
-        }catch(hostPlanException $e){
-            $error = new Error();
-            $error->setCode('hostPlanException');
-            /**
-             * or
-             * $error = new Error("hostPlanException");
-             */
-            $view->addError($error);
-
-        }catch(tldTransferDeniedException $e){
-            $error = new Error();
-            $error->setCode('tldTransferDeniedException');
-            /**
-             * or
-             * $error = new Error('tldTransferDeniedException');
-             */
-            $view->addError($error);
+            $view->setDataForm($this->inputsvalue($inputsRules));
         }
 
-        $view->setDataForm($this->inputsvalue($inputsRules));
+        $this->response->setView($view);
+        return $this->response;
     }
-
-    $this->response->setView($view);
-    return $this->response;
 }
 ```
 همانطور که مشاهده میکنید در مثال فوق به دلیل وجود خطاهای مختلف برای مدیریت بهتره خطاها برای هر کدام کد خطا (setCode) مشخص شده است.
@@ -161,7 +171,7 @@ public function order($data){
 برای traceMode ثابت های `NO_TRACE` و `SHORT_TRACE` و `FULL_TRACE` تعریف شده‌ است.
 با فراخوانی متد `setTraceMode` میتوانید traceMode را مقدار دهی کنید. مقدار پیش فرض این متغیر FULL_TRACE  است. 
 آرگومان ورودی متد setTraceMode یکی از ثابت های تعریف شده فوق میتواند باشد. 
-هر یک از ثابت ها به شیوه زیر عمل میکنند :
+ثابت ها مقدار کلید trace را تغییر میدهند. هر یک از ثابت ها به شیوه زیر عمل میکنند :
 
 **NO_TRACE :** فقط نوع خطا و پیام خطا را برمیگرداند.
 
