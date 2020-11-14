@@ -47,7 +47,7 @@ $image = new Image\WEBP(200, 150, Image\Color::fromRGB(0, 0, 0));
 
 **توجه :** فایل معرفی شده حتما باید وجود داشته باشد درصورتی که فایل موجود نباشد استثنا از جنس NotFoundException پرتاب می‌شود.
 
-**توجه :** اگر شئ ایجاد شده از کلاس فایل مربوط به (بطور مثال) تصویری با فرمت jpeg باشد اما شئ‌ از کلاس Image\PNG ایجاد شود warning دریافت میکنید.
+**توجه :** اگر شئ ایجاد شده از کلاس فایل، مربوط به (بطور مثال) تصویری با فرمت jpeg باشد اما شئ‌ از کلاس Image\PNG ایجاد شود warning دریافت میکنید.
 
 مثال از کد **خطا**
 ```php
@@ -103,8 +103,8 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 | paste(Image $image, int $x, int $y)  | جایگذاری در بخشی از تصویر |
 | copy(int $x, int $y, int $width, $height)  | کپی کردن قسمتی از تصویر |
 | rotate(float $angle, Image\Color $bg)  | چرخش تصویر |
-| fromFormat(File $file)   |  تبدیل شئ فایل به شئ کلاس تصویر |
-| fromContent(File $file)  | تبدیل شئ فایل به شئ کلاس تصویر |
+| fromFormat(File $file)   |  تبدیل شئ فایل به شئ کلاس تصویر طبق فرمت |
+| fromContent(File $file)  | تبدیل شئ فایل به شئ کلاس تصویر طبق محتوا |
 
 
 ## [ذخیره تصویر](#save_image)
@@ -122,40 +122,56 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 ```php
 <?php
 namespace packages\my_package\controllers;
-use packages\base\{Image, IO\File, Packages};
+use packages\base\{Image, IO\File, Packages, View, Http};
 use packages\my_package\User;
+use theme\theme_name\views;
 
 class profile extends controller{
 
     function update($data) {
-        $inputs = array(
-			'name' => array(
-				'type' => 'string'
-			),
-			'lastname' => array(
-				'type' => 'string'
-            ),
-            'avatar' => array(
-				'optional' => true,
-				'type' => 'image'
-            )
-        );
-
-        $formdata = $this->checkinputs($inputs);
+        $user = User::byId($data['id']);
+        if(!$user) {
+            throw new NotFound;
+        } 
+        $view = View::byName(views\profile\Update::class);
+        $this->response->setView($view);
         
-        if (isset($formdata['avatar'])) {
+        if(Http::is_post()) {
+            $inputs = array(
+                'name' => array(
+                    'type' => 'string'
+                ),
+                'lastname' => array(
+                    'type' => 'string'
+                ),
+                'avatar' => array(
+                    'optional' => true,
+                    'empty' => true,
+                    'type' => 'image'
+                )
+            );
 
-            $tmpfile = new file\tmp();  // ایجاد فایل موقت
-            $formdata['avatar']->resize(200, 200)->saveToFile($tmpfile);    
+            $formdata = $this->checkinputs($inputs);
             
-            $formdata['avatar'] = 'storage/public_avatar/' . $tmpfile->md5() . '.' . $formdata['avatar']->getExtension();
-            
-            $avatar = new file\Local(Packages::package('my_package')->getFilePath($formdata['avatar']));
-			$directory = $avatar->getDirectory();
-			if (!$directory->exists()) {
-				$directory->make(true);
-			}
-			$tmpfile->copyTo($avatar);
+            if (isset($formdata['avatar'])) {
+
+                $tmpfile = new file\tmp();  // ایجاد فایل موقت
+                $formdata['avatar']->resize(200, 200)->saveToFile($tmpfile);    
+                
+                $formdata['avatar'] = 'storage/public_avatar/' . $tmpfile->md5() . '.' . $formdata['avatar']->getExtension();
+                
+                $avatar = new file\Local(Packages::package('my_package')->getFilePath($formdata['avatar']));
+                $directory = $avatar->getDirectory();
+                if (!$directory->exists()) {
+                    $directory->make(true);
+                }
+                $tmpfile->copyTo($avatar);
+            }
+
+            $user->avatar = $formdata['avatar'];
+            $user->name = $formdata['name'];
+            $user->lastname = $formdata['lastname'];
+            $user->save();
         }
         
         return $this->response;
@@ -168,7 +184,7 @@ class profile extends controller{
 تصویر دریافتی را با متد `resize` به ابعاد 200px * 200px تغییر اندازه میدهیم و با متد `saveToFile` در فایل موقت ($tmpfile) ذخیره میکنیم.
 
 سپس در $formdata['avatar'] آدرس محل ذخیره تصویر را به همراه نام آن ایجاد میکنیم.
- با استفاده از $tmpfile->md5 براساس هش md5 نام جدید و یکتا برای تصویر ایجاد میکنیم، و با استفاده از $formdata['avatar']->getExtension() فرمت تصویر را مشخص میکنیم. 
+ با استفاده از $tmpfile->md5 براساس هش md5 نام جدید برای تصویر ایجاد میکنیم، و با استفاده از $formdata['avatar']->getExtension() فرمت تصویر را مشخص میکنیم. 
 
 سپس در $avatar شئ‌از کلاس File برای فایل جدید ایجاد میکنیم.
 و در نهایت فایل موقت (که تصویر ارسالی کاربر در آن ذخیره شده است ) را آدرسی که برای آن ایجاد کرده‌ایم ($avatar) ذخیره میکنیم.
@@ -176,18 +192,17 @@ class profile extends controller{
 
 ## [ترسیم تصویر](#set_color_at) 
 با استفاده از متد `setColorAt` میتوانید تصویری را ترسیم کنید. 
-نحوه ی کار متد به اینصورت است که موقعیت پیکسل را گرفته و مصابق رنگ تعیین شده آن پیکسل را رنگ میکند. در واقع برای ترستم تصویر لازم است پیکسل به پیکسل پیش برویم. 
+نحوه ی کار متد به اینصورت است که مختصات پیکسل را گرفته و مصابق رنگ تعیین شده آن پیکسل را رنگ میکند. در واقع برای ترستم تصویر لازم است پیکسل به پیکسل پیش برویم. 
 
 متد setColorAt سه آرگومان ورودی میگیرد، آرگومان اول موقعیت پیکسل در محور x و آرگومان دوم موقعیت پیکسل در محور y میباشد; و در آرگومان سوم رنگ مورد نظر را میگیرد که از جنس کلاس [Color](#color) می‌باشد.
 
-در مثال زیر قصد ترسیم یک ضربدر در وسط تصویر داریم.
+در مثال زیر قصد ترسیم یک ضربدر در تصویر داریم.
 
 **1 مثال**
 ```php
 <?php
 namespace packages\my_package\controllers;
 use packages\base\{Image, IO\File, Packages};
-use packages\my_package\User;
 
 class Drawing extends controller{
 
@@ -207,7 +222,7 @@ class Drawing extends controller{
 }
 ```
 در مثال فوق ابتدا یک تصویر با فرمت png و ابعاد 100px * 100px ایجاد میکنیم. 
-سپس در حلقه  for موقعیت پیکسل ها را مشخص میکنیم. 
+سپس در حلقه  for مختصات پیکسل ها را مشخص میکنیم. 
 بطور مثال زمانی که $i = 4 است.
 
 $image->setColorAt( 4, 96, $yellow) : پیکسلی که x آن برابر 4 و y آن برابر 96 باشد، رنگ آن زرد می‌شود. 
@@ -218,7 +233,7 @@ $image->setColorAt( 4, 96, $yellow) : پیکسلی که x آن برابر 4 و y
 
 
 ### خواندن رنگ پیکسل 
-همچنین متد `colorAt` رنگ پیکسل را مشخص شده را برمیگرداند. 
+همچنین متد `colorAt` رنگ پیکسل مشخص شده را برمیگرداند. 
 خروجی این متد از جنس کلاس [Color](#color) می‌باشد.
 
 متد colorAt دو آرگومان ورودی میگیرد که آرگومان اول موقعیت پیکسل روی محور x و آرگومان دوم موقعیت پیکسل روی محور y میباشد.
@@ -240,16 +255,20 @@ $color = $image->colorAt(4, 96);
     )
     */
 ```
-اگر تصویر $image را تصویر ایجاد شده در مثال 1 در نظر بگیریم در متغیر $color شئ از کلاس Color ذخیره می‌شود.
+اگر تصویر $image را تصویر ایجاد شده در مثال 1 در نظر بگیریم در متغیر $color شئ از کلاس Color که بیانگر کد رنگ زرد است ذخیره می‌شود.
 
 
 ## [کپی کردن قسمتی از یک تصویر](#copy)
 با استفاده از متد `copy` میتوانید قسمتی از یک تصویر را کپی کنید.
-برای مشخص کردن قسمتی که قصد کپی کردن آن را دارید، باید مختصات یک پیکسل را مشخص کنید و عرض و ارتفاع برای آن مشخص کنید.
+برای مشخص کردن قسمتی که قصد کپی کردن آن را دارید، باید مختصات یک پیکسل و عرض و ارتفاع آن قسمت را مشخص کنید.
 متد copy چهار آرگومان ورودی میگیرد. آرگومان اول موقعیت پیکسل روی محور x ، آرگومان دوم موقعیت پیکسل روی محور y ، در آرگومان سوم عرض و آرگومان چهارم ارتفاع آن قسمت می‌باشد.
 
-با فراخوانی متد`paste` میتوانید تصویری را در تصویر دیگی جایگذاری کنید. 
-متد paste چهار آرگومان ورودی میگیرد. آرگومان اول تصویری که قصد دارید آن را جایگذاری کنید، آرگومان دوم موقعیت پیکسل جایگذاری روی محور x و آرگومان سوم موقعیت پیکسل جایگذاری روی محور y میباشد. آرگومان چهارم درصد شفافیت تصویر را مشخص میکند که عددی بین 0 و 1 میباشد.
+قسمت مشخص شده در واقع از پیکسلی که مختصات آن مشخص شده است به تعداد پیکسل عرض به سمت راست و به تعداد پیکسل ارتفاع به سمت پایین را شامل می‌شود.
+
+با فراخوانی متد`paste` میتوانید تصویری را در تصویرتان جایگذاری کنید. 
+متد paste چهار آرگومان ورودی میگیرد. آرگومان اول تصویری که قصد دارید آن را جایگذاری کنید، آرگومان دوم موقعیت پیکسل روی محور x و آرگومان سوم موقعیت پیکسل روی محور y میباشد. آرگومان چهارم درصد شفافیت تصویر را مشخص میکند که عددی بین 0 و 1 میباشد.
+
+موقعیت تصویر جایگذاری شده، از پیکسلی که مشخص شده است، به اندازه عرض آن به سمت راست و اندازه ارتفاع آن به سمت پایین، در تصویر قرار میگیرد.
 
 **توجه :** درصد شفافیت تصویر تنها برای تصاویر با فرمت png در نظر گرفته میشود برای سایر فرمت ها همواره 1 در نظر گرفته میشود.
 
@@ -258,7 +277,6 @@ $color = $image->colorAt(4, 96);
 <?php
 namespace packages\my_package\controllers;
 use packages\base\{Image, IO\File, Packages};
-use packages\my_package\User;
 
 class Drawing extends controller{
 
@@ -284,9 +302,9 @@ class Drawing extends controller{
     }
 }
 ```
-در مثال فوق تصویر یک مربع به رنگ قرمز با ابعاد 100px * 100px در وسط یک عکس ایجاد شده است.
+در مثال فوق یک مربع به رنگ قرمز با ابعاد 100px * 100px در وسط تصویر ایجاد می‌شود.
 
-سپس با فراخوانی متد copy قسمت بالایی مربع به شکل مستطیلی با ابعاد 100px * 50px کپی شده است.
+سپس با فراخوانی متد copy قسمت بالایی مربع به شکل مستطیلی با ابعاد 100px * 50px کپی شده.
 تصویر جدیدی با رنگ زمینه مشکی ایجاد شده و مستطیل کپی شده، از پیکسل با مختصات (50,50) و با درصد شفافیت 0.5 جایگذاری میشود.
 
 تصاویر ایجاد شده بصورت زیر میباشند.
@@ -306,7 +324,6 @@ class Drawing extends controller{
 <?php
 namespace packages\my_package\controllers;
 use packages\base\{Image, IO\File, Packages};
-use packages\my_package\User;
 
 class Picture extends controller {
 
@@ -341,7 +358,6 @@ class Picture extends controller {
 <?php
 namespace packages\my_package\controllers;
 use packages\base\{Image, IO\File, Packages};
-use packages\my_package\User;
 
 class Picture extends controller{
 
@@ -369,7 +385,6 @@ class Picture extends controller{
 <?php
 namespace packages\my_package\controllers;
 use packages\base\{Image, IO\File, Packages};
-use packages\my_package\User;
 
 class Picture extends controller{
 
@@ -415,6 +430,67 @@ $image = Image::fromFormat(new File\Local("packages/my_package/images/img.png"))
                 [basename] => img.png
             )
 
+    )
+    */
+```
+
+# [رنگ‌ ها](#color)
+هنگام استفاده از متدهای کلاس Image برای ایجاد تصویر جدید،‌ ترسیم تصویر و ... لازم است رنگ مورد نظر را به متد معرفی کنید که ورودی متدها شئ از کلاس `packages\base\Image\Color` می‌باشد. 
+
+## معرفی رنگ 
+از متدهای `fromRGB` و `fromRGBA` برای معرفی رنگ استفاده می‌شود. 
+رنگ ها طبق فرمت R G B معرفی میشوند. متدها برای سهولت فراخوانی بصورت `static` تعریف شده‌اند.
+
+در هر دو متد `fromRGB` و `fromRGBA` آرگومان اول کد رنگ `قرمز` , آرگومان دوم کد رنگ `سبز` و آرگومان سوم کد رنگ `آبی` میباشد. 
+
+برای متد `fromRGBA` آرگومان چهارم تعریف شده که برای مشخص کردن وضوح رنگ بکار میرود که عددی بین `صفر` و `یک` مبیاشد. 
+
+**نکته :** هر یک از کد رنگ های RGB عددی بین `0` تا `255` هستند.
+
+
+```php
+use packages\base\Image\Color;
+
+$rgb = Color::fromRGB(17,160,234); // red:17 green:160 blue: 234 => معرف رنگ آبی
+
+$rgba = Color::fromRGBA(235,185,18, 0.2); // red:235 green:185 blue: 18 alpha: 0.2 => معرف رنگ نارنجی
+```
+
+## خواندن رنگ 
+میتوانید با فراخوانی متدهای `toRGB` و `toRGBA` کد رنگ های معرفی شده را بصورت آرایه دریافت کنید. 
+خانه های آرایه به ترتیب معرف کد رنگ های قرمز ، سبز و آبی هستند. 
+
+متد `toRGBA` آرایه‌ای با چهار عنصر بر میگرداند که عنصر چهارم وضوح رنگ را مشخص میکند. 
+
+**توجه :** وضوح رنگ فقط برای تصاویر با فرمت `PNG` کاربرد دارد.
+
+**توجه :** متدهای `toRGB` و `toRGBA` static تعریف `نشده‌اند` و باید آن‌ها روی شئ کلاس Color صدا زده شوند.
+
+
+```php
+use packages\base\Image\Color;
+
+
+$rgb = Color::fromRGB(17,160,234)
+$rgb->toRGB();
+/**
+ * Array
+    (
+        [0] => 17
+        [1] => 160
+        [2] => 234
+    )
+    */
+
+$rgba = Color::fromRGBA(235,185,18, 0.2);
+$rgba->toRGBA();
+/**
+ * Array
+    (
+        [0] => 235
+        [1] => 185
+        [2] => 18
+        [3] => 0.2
     )
     */
 ```
