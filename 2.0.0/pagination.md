@@ -10,199 +10,209 @@
 **مثال :** ارث بری از کلاس
 ```php
 <?php
-namespace themes\package_theme\views;
+namespace themes\themename\views\packagename\users;
 use packages\base\views\Listview;
 
 class UsersList extends Listview {
-    
-    
+	
+	
 }
 ```
 
 **مثال :** استفاده از trait
 ```php
 <?php
-namespace themes\package_theme\views;
-use packages\base\View;
-use packages\base\views\traits\listTrait;
+namespace themes\themename\views\packagename\users;
 
-class usersList extends View {
-    use listTrait;
-    
+use packages\base\View;
+use packages\base\views\traits\ListTrait;
+
+class Search extends View {
+	use ListTrait;
+	
 }
 ```
 
 برای صفحه بندی سطرها باید داده‌ها، تعداد سطر مجاز برای نمایش، تعداد کل سطرها و شماره صفحه مشخص شود. 
 
-## مشخص کردن سطرها
-سطرهایی که قصد صفحه‌بندی آن‌ها را داریم به صورت آرایه به آرگومان ورودی متد `setDataList` داده میشود.
+## [مشخص کردن سطرها](#set_data)
+سطرهایی که قصد نمایش آن‌ها را داریم با استفاده از متد `setDataList`به view منتقل داده میشوند.
 
-## تنظیمات صفحه‌بندی
-تنظیمات صفحه‌بندی که شامل تعداد سطرهای مجاز و شماره صفحه و تعدادکل سطر‌ها می‌باشد با استفاده از متد `setPaginate` انجام می‌شود. 
+## [تنظیمات صفحه‌بندی](#configure_pagination)
+تنظیمات صفحه‌بندی که شامل تعداد سطرهای نمایش داده شده در این صفحه، شماره صفحه و تعدادکل سطر‌ها می‌باشد با استفاده از متد `setPaginate` انجام می‌شود. 
 
-متد سه آرگومان ورودی دریافت میکند که آرگومان اول شماره صفحه، آرگومان دوم تعداد کل سطرها و آرگومان سوم تعداد سطرهای مجاز می‌باشد.
-
-## دریافت سطرها 
-بعد از انجام صفحه بندی، سطرها با استفاده از متد `getDataList` دریافت می‌شوند. همچنین میتوان از صفت dataList تعریف شده در کلاس استفاده کرد.
-
+متد سه آرگومان ورودی دریافت میکند که آرگومان اول شماره صفحه، آرگومان دوم تعداد کل سطرها و آرگومان سوم تعداد سطرهای نمایش داده شده در این صفحه می‌باشد.
 
 **مثال :** نمونه فایل کنترلر
 ```php
 <?php
-namespace packages\my_package\controllers;
-use packages\userpanel\Controller;
-use packages\base\View;
-use themes\package_theme\views;
-use packages\my_package\User;
+namespace packages\packagename\controllers;
+
+use packages\packagename\User as Model;
+use packages\base\{Controller, Response, View};
+use themes\themename\views\packagename\users as views;
 
 class Users extends Controller {
-    function usersList() {
-        $view = view::byName(views\panel\UsersList::class);
-        $this->response->setView($view);
 
-        $user = new User();
-        $user->pageLimit = $this->items_per_page;
-        $users = $user->paginate($this->page, ["userpanel_users.*"]);
-    
-        $view->setDataList($users);
-        $view->setPaginate($this->page, $user->totalCount, $this->items_per_page);
-        
-        return $this->response;
-    }
+	public function search(): Response {
+
+		$view = view::byName(views\Search::class);
+		$this->response->setView($view);
+
+		$inputs = $this->checkinputs(array(
+			"page" => array(
+				"type" => "number",
+				"optional" => true,
+				"default" => 1,
+			),
+			"ipp" => array(
+				"type" => "number",
+				"optional" => true,
+				"default" => 25,
+			),
+		));
+
+		if ($inputs["page"] < 1) {
+			$inputs["page"] = 1;
+		}
+		if ($inputs["ipp"] < 1) {
+			$inputs["ipp"] = 1;
+		}
+		if ($inputs["ipp"] > 100) {
+			$inputs["ipp"] = 100;
+		}
+
+		$model = new Model();
+		$model->pageLimit = $inputs["ipp"];
+		$users = $model->paginate($inputs["page"]);
+	
+		$view->setDataList($users);
+		$view->setPaginate($inputs["page"], $user->totalCount, $inputs["ipp"]);
+		
+		$this->response->setStatus(true);
+
+		return $this->response;
+	}
 }
 ?>
 ```
-در مثال فوق سطرها با استفاده از متد paginate با تعداد مشخص از پایگاه داده دریافت میشوند.
-pageLimit تعداد سطری که از پایگاه داده دریافت می‌شود را مشخص میکند. items_per_page در کنترلر پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده و برابر 25 می‌باشد.
-
 __برای اطلاعات بیشتر به صفحه [پایگاه داده](dbObject.md) مراجعه کنید.__
 
-سطرهای دریافتی از پایگاه داده بصورت آرایه در $users ذخیره می‌شود.
-
-$this->page در کنترلر پکیج [یوزرپنل](https://github.com/Jalno/userpanel) تعریف شده است و شماره صفحه‌ای که درآن هستیم، در آن ذخیره شده است.
-
-شماره صفحه‌ای که در $this->page ذخیره شده است، مطابق پارامتر page در آدرس url می‌باشد.
-
-کد زیر بخشی از متد سازنده کنترلر یوزرپنل است که مقداردهی متغیرهای توضیح داده شده در فوق را انجام می‌دهد.
-```php
-public function __construct() {
-    
-    $this->page = Http::getURIData('page');
-    $this->items_per_page = Http::getURIData('ipp');
-    if($this->page < 1)$this->page = 1;
-    if($this->items_per_page < 1)$this->items_per_page = 25;
-    DB::pageLimit($this->items_per_page);
-}
-```
-
-$user->totalCount تعداد کل سطرهای موجود در پایگاه داده می‌باشد.
-
-آرگومان سوم ($this->items_per_page) تعداد سطر مجازی است که در هر صفحه نمایش داده می‌شود. که این عدد با تعداد سطرهایی که از پایگاه داده دریافت میشود برابر است.
-
+## [دریافت سطرها ](#get_data)
+بعد از انجام صفحه بندی، سطرها با استفاده از متد `getDataList` دریافت می‌شوند.
 
 **مثال :** نمونه کد view
 ```php
-public function getUsers() {
-    return $this->dataList;
+namespace themes\themename\views\packagename\users;
+
+use packages\base\views\ListView;
+
+class Search extends ListView {
+	public function __beforeLoad() {
+		$this->setTitle(t("users.search");
+	}
+	public function getUsers(): array {
+		return $this->getDataList(); // Or you can use $this->getDataList() directly in html file
+	}
 }
 ```
-برای دسترسی به سطرها علاوه بر فراخوانی متد getDataList() میتوان از dataList نیز استفاده کرد.
 
-
-## صفحه‌بندی در قالب 
+## [صفحه‌بندی در قالب ](#pagination_in_html)
 برای نمایش سطرها در html باید مشخص شود سطرهای نمایشی صفحه‌بندی شده هستند برای نمایش شماره صفحات باید ابتدا تعداد کل صفحات و صفحه‌ای که در آن هستیم را بدانیم. با استفاده از totalPages تعریف شده در شئ ایجاد شده از پایگاه داده به تعداد کل صفحات دسترسی داریم (تعداد کل صفحات مطابق با تعداد کل سطرها و تعداد سطرهای دریافتی می‌باشد.)
-
-طبق کد زیر تعداد صفحات را در متغیر pages و صفحه ای که در آن هستیم را در متغیر thisPage قالب ذخیره میکنیم.
-```php
-$user = new User();
-$user->pageLimit = $this->items_per_page;
-$users = $user->paginate($this->page);
-
-$view->pages = $users->totalPages;
-$view->thisPage = http::$request["get"]["page"] ? http::$request["get"]["page"] : 1;
-```
 
 کد زیر نمونه ایجاد شماره صفحات در html است. 
 
 ```php
 <table class="table table-striped">
-    <head>
-        <th>#</th>
-        <th>نام</th>
-        <th>نام خانوادگی</th>
-        <th>ایمیل</th>
-        <th>موبایل</th>
-    </head>
-    <tbody>
-        <?php
-        foreach($this->getDataList() as $key => $user){
-        echo `
-        <tr>
-            <td>{++$key}</td>
-            <td>{$user->name}</td>
-            <td>{$user->lastname}</td>
-            <td>{$user->email}</td>
-            <td>{$user->cellphone}</td>
-        </tr>`
-        <?php } ?>
-    </tbody>
+	<head>
+		<th>#</th>
+		<th>نام</th>
+		<th>نام خانوادگی</th>
+		<th>ایمیل</th>
+		<th>موبایل</th>
+	</head>
+	<tbody>
+	<?php foreach($this->getDataList() as $user) { ?>
+		<tr>
+			<td><?php echo $user->id; ?></td>
+			<td><?php echo $user->name; ?></td>
+			<td><?php echo $user->lastname; ?></td>
+			<td><?php echo $user->email; ?></td>
+			<td><?php echo $user->cellphone; ?></td>
+		</tr>
+	<?php } ?>
+	</tbody>
 </table>
 
 <nav>
-    <ul class="pagination">
-        <?php 
-        for($i = 1; $i <= $this->pages; $i++) {
-            $active = $i == $this->thisPage ? 'active' : '';
-            echo '
-                <li class="page-item ' . $active .'">
-                    <a class="page-link" href="?'. http_build_query(["page" => $i]). '">'.  $i . '</a>'.
-                '</li>';
-        }
-        ?>
-    </ul>
+	<ul class="pagination">
+	<?php
+	$urlData = Http::$request['get'];
+	for ($i = 1; $i <= $this->totalPages; $i++) {
+		$urlData["page"] = $i;
+	?>
+		<li class="page-item<?php echo ($i == $this->currentPage) ? ' active' : ''; ?>">
+			<a class="page-link" href="?<?php echo http_build_query($urlData); ?>"><?php echo $i; ?></a>
+		</li>
+	<?php } ?>
+	</ul>
 </nav>
 ```
 
 استفاده از روش فوق برای ایجاد قالب صفحه‌بندی بسیار وقت گیر و باعث ایجاد حجم زیادی از کد میشود. برای سهولت میتوانید از متد `paginator` پکیج [یوزرپنل](https://github.com/Jalno/userpanel) استفاده کنید. 
 
-برای فراخوانی متد paginator لازم است بجای استفاده از `packages\base\views\traits\listTrait` از `themes\clipone\views\listTrait` در کلاس view استفاده شود و بجای ایجاد تگ nav متد paginator فراخوانی شود. در این روش نیاز به مقدار دهی متغیر های thisPage و pages برای صفحه فعلی و تعداد صفحات نیست تمامی موارد توسط پکیج مدیریت می‌شود.
+برای فراخوانی متد paginator لازم است مخزن `themes\clipone\views\ListTrait` در کلاس view استفاده شود.
+
+
+**نکته**:درحال حاضر پکیج یوزرپنل از boostrap نسخه‌ی 3 استفاده میکند و ظاهر ایجاد شده برای صفحه بندی ها بر اساس boostrap نسخه‌ی 3 است.
 
 **مثال :** نمونه فایل view
 ```php
 <?php
-namespace themes\package_theme\views;
-use packages\base\View;
-use themes\clipone\views\listTrait;
+namespace themes\themename\views\packagename\users;
 
-class usersList extends View {
-    use listTrait;
-    
+use packages\base\views\ListView;
+use themes\clipone\views\ListTrait;
+
+class Search extends ListView {
+	use ListTrait;
+}
+```
+
+```php
+<?php
+namespace themes\themename\views\packagename\users;
+
+use packages\base\{View, views\traits\ListTrait};
+use themes\clipone\views\ListTrait as UserpanelListTrait;
+
+class Search extends View {
+	use ListTrait, UserpanelListTrait;
+	
 }
 ```
 
 **مثال :** نمونه فایل html
 ```php
 <table class="table table-striped">
-    <head>
-        <th>#</th>
-        <th>نام</th>
-        <th>نام خانوادگی</th>
-        <th>ایمیل</th>
-        <th>موبایل</th>
-    </head>
-    <tbody>
-        <?php
-        foreach($this->getDataList() as $key => $user){
-        echo `
-        <tr>
-            <td>{++$key}</td>
-            <td>{$user->name}</td>
-            <td>{$user->lastname}</td>
-            <td>{$user->email}</td>
-            <td>{$user->cellphone}</td>
-        </tr>`
-        <?php } ?>
-    </tbody>
+	<head>
+		<th>#</th>
+		<th>نام</th>
+		<th>نام خانوادگی</th>
+		<th>ایمیل</th>
+		<th>موبایل</th>
+	</head>
+	<tbody>
+	<?php foreach($this->getDataList() as $user) { ?>
+		<tr>
+			<td><?php echo $user->id; ?></td>
+			<td><?php echo $user->name; ?></td>
+			<td><?php echo $user->lastname; ?></td>
+			<td><?php echo $user->email; ?></td>
+			<td><?php echo $user->cellphone; ?></td>
+		</tr>
+	<?php } ?>
+	</tbody>
 </table>
 <?php $this->paginator(); ?>
 ```
