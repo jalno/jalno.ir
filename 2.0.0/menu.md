@@ -12,13 +12,13 @@
 	- [مسیر یابی](routing.md)
 	- [مترجم](translator.md)
 	- [کنترلر](controller.md)
-	- [ظاهر](view.md)
+	- [ظاهر View](view.md)
 	- [پاسخ](response.md)
 	- [اعتبار سنجی](validation.md)
 	- [فرم ها](form.md)
 	- [نشست](session.md)
-+ __[ظاهر](#clickable)__
-	- [قالب](frontend.md)
++ __[قالب](#clickable)__
+	- [معرفی قالب](frontend.md)
 	- [Webpack](webpack.md)
 	- [NPM](npm.md)
 	- [Node Webpack](node_webpack.md)
