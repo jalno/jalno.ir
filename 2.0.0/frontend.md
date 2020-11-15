@@ -1,5 +1,5 @@
 # قالب
-قسمت های سمت کاربر شامل HTML، CSS و Javascript  و یک قسمت ظاهری است. قالب ها باید در فایل `package.json` در کلیدی با عنوان frontend در  پوشه ی اصلی پکیج تعریف شود .
+قسمت های سمت کاربر شامل HTML، CSS و Javascript  یک قسمت ظاهری است. قالب ها باید در فایل `package.json` در کلیدی با عنوان frontend در  پوشه ی اصلی پکیج تعریف شود .
 
 فایل‌های html باید در پوشه‌ای به نام html ذخیره شوند. نام فایل های html باید با نام کلاس view متناظر با آن یکسان باشد.
 
@@ -78,13 +78,13 @@ __برای اطلاعات بیشتر به صفحه ی [مترجم](translator.md
 ```json
 {
     "author": {
-        "name" : "Jeyserver",
-        "website" : "https://www.jeyserver.com/"
+        "name" : "Jalno CO",
+        "website" : "https://jalno.ir/"
     },
     "rtl": true,
     "phrases":{
-        "title": "Jeyserver framwork docs",
-        "description": "powered by <a href=\"{url}\">Jeyserver</a> , open license framwork"
+        "title": "Jalno framwork docs",
+        "description": "powered by <a href=\"{url}\">Jalno CO</a> , open license framwork"
     }
 }
 ```
@@ -113,7 +113,7 @@ __برای اطلاعات بیشتر به صفحه ی [مترجم](translator.md
 ```
 
 ### فراخوانی فایل های css
-برای بارگذاری فایل های css فقط لازم است تا در صفحه‌ی html متد `loadCSS` را فراخوانی کنید. این متد در کلاس `packages/base/view` تعریف شده و ظاهر ها با توجه به رابطه ی پدر-فرزندی از آن ارث بری می‌کنند.
+برای بارگذاری فایل های css فقط لازم است تا در صفحه‌ی html متد `loadCSS` را فراخوانی کنید. این متد در کلاس `packages/base/view` تعریف شده و ظاهر ها با توجه به رابطه ی پدر-فرزندی به آن دسترسی دارند.
 
 ```php
 <!DOCTYPE html>
@@ -127,7 +127,7 @@ __برای اطلاعات بیشتر به صفحه ی [مترجم](translator.md
 
 
 ### فراخوانی فایل های js
- برای بارگذاری فایل های javascript هم نیاز هست تا در صفحه ی html متد `loadJS` را فراخوانی کنید. این متد نیز در کلاس `packages/base/view` تعریف شده و ظاهر ها با توجه به رابطه ی پدر-فرزندی از آن ارث بری دارند.
+ برای بارگذاری فایل های javascript هم نیاز هست تا در صفحه ی html متد `loadJS` را فراخوانی کنید. این متد نیز در کلاس `packages/base/view` تعریف شده و ظاهر ها با توجه به رابطه ی پدر-فرزندی به آن دسترسی دارند.
 
 ```php
 <!DOCTYPE html>
@@ -138,4 +138,3 @@ __برای اطلاعات بیشتر به صفحه ی [مترجم](translator.md
 </body>
 </html>
 ```
-
