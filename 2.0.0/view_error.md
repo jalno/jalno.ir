@@ -1,23 +1,99 @@
 # خطاها در قالب
-گاها لازم است خطاهایی که به وجود می‌آید در قالب نمایش داده شوند، برای نمایش و مدیریت این دسته از خطاها در فریمورک کلاس `packages\base\view\Error` ایجاد شده است. 
+گاها لازم است خطاهایی که به وجود می‌آید در قالب نمایش داده شوند، برای نمایش و مدیریت این دسته از خطاها در فریمورک کلاس `packages\base\view\Error` ایجاد شده است.
 
-## نوع خطا
+## [کد خطا ](#error_code)
+برای مدیریت خطاها حتما پیشنهاد میشود برای هر خطا یک کد مشخص تعیین کنید که بیانگر علت خطای دریافتی میباشد. از این کد میتوانید برای پیدا کردن مشکل و یا نمایش خطای مختص به آن استفاده کنید.   
+در زمان ایجاد شئ از کلاس Error میتوانید کد خطا را در اولین آرگومان آن مشخص کنید. همچنین میتوانید بعد از ایجاد شئ، از متد `setCode`  برای مشخص کردن کد خطا، استفاده نمایید.   
+از طریق فراخوانی متد `getCode` میتوانید کد خطا مشخص شده را دریافت کنید.
+
+```php
+<?php
+namespace packages\packagename\controllers;
+
+use themes\themename\views\packagenaem as views;
+use packages\packagename\{hosts\Plan as HostModel, Order as OrderModel, Tld as TldModel};
+use packages\base\{Controller, Response, View, Http, InputValidationException, view\Error};
+
+class Orders extends Controller {
+
+	public function domain($data): Response {
+
+		$view = View::byName(views\domains\Order::class);
+		$this->response->setView($view);
+
+		if (Http::is_post()) {
+			$this->response->setStatus(false);
+			$inputs = $this->checkinputs(array(
+				'domain' => array(
+					"type" => "string",
+				),
+				'tld' => array(
+					'type' => array('number', 'string'),
+				),
+				'hostPlan' => array(
+					'type' => HostModel::class,
+					'optional' => true
+				)
+			));
+			if (!$inputs["tld"]) {
+				throw new InputValidationException("tld");
+			}
+			if (!$inputs["domain"]) {
+				throw new InputValidationException("domain");
+			}
+			if (is_number($inputs["tld"])) {
+				$inputs["tld"] = TldModel::byId($inputs["tld"]);
+				if (!$inputs["tld"]) {
+					throw new InputValidationException("tld");
+				}
+				$inputs["tld"] = $inputs["tld"]->code;
+			}
+            $isAvailable = OrderModel::checkDomainAvailability($inputs["domain"] . "." . $inputs["tld"]);
+            if (!$isAvailable) {
+                $error = new Error("domain_is_not_available");
+                // $error->setCode("domain_is_not_available");
+                $view->addError($error);
+                /**
+                 * Or you can throw it. Jalno will be catch and add it to view errors automatically
+                 * 
+                 * throw $error;
+                 */
+            }
+            $order = new Order();
+            $order->user_id = 1;// Current user id
+            $order->domain = $inputs["domain"] . "." . $inputs["tld"];
+            if (isset($inputs["hostPlan"])) {
+                $order->host_id = $inputs["hostPlan"]->id;
+            }
+            $order->status = OrderModel::NOT_CONFIGURED;
+            $order->save();
+
+			$this->response->setStatu(true);
+		} else {
+			$this->response->setStatu(true);
+		}
+		return $this->response;
+	}
+}
+```
+
+## [نوع خطا](#error_type)
 در فریمورک خطاها به چهاردسته زیر تقسیم می‌شوند که هرکدام بیانگر سطحی از خطا هستند. 
 
 نوع خطا در متغیر `type` کلاس ذخیره می‌شود و مقدار پیش فرض آن `fatal` میباشد.
 
-| سطح   | کاربرد                                      |
+| سطح   | کاربرد									  |
 | ----- | ------------------------------------------- |
-| success | پیام تایید                       |
+| success | پیام تایید					   |
 | warning  | خطاهایی که روند اجرای برنامه را متوقف نمیکنند اما نیاز به بررسی و یا حساسیت بیشتری دارند   |
-| fatal  | خطاهایی که باید روند اجرای برنامه متوقف شود    |
+| fatal  | خطاهایی که باید روند اجرای برنامه متوقف شود	|
 | notice | اعلام مشکلاتی که در برنامه وجود دارد  |
 
 **توجه :** `success` خطا نیست از آن برای نمایش پیام هایی در قالب با مضمون موفقیت آمیز بودن عملیاتی در اجرای برنامه استفاده می‌شود.
 
-### مشخص کردن نوع خطا 
+### [مشخص کردن نوع خطا](#set_type) 
 برای مشخص کردن نوع خطا از متد `setType` استفاده می‌شود.
-در کلاس برای خطاها ثابت‌های `SUCCESS` , `WARNING` , `FATAL` , `NOTICE` تعریف شده است که در هر کدام از ثابت ها عنوان نوع خطا بصورت رشته ذخیره شده است. (const SUCCESS = 'success')
+در کلاس برای خطاها ثابت‌های `SUCCESS` , `WARNING` , `FATAL` , `NOTICE` تعریف شده است.
 
 آرگومان ورودی متد setType رشته است و میتواند یکی از انواع خطا باشد. 
 اگر ورودی متد به غیر از موارد فوق باشد استثنا type پرتاب می‌شود. 
@@ -32,7 +108,7 @@ $error = new Error();
 $error->setType(Error::NOTICE);
 ```
 
-## متن خطا
+## [متن خطا](#error_text)
 برای نمایش خطا لازم است متنی برای خطا ثبت شده باشد. با فراخوانی متد `setMessage` میتوانید متنی برای خطا ثبت کنید. آرگومان ورودی این متد یک رشته می‌باشد.
 
 همچنین با فراخوانی متد `getMessage` میتوانید به متن پیام خطا دسترسی داشته باشید.
@@ -45,7 +121,7 @@ $error = new Error();
 $error->setMessage('This is error message!');
 ```
 
-## انتقال داده
+## [انتقال داده](#set_data)
 علاوه بر متن پیام خطا میتوانید داده هایی نیز مشخص کنید. با فراخوانی متد `setData` میتوانید داده‌ها را ثبت کنید. 
 متد setData دو آرگومان ورودی میگیرد. آرگومان اول مقدار داده ( از هر نوع داده‌ای میتواند باشد) و آرگومان دوم، کلید داده می‌باشد.
 
@@ -58,127 +134,55 @@ $error->setMessage('This is error message!');
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
-use packages\base\{View, NotFound, Controller};
-use packages\base\view\Error;
-use packages\my_package\{Student, ClassRoom as ModalClassroom, ClassStudent};
-use themes\my_theme\views;
+namespace packages\packagename\controllers;
+
+use themes\themename\views;
+use packages\base\{View, NotFound, Controller, view\Error};
+use packages\packagename\{Student as StudentModel, ClassRoom as ClassroomModal, ClassStudent};
 
 class Classrooms extends Controller {
 
-    function addStudent($data) {
-        $student = Student::byId($data['student']);
-        $classroom = ModalClassroom::byId($data['classroom']);
-        if(!$student or !$classroom) {
-            throw new NotFound();
-        }
-        $view = View::byName(views\classroom\AddStudent::class);
-        $this->response->setView($view);
-        if($classroom->status == ModalClassRoom::finished) {
-            $error = new Error();
-            $error->setData($classroom->id, 'classroomId');
-            $error->setData($classroom, 'classroomObj');
-            $error->setMessage("کلاس پایان یافته است!");
-            $view->addError($error);
-            return $this->response;
-        }
-        $classStudent = new ClassStudent();
-        $classStudent->class = $classroom->id;
-        $classStudent->student = $student->id;
-        $classStudent->save();
-        return $this->response;
-    }
+	public function addStudent($data) {
+
+		$student = StudentModel::byId($data['student']);
+		$classroom = ClassroomModal::byId($data['classroom']);
+		if(!$student or !$classroom) {
+			throw new NotFound();
+		}
+		$view = View::byName(views\classroom\AddStudent::class);
+		$this->response->setView($view);
+
+		if ($classroom->status == ClassroomModal::FINISHED) {
+			$error = new Error();
+			$error->setData($classroom->id, 'classroomId');
+			$error->setData($classroom, 'classroomObj');
+			$error->setMessage("کلاس پایان یافته است!");
+			$view->addError($error);
+			return $this->response;
+		}
+
+		$classStudent = new ClassStudent();
+		$classStudent->class = $classroom->id;
+		$classStudent->student = $student->id;
+		$classStudent->save();
+
+		$this->response->setStatus(true);
+		return $this->response;
+	}
 }
 ?>
 ```
-در مثال فوق متد `addError` در کلاس `packages\base\view` برای انتقال خطاها به قالب تعریف شده است.
+در مثال فوق متد `addError` در کلاس `packages\base\View` برای انتقال خطاها به قالب تعریف شده است.
 
-
-## کد خطا 
-برای مدیریت بهتر خطاها میتوانید برای هر خطا کد مشخصی تعیین کنید که بیانگر علت خطای دریافتی میباشد. 
-برای تعیین کد خطا از متد `setCode` استفاده می‌شود. آرگومان ورودی این متد رشته است.
-
-همچنین میتوانید بجای فراخوانی متد setCode کدخطا را در شئ ایجاد شده از کلاس Error مشخص کنید.
-
-همچنین برای دریافت کدخطا ثبت شده میتوانید متد `getCode` را فراخوانی کنید.
-
-```php
-<?php
-namespace packages\my_package\controllers;
-use packages\base\{View, Controller, Http},
-use packages\base\view\Error;
-use packages\my_package\HostPlan;
-use themes\my_theme\views;
-
-class Hosts extends Controller {
-
-    public function order($data){
-        $view = view::byName(views\hosts\Order::class);
-
-        if(Http::is_post()){
-            $this->response->setStatus(false);
-            $inputsRules = [
-                'tld' => [
-                    'type' => ['number', 'string'],
-                ],
-                'hostPlan' => [
-                    'type' => 'number',
-                    'optional' => true
-                ]
-            ];
-            try{
-                $inputs = $this->checkinputs($inputsRules);
-                
-                if(isset($inputs['hostPlan'])){
-                    if(!$inputs['hostPlan'] = HostPlan::byId($inputs['hostPlan'])){
-                        throw new hostPlanException();
-                    }
-                }
-
-                if($inputs["tld"] == 0){
-                    throw new tldTransferDeniedException('tld');
-                }   
-            }catch(hostPlanException $e){
-                $error = new Error();
-                $error->setCode('hostPlanException');
-                /**
-                 * or
-                 * $error = new Error("hostPlanException");
-                 */
-                $view->addError($error);
-
-            }catch(tldTransferDeniedException $e){
-                $error = new Error();
-                $error->setCode('tldTransferDeniedException');
-                /**
-                 * or
-                 * $error = new Error('tldTransferDeniedException');
-                 */
-                $view->addError($error);
-            }
-            $view->setDataForm($this->inputsvalue($inputsRules));
-        }
-
-        $this->response->setView($view);
-        return $this->response;
-    }
-}
-```
-همانطور که مشاهده میکنید در مثال فوق به دلیل وجود خطاهای مختلف برای مدیریت بهتره خطاها برای هر کدام کد خطا (setCode) مشخص شده است.
-
-## trace 
+## [تعیین حالت trace](#trace_mode) 
 در کلاس Error متغیر `traceMode` تعریف شده است که مشخص میکند چه اطلاعاتی از متغیرهای کلاس، زمان فراخوانی متد `jsonSerialize()` در خروجی نمایش داده شود.
-برای traceMode ثابت های `NO_TRACE` و `SHORT_TRACE` و `FULL_TRACE` تعریف شده‌ است.
-با فراخوانی متد `setTraceMode` میتوانید traceMode را مقدار دهی کنید. مقدار پیش فرض این متغیر FULL_TRACE  است. 
-آرگومان ورودی متد setTraceMode یکی از ثابت های تعریف شده فوق میتواند باشد. 
-ثابت ها مقدار کلید trace را تغییر میدهند. هر یک از ثابت ها به شیوه زیر عمل میکنند :
+متد `setTraceMode` برای مقدار دهی و یا تغییر حالت `traceMode` پیاده سازی شده و یکی از ثابت های تعریف شده ی زیر را در تنها آرگومان خود دریافت میکند. زمانیکه این متغیر توسط برنامه نویس مقدار دهی نشود، به صورت خودکار مقدار FULL_TRACE در نظر گرفته خواهد شد.
 
-**NO_TRACE :** فقط نوع خطا و پیام خطا را برمیگرداند.
-
-**SHORT_TRACE :** در کلید trace اطلاعات فایل هایی که برای نمایش صفحه اجرا شده‌اند بصورت مختصر نمایش داده می‌شود.
-
-**FULL_TRACE :** در کلید trace اطلاعات فایل هایی که برای نمایش صفحه اجرا شده‌اند در آرایه‌ای نمایش داده می‌شود.
-
+| حالت   | کاربرد									  |
+| ----- | ------------------------------------------- |
+| <span class="display-block ltr">NO_TRACE</span> | فقط نوع خطا و پیام خطا را برمیگرداند				   |
+| <span class="display-block ltr">SHORT_TRACE</span>  | در کلید trace اطلاعات فایل هایی که برای نمایش صفحه اجرا شده‌اند بصورت مختصر نمایش داده می‌شود   |
+| <span class="display-block ltr">FULL_TRACE</span>  | در کلید trace اطلاعات فایل هایی که برای نمایش صفحه اجرا شده‌اند در آرایه‌ای نمایش داده می‌شود	|
 همچنین با فراخوانی متد `getTraceMode` میتوانید  به مقدار traceMode دسترسی داشته باشید.
 
 ```php
@@ -186,7 +190,8 @@ $error = new Error();
 $error->setTraceMode(Error::SHORT_TRACE)
 ```
 
-## jsonSerialize
-از متد `jsonSerialize()` برای تبدیل شئ کلاس Error به آرایه استفاده میشود.
-با توجه به مقدار متغیر traceMode مشخص میشود کدام یک از متغیر‌های کلاس در آرایه نمایش داده شود.
+## [متد jsonSerialize](#json_serialize)
+از متد `jsonSerialize()` برای تبدیل شئ کلاس Error به آرایه قابل تبدیل به `JSON` استفاده میشود. این متد با استفاده از حالت مشخص شده در متغیر `traceMode` اطلاعات خروجی را مشخص میکند. 
 
+## [Serialize](#serialize)
+زمانیکه شئ از کلاس serialize میشود، اطلاعات خروجی با استفاده از حالت مشخص شده در متغیر `traceMode` مشخص و در خروجی برگردانده میشوند.
