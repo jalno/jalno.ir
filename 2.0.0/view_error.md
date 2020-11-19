@@ -190,6 +190,28 @@ $error = new Error();
 $error->setTraceMode(Error::SHORT_TRACE)
 ```
 
+## [دریافت خطا ها در قالب](#get_errors)
+خطاهای ثبت شده را با متد‌‌‌های `getError` و `getErrors` میتوانید دریافت کنید. 
+متد getError یک شئ از کلاس Error برمی‌گرداند که اولین خطا ثبت شده است و متد getErrors آرایه‌ای از اشیا کلاس Error که تمامی خطاهای ثبت شده است را برمیگرداند.
+```php
+<body>
+	<?php
+	$errors = $this->getErrors();
+	if ($errors) {
+		foreach ($errors as $error) {
+			$message = $error->getMessage();
+			if (!$message) {
+				$message = t($error->getCode());
+			}
+			echo '<div class="alert alert-danger" role="alert">
+					<strong>'. $message . '</strong>
+				</div>';
+		}
+	}
+	?>
+
+```
+
 ## [متد jsonSerialize](#json_serialize)
 از متد `jsonSerialize()` برای تبدیل شئ کلاس Error به آرایه قابل تبدیل به `JSON` استفاده میشود. این متد با استفاده از حالت مشخص شده در متغیر `traceMode` اطلاعات خروجی را مشخص میکند. 
 

@@ -19,6 +19,7 @@
 	- [نشست](session.md)
 + __[قالب](#clickable)__
 	- [معرفی قالب](frontend.md)
+	- [خطاها در قالب](view_error.md)
 	- [Webpack](webpack.md)
 	- [NPM](npm.md)
 	- [Node Webpack](node_webpack.md)
