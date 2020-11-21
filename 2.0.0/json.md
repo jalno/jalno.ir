@@ -121,7 +121,7 @@ class Test extends Controller {
 ```
 
 ## استثنا JsonException
-زمان کار با کلاس Json ممکن است داده‌ای که برای encode\decode داده می‌شود باعث بروز خطا شود در اینصورت استثنا از جنس `packages\base\json\JsonException` پرتاب می‌شود. 
+زمان کار با کلاس Json ممکن است عملیات encode\decode کردن داده بدرستی انجام نشود (ممکن است ورودی اشتباه بوده و یا گاها روند عملیات بدرستی پیش نرود) و باعث بروز خطا شود؛ در اینصورت استثنا از جنس packages\base\json\JsonException پرتاب می‌شود.
 
 فراخوانی متد `getMessage()` روی شئ JsonException علت خطای بوجود آماده را برمیگرداند.
 
