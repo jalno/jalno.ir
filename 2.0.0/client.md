@@ -66,7 +66,7 @@ class Main extends Controller {
 
 |   تنظیم   |    کاربرد   |
 |-------------|-----------|
-| base_uri    |           |
+| base_uri    |    (مشخص کردن دامنه اصلی سایت (برای ارسال چند درخواست روی یک سایت      |
 | allow_redirects    |     مجوز دنبال کردن صفحاتی که سرور به عنوان بخشی از هدر HTTP ارسال می کند مقدار پیش‌فرض آن true است.       |
 | auth    |      آرایه‌ای از مشخصات احرازهویت     |
 | cookies    |    مجوز ذخیره کوکی       |
@@ -165,7 +165,7 @@ $params = [
 
 ```php
 $params = [
-	'save_as' => new File\Local("/tmp/download/file.format");
+	'save_as' => new File\Local("/tmp/download/file.format")
 ];
 ```
 
@@ -185,6 +185,41 @@ $params = [
 	]
 ];
 ```
+
+### [base_uri](#base_uri)
+ممکن است بخواهید چندین درخواست برای صفحات مختلف یک سایت ارسال کنید، در این شرایط میتوانید آدرس دامنه سایت را به کلید base_uri  داده و به آرگومان اول متدهای get , post آدرس صفحه موردنظر را بدهید.
+
+همچنین میتوانید بجای مقداردهی کلید base_uri آدرس دامنه را زمان ایجاد شئ مقداردهی کنید.
+
+
+```php
+$client = new Client();
+$params = [
+	'base_uri' => 'http://www.example.com/',
+	'form_params' => [
+		'username' => 'john',
+		'password' => 12345678
+	]
+];
+$client->post('userpanel/login', $params);
+$client->get('userpanel/documents', [
+	'save_as' => new File\Local("/tmp/download/doc.pdf")
+]);
+```
+
+```php
+$client = new Client('http://www.example.com/');
+
+$client->post('register', [
+	'json' => [
+		'name' => "John",
+		'email' => "john@yahoo.com"
+	]
+]);
+$client->get('userpanel/tickets', ["query" => ["ajax" => 1]]);
+```
+
+### چند‌مثال
 
 **مثال 1**
 ```php
@@ -339,6 +374,57 @@ class Main extends Controller {
 				]
 			);
 			$response = $client->post("https://www.example.com", $params);
+			
+		} catch (Http\ClientException $e) {
+			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
+		} catch (Http\ServerException $e) {
+			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
+		}
+	}
+}
+```
+
+**مثال 5**
+```php
+<?php
+namespace packages\packagename\controllers;
+use packages\base\{Controller, Log, Http};
+
+class Users extends Controller {
+
+	public function register(array $info) {
+		$log = Log::getInstance();
+
+		$client = new Http\Client("https://www.example.com");
+		try {
+
+			$log->info("init client params for register");
+			$params = array(
+				"ssl_verify" => true,
+				"cookies" => false,
+				'json' => [
+					'username' => $info['username'],
+					'password' => $info['password'],
+					'email' => $info['email']
+				]
+			);
+			$response = $client->post('register', $params);
+			
+			$log->info("init client params for complete profile");
+			$params = array(
+				"ssl_verify" => true,
+				"cookies" => false,
+				'form_params' => [
+					'name' => $info['name'],
+					'city' => $info['city'],
+					'age' => $info['age'],
+					'address' => $info['address']
+				],
+				'query' => [
+					'user' => $info['username']
+				]
+			);
+			$response = $client->post('userpanel/profile', $params);
 			
 		} catch (Http\ClientException $e) {
 			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
