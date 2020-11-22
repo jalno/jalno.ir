@@ -7,24 +7,24 @@
 
 __برای اطلاعات بیشتر از ظاهر به صفحه [ظاهر View](view.md) مراجعه کنید.__
 
-
 ## [تنظیمات](#options)
 __برای اطلاعات بیشتر از تنظیمات به صفحه [تنظیمات و پیکربندی](options.md) مراجعه کنید.__
 
-تنظیماتی که مربوط به صفحه‌ای است که باز شده است،‌ در `var options` تگ script که در صفحه اضافه شده است قابل رویت می‌باشد.  
-در کلاس ThrowDynamicData با استفاده از متد‌های زیر میتوانید تنظیمات نمایش داده شده را مدیریت کنید.
-مقادیر مربوط به تنظیمات در متغیر $data['options'] کلاس ذخیره می‌شود.
+تنظیمات اصلی سایت از جمله تنظیمات مربوط به زبان سایت مانند زبان اصلی، نوع قرار گیری زبان در آدرس و اطلاعات پایه سایت مانند اینکه سایت با www باز میشود و یا بدون آن را در صفحه و در متغیر جاوااسکریپتی `var options` قرار میدهد. از این پارامتر ها میتوان در تولید آدرس ها توسط جاوااسکریپت استفاده کرد.
 
-**توجه :** تنظیمات packages.base.translator.defaultlang ، packages.base.translator.changelang ، packages.base.translator.changelang.type ، packages.base.routing.www
-بصورت خودکار در $data['options'] ذخیره می‌شوند.
+**توجه :** تنظیماتی که به صورت خودکار توسط فرمورک اضافه شده با کلید های  packages.base.translator.defaultlang ، packages.base.translator.changelang ، packages.base.translator.changelang.type ، packages.base.routing.www
+هستند.
+
+میتوانید تنظیمات دیگر و یا حتی تنظیماتی که جدید اضافه کردید را نیز اضافه کنید تا در هنگام باز شدن صفحه قرار بگیرند.
+در کلاس ThrowDynamicData با استفاده از متد‌های زیر میتوانید تنظیمات نمایش داده شده را مدیریت کنید.
 
 ### [تعریف تنظیم](#set_option)
-با استفاده از متد `setOption($name)` میتوانید تنظیمات جدیدی که اضافه کرده‌اید در صفحه نیز نمایش دهید و از آن استفاده کنید. ورودی این متد نام تنظیم است،‌ نام تنظیم به عنوان کلید و مقدار آن، مقدار تنظیم میباشد. 
+با استفاده از متد `setOption` میتوانید تنظیمات جدیدی که اضافه کرده‌اید در صفحه اضافه کرده و از آن استفاده کنید. ورودی این متد نام تنظیم است.
 
 **مثال**
 ```php
 <?php
-namespace themes\themename\views;
+namespace themes\themename\views\packagename\posts;
 
 use packages\base\{Options, views\Form};
 
@@ -46,8 +46,6 @@ class Prioritize extends Form {
     }
 }
 ```
-در مثال فوق با فراخوانی متد set تنظیم جدیدی برای صفحه اضافه میشود و سپس با فراخوانی متد setOption این تنظیم در صفحه نیز نمایش داده می‌شود.
-
 خروجی کد فوق در صفحه html بصورت زیر میباشد
 ```html
 <script>
@@ -56,13 +54,13 @@ var options = {"packages.base.translator.defaultlang":"fa_IR","packages.base.tra
 ```
 
 ### [بررسی تنظیم](#has_option)
- با فراخوانی متد `hasOption($name)` میتوانید وجود یا عدم وجود تنظیمات ذخیره شده در $data['options'] را بررسی کنید. خروجی متد boolean میباشد. 
+ با فراخوانی متد `hasOption` میتوانید وجود یا عدم وجود تنظیمات ذخیره شده را بررسی کنید. خروجی متد boolean میباشد. 
 با فراخوانی متد `getData` با ورودی `options` میتوانید به تمامی options های ذخیره شده در این کلاس (بصورت آرایه) دسترسی داشته باشید. 
 
 **مثال**
 ```php
 <?php
-namespace themes\themename\views;
+namespace themes\themename\views\packagename\posts;
 
 use packages\base\{Options, views\Form};
 
@@ -75,16 +73,18 @@ class Prioritize extends Form {
 
         Options::load("packages.packagename.has_access_to_delete_service");
 
-        if(!$this->dynamicData()->hasOption("packages.packagename.has_access_to_delete_service")) {
-            $this->dynamicData()->setOption("packages.packagename.has_access_to_delete_service");
+        $dynamicData = $this->dynamicData();
+
+        if (!$dynamicData->hasOption("packages.packagename.has_access_to_delete_service")) {
+            $dynamicData->setOption("packages.packagename.has_access_to_delete_service");
         }
     }
 }
 ```
-در مثال فوق تنظیم ذخیره شده با متد load در صفحه لود می‌شود سپس با متد hasOption بررسی می‌شود اگر این تنظیم در $data['options'] ذخیره نشده است، با فراخوانی متد setOption ذخیره می‌شود.
+در مثال فوق تنظیم ذخیره شده با متد load در از پایگاه داده دریافت شده و سپس با متد hasOption بررسی می‌شود اگر این تنظیم در این رویداد اضافه نشده است، با فراخوانی متد setOption اضافه می‌شود.
 
 ### [حذف تنظیم](#delete_option)
-با فراخوانی متد `deleteOption($name)` میتوانید تنظیم ایجاد شده در $data['options'] را حذف کنید. آرگومان ورودی متد نام تنظیم میباشد.
+با فراخوانی متد `deleteOption` میتوانید تنظیم اضافه شده را حذف کنید. آرگومان ورودی متد نام تنظیم میباشد.
 
 
 **مثال**
@@ -105,15 +105,9 @@ class Prioritize extends Form {
     }
 }
 ```
-
-## [اطلاعات و داده‌ها](#data)
-علاوه بر تنظیمات برنامه میتوانید سایر اطلاعات مورد استفاده در جاوااسکریپت را با استفاده از متدهای زیر ذخیره و مدیریت کنید.
-
-**توجه :** مقدار `lang` که زبان فعال برنامه را نمایش می‌دهد بطور خودکار در `$data['translator']` ذخیره می‌شود.
-
 ### [تعریف داده](#set_data) 
-متد `setData($name, $value)` برای تعریف اطلاعات، ایجاد شده است. 
-متد setData دو آرگومان ورودی میگیرد که در آرگومان اول کلید برای داده و در آرگومان دوم مقدار داده مقداردهی می‌شود. آرگومان اول باید رشته باشد. آرگومان دوم از هر نوع داده میتواند باشد.
+متد `setData` برای تعریف اطلاعات، ایجاد شده است. 
+این متد دو آرگومان ورودی میگیرد که در آرگومان اول یک رشته برای کلید داده و در آرگومان دوم مقدار داده مقداردهی می‌شود.
 
 **مثال**
 ```php
@@ -144,7 +138,7 @@ class Edit extends Form {
 ```
 در مثال فوق در متد buildPermissionsArray مجوزها که با کلید permissions در کنترلر مقداردهی شده‌اند و با فراخوانی متد getData در دسترس می‌باشند.  (متد getData در کلاس packages\base\view تعریف شده است.)
 با فراخوانی متد buildPermissionsArray در متد `setData`
- آرایه‌ای از مجوز‌ها تحت عنوان کلید permissions در متغیر $data کلاس throwDynamicData ذخیره می‌شود. 
+ آرایه‌ای از مجوز‌ها تحت عنوان کلید permissions در داده های صفحه اضافه میشود. 
 
 خروجی کد فوق در صفحه html بصورت زیر می‌باشد
 ```html
@@ -154,12 +148,11 @@ var options = {"packages.base.translator.defaultlang":"fa_IR","packages.base.tra
 ```
 
 ### [بررسی وجود داده](#has_data)
-متد `hasData($name)` برای بررسی وجود و یا عدم وجود داده تعریف شده است. 
-آرگومان ورودی متد کلید داده‌ای است که میخواهید وجود آن را بررسی کنید.
+متد `hasData` برای بررسی وجود و یا عدم وجود یک کلید در داده ها تعریف شده است. آرگومان ورودی متد کلید داده‌ای است که میخواهید وجود آن را بررسی کنید.
 خروجی متد boolean است.
 
 ### [حذف داده](#delete_data) 
-متد `deleteData($name)` برای حذف داده ایجاد شده استفاده می‌شود. ورودی متد کلید تعریف شده برای داده میباشد.
+متد `deleteData` برای حذف داده اضافه شده استفاده می‌شود. ورودی متد کلید تعریف شده برای داده میباشد.
 
 **مثال**
 ```php
@@ -175,15 +168,17 @@ class Delete extends View {
 			t("usertype.delete")
         ));
 
-        if($this->dynamicData()->hasData("permissions")) {
-            $this->dynamicData()->deleteData("permissions")
+        $dynamicData = $this->dynamicData();
+
+        if ($dynamicData->hasData("permissions")) {
+            $dynamicData->deleteData("permissions")
         }
     }
 }
 ```
 
 ### [خواندن داده](#get_data) 
-متد `getData` برای دریافت داده‌های تعریف شده استفاده میشود. آرگومان ورودی متد کلید تعریف شده برای داده میباشد.
+متد `getData` برای دریافت داده‌های اضافه شده استفاده میشود. آرگومان ورودی متد کلید تعریف شده برای داده میباشد.
 اگر به متد آرگومانی ارسال نشود آرایه‌ای از تمامی داده‌های تعریف شده را برمیگرداند.
 
 
@@ -212,19 +207,21 @@ class UsersList extends Form {
 }
 ```
 
-**نحوه ی استفاده در فایل جاوااسکریپت**
-```javascript
-if (!permissions["users_edit"]) {
-    $(".btn_users_edit").css("display", "none");
-} 
-if (!permissions["users_delete"]) {
-    $(".btn_users_delete").css("display", "none");
-}
-```
-
 **خروجی داده‌ها در تگ script**
 ```html
 <script>
 var options = {"packages.base.translator.defaultlang":"fa_IR","packages.base.translator.changelang":"uri","packages.base.translator.changelang.type":"short","packages.base.routing.www":"nowww"};var translator = {"lang":"fa_IR"};var permissions = {"users_edit":true,"users_delete":false};
 </script>
+```
+
+**نحوه ی استفاده در فایل جاوااسکریپت**
+```javascript
+$(() => {
+    if (!permissions["users_edit"]) {
+        $(".btn_users_edit").css("display", "none");
+    } 
+    if (!permissions["users_delete"]) {
+        $(".btn_users_delete").css("display", "none");
+    }
+});
 ```
