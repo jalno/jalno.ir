@@ -85,6 +85,9 @@ class Main extends Controller {
 
 ### [auth](#auth) 
 برای اتصال به برخی از سرورها نیاز به نام کاربری و رمز عبور برای احراز‌هویت میباشد. برای این منظور کلید auth آرایه‌ای از نام کاربری و رمز‌عبور میگیرد. 
+اگر کلید auth بصورت آرایه و با کلید‌های `username` , `password` مقدار‌دهی شود؛ در هدر درخواست کلید Authorization بصورت کد شده مقداردهی میشود. (Authorization: Basic YWxpOjEyMzQ1Nzg= )
+
+**توجه:** اگر کلید auth بصورت رشته مقداردهی شود بدون هیچ پردازشی به هدر درخواست اضافه می‌شود.(Authorization: name pass)
 
 ```php
 $params = [
@@ -92,6 +95,10 @@ $params = [
 		"username" => "ali",
 		"password" => 1234578
 	]
+	/**
+	 * or :
+	 * "auth" => "name pass"
+	 * */
 ];
 ```
 
