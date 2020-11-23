@@ -156,7 +156,7 @@ class profile extends controller{
             
             if (isset($formdata['avatar'])) {
 
-                $formdata['avatar']->resize(200, 200)->save();    
+                $formdata['avatar'] = $formdata['avatar']->resize(200, 200);    
                 
                 $path = 'storage/public_avatar/' . $formdata['avatar']->getFile()->md5() . '.' . $formdata['avatar']->getExtension();
                 
