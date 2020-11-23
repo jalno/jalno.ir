@@ -6,10 +6,10 @@
 
 |  کلاس |               فرمت تصویر  |
 |---------------------------|------|
-| packages\base\Image\GIF   | GIF  |
-| packages\base\Image\JPEG  | JPEG |
-| packages\base\Image\PNG   | PNG  |
-| packages\base\Image\WEBP  | WEBP |
+| <div class="display-block ltr">packages\base\Image\GIF</span>   | <div class="display-block text-center">GIF</span>  |
+| <div class="display-block ltr">packages\base\Image\JPEG</span>  | <div class="display-block text-center">JPEG</span> |
+| <div class="display-block ltr">packages\base\Image\PNG</span>   | <div class="display-block text-center">PNG</span>  |
+| <div class="display-block ltr">packages\base\Image\WEBP</span>  | <div class="display-block text-center">WEBP</span> |
 
 
 ## [ایجاد شئ](#object)
@@ -47,7 +47,7 @@ $image = new Image\WEBP(200, 150, Image\Color::fromRGB(0, 0, 0));
 
 **توجه :** فایل معرفی شده حتما باید وجود داشته باشد درصورتی که فایل موجود نباشد استثنا از جنس NotFoundException پرتاب می‌شود.
 
-**توجه :** اگر شئ ایجاد شده از کلاس فایل، مربوط به (بطور مثال) تصویری با فرمت jpeg باشد اما شئ‌ از کلاس Image\PNG ایجاد شود warning دریافت میکنید.
+**توجه :** اگر شئ ایجاد شده از کلاس فایل، مربوط به تصویری با فرمت jpeg باشد اما شئ‌ از کلاس Image\PNG ایجاد شود warning دریافت میکنید.
 
 مثال از کد **خطا**
 ```php
@@ -88,23 +88,23 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 
 |  متد |                کاربرد  |
 |---------------------------|------|
-| saveToFile(File $file, int $quality)  | ذخیره تصویر در مکان مشخص |
-| save(int $quality)  | ذخیره تصویر |
-| getFile()   | شئ از کلاس File برمیگرداند  |
-| getWidth()  |   خواندن عرض تصویر|
-| getHeight()  |  خواندن ارتفاع تصویر|
-| getExtension  |  خواندن فرمت تصویر|
-| resize(int $width, int $height)  |  تغییر ابعاد تصویر|
-| resizeToHeight(int $height)  | تغییر ارتفاع تصویر |
-| resizeToWidth(int $width)  | تغییر عرض تصویر |
-| scale(int $scale)  | زوم تصویر |
-| colorAt(int $x, int $y)  | خواندن رنگ پیکسل مشخصی از تصویر |
-| setColorAt  | رنگ کردن پیکسل مشخص  |
-| paste(Image $image, int $x, int $y)  | جایگذاری در بخشی از تصویر |
-| copy(int $x, int $y, int $width, $height)  | کپی کردن قسمتی از تصویر |
-| rotate(float $angle, Image\Color $bg)  | چرخش تصویر |
-| fromFormat(File $file)   |  تبدیل شئ فایل به شئ کلاس تصویر طبق فرمت |
-| fromContent(File $file)  | تبدیل شئ فایل به شئ کلاس تصویر طبق محتوا |
+| <div class="display-block ltr">saveToFile(File $file, int $quality)</span>  | ذخیره تصویر در مکان مشخص |
+| <div class="display-block ltr">save(int $quality)</span>  | ذخیره تصویر |
+| <div class="display-block ltr">getFile()</span>   | شئ از کلاس File برمیگرداند  |
+| <div class="display-block ltr">getWidth()</span>  |   خواندن عرض تصویر|
+| <div class="display-block ltr">getHeight()</span>  |  خواندن ارتفاع تصویر|
+| <div class="display-block ltr">getExtension</span>  |  خواندن فرمت تصویر|
+| <div class="display-block ltr">resize(int $width, int $height)</span>  |  تغییر ابعاد تصویر|
+| <div class="display-block ltr">resizeToHeight(int $height)</span>  | تغییر ارتفاع تصویر |
+| <div class="display-block ltr">resizeToWidth(int $width)</span>  | تغییر عرض تصویر |
+| <div class="display-block ltr">scale(int $scale)</span>  | زوم تصویر |
+| <div class="display-block ltr">colorAt(int $x, int $y)</span>  | خواندن رنگ پیکسل مشخصی از تصویر |
+| <div class="display-block ltr">setColorAt</span>  | رنگ کردن پیکسل مشخص  |
+| <div class="display-block ltr">paste(Image $image, int $x, int $y)</span>  | جایگذاری در بخشی از تصویر |
+| <div class="display-block ltr">copy(int $x, int $y, int $width, $height)</span>  | کپی کردن قسمتی از تصویر |
+| <div class="display-block ltr">rotate(float $angle, Image\Color $bg)</span>  | چرخش تصویر |
+| <div class="display-block ltr">fromFormat(File $file)</span>   |  تبدیل شئ فایل به شئ کلاس تصویر طبق فرمت |
+| <div class="display-block ltr">fromContent(File $file)</span>  | تبدیل شئ فایل به شئ کلاس تصویر طبق محتوا |
 
 
 ## [ذخیره تصویر](#save_image)
@@ -122,21 +122,22 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 ```php
 <?php
 namespace packages\my_package\controllers;
-use packages\base\{Image, IO\File, Packages, View, Http};
-use packages\my_package\User;
+
 use theme\theme_name\views;
+use packages\my_package\User;
+use packages\base\{Image, IO\File, Packages, View, Http};
 
 class profile extends controller{
 
-    function update($data) {
+    public function update($data) {
         $user = User::byId($data['id']);
-        if(!$user) {
+        if (!$user) {
             throw new NotFound;
         } 
         $view = View::byName(views\profile\Update::class);
         $this->response->setView($view);
         
-        if(Http::is_post()) {
+        if (Http::is_post()) {
             $inputs = array(
                 'name' => array(
                     'type' => 'string'
@@ -155,17 +156,18 @@ class profile extends controller{
             
             if (isset($formdata['avatar'])) {
 
-                $tmpfile = new file\tmp();  // ایجاد فایل موقت
-                $formdata['avatar']->resize(200, 200)->saveToFile($tmpfile);    
+                $formdata['avatar']->resize(200, 200)->save();    
                 
-                $formdata['avatar'] = 'storage/public_avatar/' . $tmpfile->md5() . '.' . $formdata['avatar']->getExtension();
+                $path = 'storage/public_avatar/' . $formdata['avatar']->getFile()->md5() . '.' . $formdata['avatar']->getExtension();
                 
-                $avatar = new file\Local(Packages::package('my_package')->getFilePath($formdata['avatar']));
+                $avatar = Packages::package('my_package')->getFile($path);
                 $directory = $avatar->getDirectory();
                 if (!$directory->exists()) {
                     $directory->make(true);
                 }
-                $tmpfile->copyTo($avatar);
+				$formdata['avatar']->saveToFile($avatar);
+				
+				$formdata['avatar'] = $path;
             }
 
             $user->avatar = $formdata['avatar'];
@@ -179,22 +181,11 @@ class profile extends controller{
 }
 ```
 
-در مثال فوق فیلد avatar که از نوع تصویر مشخص شده است، بعد از اعتبارسنجی   ($formdata['avatar'])  شي از جنس کلاس Image میباشد.
-
-تصویر دریافتی را با متد `resize` به ابعاد 200px * 200px تغییر اندازه میدهیم و با متد `saveToFile` در فایل موقت ($tmpfile) ذخیره میکنیم.
-
-سپس در $formdata['avatar'] آدرس محل ذخیره تصویر را به همراه نام آن ایجاد میکنیم.
- با استفاده از $tmpfile->md5 براساس هش md5 نام جدید برای تصویر ایجاد میکنیم، و با استفاده از $formdata['avatar']->getExtension() فرمت تصویر را مشخص میکنیم. 
-
-سپس در $avatar شئ‌از کلاس File برای فایل جدید ایجاد میکنیم.
-و در نهایت فایل موقت (که تصویر ارسالی کاربر در آن ذخیره شده است ) را آدرسی که برای آن ایجاد کرده‌ایم ($avatar) ذخیره میکنیم.
-
-
 ## [ترسیم تصویر](#set_color_at) 
 با استفاده از متد `setColorAt` میتوانید تصویری را ترسیم کنید. 
-نحوه ی کار متد به اینصورت است که مختصات پیکسل را گرفته و مصابق رنگ تعیین شده آن پیکسل را رنگ میکند. در واقع برای ترستم تصویر لازم است پیکسل به پیکسل پیش برویم. 
+نحوه ی کار متد به اینصورت است که مختصات پیکسل را گرفته و مصابق رنگ تعیین شده آن پیکسل را رنگ میکند. در واقع برای ترسیم تصویر لازم است پیکسل به پیکسل پیش برویم. 
 
-متد setColorAt سه آرگومان ورودی میگیرد، آرگومان اول موقعیت پیکسل در محور x و آرگومان دوم موقعیت پیکسل در محور y میباشد; و در آرگومان سوم رنگ مورد نظر را میگیرد که از جنس کلاس [Color](#color) می‌باشد.
+متد setColorAt سه آرگومان ورودی میگیرد، آرگومان اول موقعیت پیکسل در محور x و آرگومان دوم موقعیت پیکسل در محور y میباشد; در آرگومان سوم رنگ مورد نظر را از جنس کلاس [Color](#color) دریافت میکند.
 
 در مثال زیر قصد ترسیم یک ضربدر در تصویر داریم.
 
@@ -202,11 +193,12 @@ class profile extends controller{
 ```php
 <?php
 namespace packages\my_package\controllers;
+
 use packages\base\{Image, IO\File, Packages};
 
 class Drawing extends controller{
 
-    function closeSign() {
+    public function closeSign() {
         
         $image = new Image\PNG(100, 100 , Image\Color::fromRGB(255, 255, 255));
 
@@ -215,9 +207,14 @@ class Drawing extends controller{
         for ($i = 1; $i < 100; $i++) {
             $image->setColorAt( $i, $i, $yellow);
             $image->setColorAt( $i, 100-$i, $yellow);
-        }
+		}
+		
+		$file = Packages::package("my_package")->getFile("images/closeSign.png");
 
-        $image->saveToFile(new File\Local("packages/my_package/images/closeSign.png"));
+		$image->saveToFile($file);
+		
+		$this->response->setStatus(true);
+		return $this->response;
     }
 }
 ```
@@ -225,7 +222,7 @@ class Drawing extends controller{
 سپس در حلقه  for مختصات پیکسل ها را مشخص میکنیم. 
 بطور مثال زمانی که $i = 4 است.
 
-$image->setColorAt( 4, 96, $yellow) : پیکسلی که x آن برابر 4 و y آن برابر 96 باشد، رنگ آن زرد می‌شود. 
+<span class="d-inline ltr">$image->setColorAt( 4, 96, $yellow)</span> : پیکسلی که x آن برابر 4 و y آن برابر 96 باشد، رنگ آن زرد می‌شود. 
 
 تصویر ایجاد شده در کد فوق بصورت زیر می‌باشد.
 
@@ -247,15 +244,15 @@ $color = $image->colorAt(4, 96);
 /**
  * $color :
  * packages\base\Image\Color Object
-    (
-        [r:packages\base\Image\Color:private] => 248
-        [g:packages\base\Image\Color:private] => 195
-        [b:packages\base\Image\Color:private] => 13
-        [a:packages\base\Image\Color:private] => 1
-    )
-    */
+ *  (
+ *      [r:packages\base\Image\Color:private] => 248
+ *      [g:packages\base\Image\Color:private] => 195
+ *      [b:packages\base\Image\Color:private] => 13
+ *      [a:packages\base\Image\Color:private] => 1
+ *  )
+ */
 ```
-اگر تصویر $image را تصویر ایجاد شده در مثال 1 در نظر بگیریم در متغیر $color شئ از کلاس Color که بیانگر کد رنگ زرد است ذخیره می‌شود.
+اگر تصویر <span class="d-inline ltr">$image</span> را تصویر ایجاد شده در مثال 1 در نظر بگیریم در متغیر <span class="d-inline ltr">$color</span> شئ از کلاس Color که بیانگر کد رنگ زرد است ذخیره می‌شود.
 
 
 ## [کپی کردن قسمتی از یک تصویر](#copy)
@@ -276,11 +273,12 @@ $color = $image->colorAt(4, 96);
 ```php
 <?php
 namespace packages\my_package\controllers;
+
 use packages\base\{Image, IO\File, Packages};
 
 class Drawing extends controller{
 
-    function square() {
+    public function square() {
         
         $image = new Image\JPEG(200, 200 , Image\Color::fromRGB(255, 255, 255));
 
@@ -323,26 +321,33 @@ class Drawing extends controller{
 ```php
 <?php
 namespace packages\my_package\controllers;
+
 use packages\base\{Image, IO\File, Packages};
 
 class Picture extends controller {
 
-    function resizePic() {
-        
+    public function resizePic() {
         $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-        $image->resize(150, 150)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+		$image->resize(150, 150)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+
+		$this->response->setStatus(true);
+		return $this->response;
     }
 
-    function resizeHeight () {
-        
+    public function resizeHeight () {
         $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-        $image->resizeToHeight(200)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+		$image->resizeToHeight(200)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+
+		$this->response->setStatus(true);
+		return $this->response;
     }
 
-    function resizeWidth () {
-        
+    public function resizeWidth () {
         $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-        $image->resizeToWidth(250)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+		$image->resizeToWidth(250)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+
+		$this->response->setStatus(true);
+		return $this->response;
     }
 }
 ```
@@ -388,10 +393,12 @@ use packages\base\{Image, IO\File, Packages};
 
 class Picture extends controller{
 
-    function rotate() {
+    public function rotate() {
         $image = new Image\PNG(new File\Local("packages/my_package/images/phpLogo.png"));
         $image->rotate(180, Image\Color::fromRGB(0,0,0,))->saveToFile(new File\Local("packages/my_package/images/newPhpLogo.png"));
         
+        $this->response->setStatus(true);
+        return $this->response;
     }
 }
 ```
@@ -422,22 +429,22 @@ $image = Image::fromFormat(new File\Local("packages/my_package/images/img.png"))
 
 /**
  * packages\base\Image\PNG Object
-    (
-        [image:protected] => Resource id #1180
-        [file:protected] => packages\base\IO\file\local Object
-            (
-                [directory] => packages/my_package/images
-                [basename] => img.png
-            )
-
-    )
-    */
+ *  (
+ *      [image:protected] => Resource id #1180
+ *      [file:protected] => packages\base\IO\file\local Object
+ *          (
+ *              [directory] => packages/my_package/images
+ *              [basename] => img.png
+ *          )
+ *
+ *  )
+ */
 ```
 
-# [رنگ‌ ها](#color)
+## [رنگ‌ ها](#color)
 هنگام استفاده از متدهای کلاس Image برای ایجاد تصویر جدید،‌ ترسیم تصویر و ... لازم است رنگ مورد نظر را به متد معرفی کنید که ورودی متدها شئ از کلاس `packages\base\Image\Color` می‌باشد. 
 
-## معرفی رنگ 
+## [معرفی رنگ](#create_color) 
 از متدهای `fromRGB` و `fromRGBA` برای معرفی رنگ استفاده می‌شود. 
 رنگ ها طبق فرمت R G B معرفی میشوند. متدها برای سهولت فراخوانی بصورت `static` تعریف شده‌اند.
 
@@ -456,7 +463,7 @@ $rgb = Color::fromRGB(17,160,234); // red:17 green:160 blue: 234 => معرف ر�
 $rgba = Color::fromRGBA(235,185,18, 0.2); // red:235 green:185 blue: 18 alpha: 0.2 => معرف رنگ نارنجی
 ```
 
-## خواندن رنگ 
+## [خواندن رنگ](#get_color)
 میتوانید با فراخوانی متدهای `toRGB` و `toRGBA` کد رنگ های معرفی شده را بصورت آرایه دریافت کنید. 
 خانه های آرایه به ترتیب معرف کد رنگ های قرمز ، سبز و آبی هستند. 
 
@@ -475,22 +482,22 @@ $rgb = Color::fromRGB(17,160,234)
 $rgb->toRGB();
 /**
  * Array
-    (
-        [0] => 17
-        [1] => 160
-        [2] => 234
-    )
-    */
+ *  (
+ *      [0] => 17
+ *      [1] => 160
+ *      [2] => 234
+ *  )
+ */
 
 $rgba = Color::fromRGBA(235,185,18, 0.2);
 $rgba->toRGBA();
 /**
  * Array
-    (
-        [0] => 235
-        [1] => 185
-        [2] => 18
-        [3] => 0.2
-    )
-    */
+ *  (
+ *      [0] => 235
+ *      [1] => 185
+ *      [2] => 18
+ *      [3] => 0.2
+ *  )
+ */
 ```
