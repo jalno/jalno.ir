@@ -3,12 +3,9 @@
 متد ها را میتوانید بدون هیچ نگرانی در هم ریختگی برای آرایه و یا رشته های زبان فارسی استفاده کنید .
 
 ## تبدیل آرایه به رشته
-برای تبدیل یک آرایه به رشته (برای امور مختلف مانند ذخیره در پایگاه داده) باید از تابع `encode` استفاده کنید . این تابع در پارامتر خود یک مقدار از هر جنسی دریافت میکند و خروجی آن یک رشته خواهد بود .
+برای تبدیل یک آرایه به رشته (برای امور مختلف مانند ذخیره در پایگاه داده) باید از تابع `encode` استفاده کنید . این تابع در آرگومان اول یک مقدار از هر جنسی دریافت میکند و در آرگومان دوم ثابت‌های مربوط به json_encode که در php تعریف شده است را دریافت میکند. (آرگومان دوم اختیاری‌است.) خروجی این متد یک رشته خواهد بود.
 
-	json\encode(input);
-
-### ثابت `JSON_PRETTY_PRINT`
-یک مقدار ثابت در زبان php است که میتوانید این مقدار را در پارامتر دوم تابع `encode` استفاده کنید . با تنظیم این ثابت، خروجی رشته به صورت مرتب شده خواهد بود .
+	json\encode($input, $option);
 
 **مثال**
 ```php
@@ -46,43 +43,7 @@ class Test extends Controller {
 
 	json\decode(string);
 
-**مثال 1**
-```php
-<?php
-namespace packages\packagename\controllers;
-use packages\base\{Controller, Json};
-
-class Test extends Controller {
-    
-    public function encodeArray(){
-
-        $array = array(
-            "name" => "jalno",
-            "company" => "جی سرور",
-            "domain" => "https://www.jalno.ir"
-        );
-
-        try {
-            echo json\encode($array);
-            echo json\encode($array, JSON_PRETTY_PRINT);
-    
-            /* output
-                {"name":"jalno","company":"جی سرور","domain":"https:\/\/www.jalno.ir"}
-    
-                {
-                    "name": "jalno",
-                    "company": "جی سرور",
-                    "domain": "https:\/\/www.jalno.ir"
-                }
-            */
-        }catch(Json\JsonException $e) {
-            echo "JsonException: {$e->getMessage()}";
-        }
-    }
-}
-```
-
-**مثال 2**
+**مثال**
 ```php
 <?php
 namespace packages\packagename\controllers;
