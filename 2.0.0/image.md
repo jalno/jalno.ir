@@ -54,13 +54,13 @@ $image = new Image\WEBP(200, 150, Image\Color::fromRGB(0, 0, 0));
 use packages\base\Image;
 
 
-$file = new File\Local("packages/my_package/storage/images/image.jpg");
+$file = new File\Local("packages/packagename/storage/images/image.jpg");
 $image = new Image\PNG($file);
 ```
 
 **خروجی**
 ````
-Warning: imagecreatefrompng(): 'packages/my_package/storage/images/image.jpg' is not a valid PNG file 
+Warning: imagecreatefrompng(): 'packages/packagename/storage/images/image.jpg' is not a valid PNG file 
 ````
 
 مثال از کد **صحیح**
@@ -68,16 +68,16 @@ Warning: imagecreatefrompng(): 'packages/my_package/storage/images/image.jpg' is
 use packages\base\Image;
 
 
-$image = new Image\JPEG(new File\Local("packages/my_package/storage/images/image.jpeg"));
+$image = new Image\JPEG(new File\Local("packages/packagename/storage/images/image.jpeg"));
 
 
-$image = new Image\PNG(new File\Local("packages/my_package/storage/images/image.png"));
+$image = new Image\PNG(new File\Local("packages/packagename/storage/images/image.png"));
 
 
-$image = new Image\GIF(new File\Local("packages/my_package/storage/images/image.gif"));
+$image = new Image\GIF(new File\Local("packages/packagename/storage/images/image.gif"));
 
 
-$image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image.webp"));
+$image = new Image\WEBP(new File\Local("packages/packagename/storage/images/image.webp"));
 ```
 
 
@@ -90,7 +90,7 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 |---------------------------|------|
 | <div class="display-block ltr">saveToFile(File $file, int $quality)</span>  | ذخیره تصویر در مکان مشخص |
 | <div class="display-block ltr">save(int $quality)</span>  | ذخیره تصویر |
-| <div class="display-block ltr">getFile()</span>   | شئ از کلاس File برمیگرداند  |
+| <div class="display-block ltr">getFile()</span>   | برای تصاویری که ذخیره شده و یا از روی یک فایل ایجاد شده باشند، شئ از کلاس File برمیگرداند  |
 | <div class="display-block ltr">getWidth()</span>  |   خواندن عرض تصویر|
 | <div class="display-block ltr">getHeight()</span>  |  خواندن ارتفاع تصویر|
 | <div class="display-block ltr">getExtension()</span>  |  خواندن فرمت تصویر|
@@ -121,10 +121,10 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 
 use theme\theme_name\views;
-use packages\my_package\User;
+use packages\packagename\User;
 use packages\base\{Image, IO\File, Packages, View, Http};
 
 class profile extends controller{
@@ -160,7 +160,7 @@ class profile extends controller{
                 
                 $path = 'storage/public_avatar/' . $formdata['avatar']->getFile()->md5() . '.' . $formdata['avatar']->getExtension();
                 
-                $avatar = Packages::package('my_package')->getFile($path);
+                $avatar = Packages::package('packagename')->getFile($path);
                 $directory = $avatar->getDirectory();
                 if (!$directory->exists()) {
                     $directory->make(true);
@@ -192,7 +192,7 @@ class profile extends controller{
 **1 مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 
 use packages\base\{Image, IO\File, Packages};
 
@@ -209,7 +209,7 @@ class Drawing extends controller{
             $image->setColorAt( $i, 100-$i, $yellow);
 		}
 		
-		$file = Packages::package("my_package")->getFile("images/closeSign.png");
+		$file = Packages::package("packagename")->getFile("images/closeSign.png");
 
 		$image->saveToFile($file);
 		
@@ -238,7 +238,7 @@ class Drawing extends controller{
 
 **مثال 2**
 ```php
-$image = new Image\PNG(new File\Local("packages/my_package/images/closeSign.png");
+$image = new Image\PNG(new File\Local("packages/packagename/images/closeSign.png");
 
 $color = $image->colorAt(4, 96);
 /**
@@ -272,7 +272,7 @@ $color = $image->colorAt(4, 96);
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 
 use packages\base\{Image, IO\File, Packages};
 
@@ -290,13 +290,13 @@ class Drawing extends controller{
             }
         }
 
-        $image->saveToFile(new File\Local("packages/my_package/images/square.png"));
+        $image->saveToFile(new File\Local("packages/packagename/images/square.png"));
 
         $partOfImage = $image->copy(51, 51, 100, 50);
         
         $new = new Image\PNG(200, 200 , Image\Color::fromRGB(0, 0, 0));
         $new->paste($partOfImage, 50, 50, 0.5);
-        $new->saveToFile(new File\Local("packages/my_package/images/new_square.png"));
+        $new->saveToFile(new File\Local("packages/packagename/images/new_square.png"));
     }
 }
 ```
@@ -321,31 +321,31 @@ class Drawing extends controller{
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 
 use packages\base\{Image, IO\File, Packages};
 
 class Picture extends controller {
 
     public function resizePic() {
-        $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-		$image->resize(150, 150)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+        $image = new Image\JPEG(new File\Local("packages/packagename/img.jpeg"));
+		$image->resize(150, 150)->saveToFile(new File\Local("packages/packagename/newImg.jpeg"));
 
 		$this->response->setStatus(true);
 		return $this->response;
     }
 
     public function resizeHeight () {
-        $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-		$image->resizeToHeight(200)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+        $image = new Image\JPEG(new File\Local("packages/packagename/img.jpeg"));
+		$image->resizeToHeight(200)->saveToFile(new File\Local("packages/packagename/newImg.jpeg"));
 
 		$this->response->setStatus(true);
 		return $this->response;
     }
 
     public function resizeWidth () {
-        $image = new Image\JPEG(new File\Local("packages/my_package/img.jpeg"));
-		$image->resizeToWidth(250)->saveToFile(new File\Local("packages/my_package/newImg.jpeg"));
+        $image = new Image\JPEG(new File\Local("packages/packagename/img.jpeg"));
+		$image->resizeToWidth(250)->saveToFile(new File\Local("packages/packagename/newImg.jpeg"));
 
 		$this->response->setStatus(true);
 		return $this->response;
@@ -362,15 +362,15 @@ class Picture extends controller {
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 use packages\base\{Image, IO\File, Packages};
 
 class Picture extends controller{
 
-    function scale() {
-        $image = new Image\JPEG(new File\Local("packages/my_package/images/image.jpeg"));
+    public function scale() {
+        $image = new Image\JPEG(new File\Local("packages/packagename/images/image.jpeg"));
 
-        $image->scale(5)->saveToFile(new File\Local("packages/my_package/images/newImage.jpeg"));
+        $image->scale(5)->saveToFile(new File\Local("packages/packagename/images/newImage.jpeg"));
         
     }
 }
@@ -384,19 +384,20 @@ class Picture extends controller{
 در کلاس  Image برای چرخش تصویر متد `rotate` ایجاد شده است. 
 این متد دو آرگومان ورودی میگیرد که در آرگومان اول زاویه چرخش و در آرگومان دوم رنگ زمینه برای تصویر جدید می‌باشد.
 
-**توجه :** برای ذخیره تصاویری که متد rotate روی آن فراخوانی شده است باید از متد `saveToFile` استفاده شود. نمیتوانید متد `save` را برای آن فراخوانی کنید.
+**توجه :** خروجی متد rotate شئ جدید از کلاس Image میباشد به همین دلیل برای ذخیره آن باید از متد `saveToFile` استفاده شود.
+
 
 **مثال**
 ```php
 <?php
-namespace packages\my_package\controllers;
+namespace packages\packagename\controllers;
 use packages\base\{Image, IO\File, Packages};
 
 class Picture extends controller{
 
     public function rotate() {
-        $image = new Image\PNG(new File\Local("packages/my_package/images/phpLogo.png"));
-        $image->rotate(180, Image\Color::fromRGB(0,0,0,))->saveToFile(new File\Local("packages/my_package/images/newPhpLogo.png"));
+        $image = new Image\PNG(new File\Local("packages/packagename/images/phpLogo.png"));
+        $image->rotate(180, Image\Color::fromRGB(0,0,0,))->saveToFile(new File\Local("packages/packagename/images/newPhpLogo.png"));
         
         $this->response->setStatus(true);
         return $this->response;
@@ -422,11 +423,11 @@ class Picture extends controller{
 ```php
 use packages\base\Image;
 
-$image = Image::fromContent(new File\Local("packages/my_package/images/img.png"));
+$image = Image::fromContent(new File\Local("packages/packagename/images/img.png"));
 
 // or 
 
-$image = Image::fromFormat(new File\Local("packages/my_package/images/img.png"));
+$image = Image::fromFormat(new File\Local("packages/packagename/images/img.png"));
 
 /**
  * packages\base\Image\PNG Object
@@ -434,7 +435,7 @@ $image = Image::fromFormat(new File\Local("packages/my_package/images/img.png"))
  *      [image:protected] => Resource id #1180
  *      [file:protected] => packages\base\IO\file\local Object
  *          (
- *              [directory] => packages/my_package/images
+ *              [directory] => packages/packagename/images
  *              [basename] => img.png
  *          )
  *
