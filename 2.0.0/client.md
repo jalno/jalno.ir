@@ -84,30 +84,36 @@ class Main extends Controller {
 | <span class="display-block ltr">outgoing_ip</span>    |    مشخص کردن IP برای سرورهایی که چند آدرس IP دارند       |
 
 ### [auth](#auth) 
-برای اتصال به برخی از سرورها نیاز به نام کاربری و رمز عبور برای احراز‌هویت میباشد. برای این منظور کلید auth آرایه‌ای از نام کاربری و رمز‌عبور میگیرد. 
-اگر کلید auth بصورت آرایه و با کلید‌های `username` , `password` مقدار‌دهی شود؛ در هدر درخواست کلید Authorization بصورت کد شده مقداردهی میشود. (Authorization: Basic YWxpOjEyMzQ1Nzg= )
-
-**توجه:** اگر کلید auth بصورت رشته مقداردهی شود بدون هیچ پردازشی به هدر درخواست اضافه می‌شود.(Authorization: name pass)
-
+برای اتصال به برخی از سرورها نیاز به نام کاربری و رمز عبور برای احراز‌هویت میباشد. برای این منظور کلید auth مقداری برای کلید Authorization در header درخواست دریافت میکند.
+اگر کلید auth بصورت آرایه و با کلید‌های `username` , `password` مقدار‌دهی شود؛ در هدر درخواست کلید Authorization بصورت کد شده مقداردهی میشود.
 ```php
 $params = [
 	"auth" => [
 		"username" => "ali",
-		"password" => 1234578
-	]
-	/**
-	 * or :
-	 * "auth" => "name pass"
-	 * */
+		"password" => 1234578,
+	],
 ];
+/**
+ * Output like
+ * Authorization: Basic YWxpOjEyMzQ1Nzg=
+ */
+```
+
+**توجه:** اگر کلید auth بصورت رشته مقداردهی شود بدون هیچ پردازشی به هدر درخواست اضافه می‌شود.
+```php
+$params = [
+	"auth" => "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+];
+/**
+ * Output like
+ * Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+ */
 ```
 
 ### [headers](#headers)
 هر درخواستی که ارسال میشود داری هدر میباشد که مشخص کننده‌ی اطلاعاتی در رابطه با درخواست مانند فرمت داده‌های ارسالی، تاریخ و ... میباشد. 
 
 headers['content-type'] فرمت داده‌های ارسالی را مشخص میکند که بطور پیش‌فرض برابر text/plain است. مقدار content-type مطابق کلید‌های json, form_params, multipart توسط فرمورک مقداردهی می‌شود. 
-
-بطورکلی تمامی پارامترهای headers توسط فرمورک مدیریت میشود.
 
 **توجه :** در هر درخواست فقط باید یکی از کلید‌های json, form_params, multipart را مقداردهی کنید.
 
