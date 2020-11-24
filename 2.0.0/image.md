@@ -226,7 +226,7 @@ class Drawing extends controller{
 
 تصویر ایجاد شده در کد فوق بصورت زیر می‌باشد.
 
-![closeSign](../images/closeSign.png)
+![closeSign](./images/closeSign.png)
 
 
 ### خواندن رنگ پیکسل 
@@ -307,8 +307,8 @@ class Drawing extends controller{
 
 تصاویر ایجاد شده بصورت زیر میباشند.
 
-![square](../images/square.png)
-![square](../images/new_square.png)
+![square](./images/square.png)
+![square](./images/new_square.png)
 
 ## [تغییر اندازه](#resize)
 برای تغییر اندازه تصویر متد `resize` ایجاد شده است. دو آرگومان ورودی میگیرد که آرگومان اول اندازه عرض و آرگومان دوم ارتفاع میباشد. 
@@ -407,8 +407,8 @@ class Picture extends controller{
 
 تصویر ایجاد شده در کد فوق بصورت زیر می‌باشد.
 
-![phpLogo](../images/phpLogo.png)
-![newPhpLogo](../images/newPhpLogo.png)
+![phpLogo](./images/phpLogo.png)
+![newPhpLogo](./images/newPhpLogo.png)
 
 ## [تبدیل شئ فایل به شئ کلاس تصویر](#convert_file_to_image)
 گاها لازم است تصویری که شئ از جنس کلاس [File](file.md) است به شئ از کلاس Image تبدیل شود; برای این منظور دو متد `fromFormat` و `fromContent` ایجاد شده است. 
