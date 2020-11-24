@@ -19,9 +19,9 @@
 زمانی که قصد ایجاد تصویر جدید را دارید، شئ از کلاس فرمتی که برای تصویر در نظر دارید ایجاد میکنید. 
 متد سازنده سه آرگومان ورودی میگیرد. 
 آرگومان اول عرض تصویر،‌آرگومان دوم ارتفاع و آگومان سوم رنگ زمینه تصویر میباشد
-که آرگومان سوم باید از جنس کلاس [Color](#color) باشد.
+که آرگومان سوم باید از جنس کلاس [Color](#color) باشد. ابعاد تصویر برحسب px میباشند.
 
-**توجه :** ابعاد تصویر برحسب px میباشند.
+برنامه نویسان باید توجه داشته باشند تصویر ایجاد شده تا زمانی که متد `saveToFile()` فراخوانی نشود ذخیره نشده (فایلی برای آن ایجاد نشده) است و فقط در دسترس برنامه نویس میباشد. 
 
 در مثال های زیر تصویری با عرض 200px و ارتفاع 150px و رنگ زمینه مشکی در فرمت مشخص شده ایجاد می‌شود.
 
@@ -93,13 +93,13 @@ $image = new Image\WEBP(new File\Local("packages/my_package/storage/images/image
 | <div class="display-block ltr">getFile()</span>   | شئ از کلاس File برمیگرداند  |
 | <div class="display-block ltr">getWidth()</span>  |   خواندن عرض تصویر|
 | <div class="display-block ltr">getHeight()</span>  |  خواندن ارتفاع تصویر|
-| <div class="display-block ltr">getExtension</span>  |  خواندن فرمت تصویر|
+| <div class="display-block ltr">getExtension()</span>  |  خواندن فرمت تصویر|
 | <div class="display-block ltr">resize(int $width, int $height)</span>  |  تغییر ابعاد تصویر|
 | <div class="display-block ltr">resizeToHeight(int $height)</span>  | تغییر ارتفاع تصویر |
 | <div class="display-block ltr">resizeToWidth(int $width)</span>  | تغییر عرض تصویر |
 | <div class="display-block ltr">scale(int $scale)</span>  | زوم تصویر |
 | <div class="display-block ltr">colorAt(int $x, int $y)</span>  | خواندن رنگ پیکسل مشخصی از تصویر |
-| <div class="display-block ltr">setColorAt</span>  | رنگ کردن پیکسل مشخص  |
+| <div class="display-block ltr">setColorAt(int $x, int $y, Image\Color $color)</span>  | رنگ کردن پیکسل مشخص  |
 | <div class="display-block ltr">paste(Image $image, int $x, int $y)</span>  | جایگذاری در بخشی از تصویر |
 | <div class="display-block ltr">copy(int $x, int $y, int $width, $height)</span>  | کپی کردن قسمتی از تصویر |
 | <div class="display-block ltr">rotate(float $angle, Image\Color $bg)</span>  | چرخش تصویر |
@@ -315,7 +315,8 @@ class Drawing extends controller{
 
 همچنین متدهای `resizeToHeight` و `resizeToWidth` برای تغییر اندازه مجزا ابعاد ایجاد شده است.
 
-**توجه :** برای ذخیره تصاویری که متد resize و resizeToHeight و resizeToWidth روی آن فراخوانی شده است باید از متد `saveToFile` استفاده شود. نمیتوانید متد `save` را برای آن فراخوانی کنید.
+**توجه :** خروجی متدهای resize و resizeToHeight و resizeToWidth شئ جدید از کلاس Image میباشد به همین دلیل برای ذخیره آن باید از متد `saveToFile` استفاده شود.
+
 
 **مثال**
 ```php
@@ -356,7 +357,7 @@ class Picture extends controller {
 گاها لازم است تصویر زوم شده و ذخیره شود برای این منظور متد `scale` ایجاد شده است. 
 ورودی متد scale عدد صحیح از درصد زوم شدن عکس میباشد. 
 
-**توجه :** برای ذخیره تصاویری که متد scale روی آن فراخوانی شده است باید از متد `saveToFile` استفاده شود. نمیتوانید متد `save` را برای آن فراخوانی کنید.
+**توجه :** خروجی متد scale شئ جدید از کلاس Image میباشد به همین دلیل برای ذخیره آن باید از متد `saveToFile` استفاده شود.
 
 **مثال**
 ```php
