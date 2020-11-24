@@ -76,6 +76,8 @@ class Test extends Controller {
                     ["e"] => int(5)
                 }
             */
+        }catch(Json\JsonException $e) {
+            echo "JsonException: {$e->getMessage()}";
         }
     }
 }
@@ -116,17 +118,18 @@ class Questions extends Controller {
                 ];
             }   
             $options = Json\encode($option);
+
+            $question = new Model();
+            $question->question = $inputs['question'];
+            $question->options = $options;
+            $question->save();
+            $this->response->setStatus(true);
+
         }catch(Json\JsonException $e) {
             echo "JsonException: {$e->getMessage()}";
         }
 
-        $question = new Model();
-        $question->question = $inputs['question'];
-        $question->options = $options;
-        $question->save();
-
-		$this->response->setStatus(true);
-		return $this->response;
+        return $this->response;
 	}
 }
 ```
