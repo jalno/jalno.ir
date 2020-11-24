@@ -16,24 +16,37 @@ namespace مربوط به هر event را در کلید `name` و شنونده �
 
 **نمونه فایل package.json**
 ```json
-"events": [
-    {
-        "name":"packages/userpanel/events/search",
-        "listener": "listeners/search@find"
-    },
-    {
-        "name":"packages/userpanel/events/search",
-        "listener": "listeners/users@list"
-    },
-    {
-        "name":"packages/sms/events/templates",
-        "listener": "listeners/sms@templates"
-    },
-    {
-        "name":"packages/email/events/templates",
-        "listener": "listeners/email@templates"
-    }
-]
+{
+	"permissions": "*",
+	"routing": "routing.json",
+	"frontend": ["frontend", "panel", "userpanel"],
+	"autoload": {
+		"directories": ["controllers", "Models", "listeners", "events"]
+	},
+	"dependencies": ["userpanel", "sms", "email"],
+	"languages": {
+		"fa_IR": "langs/fa_IR.json"
+	},
+	"events": [
+		"events": [
+            {
+                "name":"packages/userpanel/events/search",
+                "listener": "listeners/search@find"
+            },
+            {
+                "name":"packages/userpanel/events/search",
+                "listener": "listeners/users@list"
+            },
+            {
+                "name":"packages/sms/events/templates",
+                "listener": "listeners/sms@templates"
+            },
+            {
+                "name":"packages/email/events/templates",
+                "listener": "listeners/email@templates"
+            }
+        ]
+	]
 ```
 در مثال فوق برای رویداد packages/userpanel/events/search دو شنونده مجزا listeners/search@find و listeners/users@list تعریف شده است.
 
@@ -108,11 +121,11 @@ class Email extends Event {
 		$this->user = $user;
     }
     
-    public function getName(): string {
+    public static function getName(): string {
         return $this->user->name.' '.$this->user->lastname ;
     }
 
-    public function getEmail(): string {
+    public static function getEmail(): string {
         return $this->user->email;
     }
 }
@@ -137,7 +150,7 @@ class Email extends Event {
  **/
 <?php
 namespace packages\my_package\listeners;
-use packages\my_package\events\Email;
+use packages\my_package\events\Email as EmailEvant;
 
 class Email {
     public $userEmail;
@@ -145,8 +158,8 @@ class Email {
     const $SENDER = "email@example.com";
 
 	public function templates(Email $event){
-        $this->name = Email::getName();
-        $this->userEmail = Email::getEmail();
+        $this->name = EmailEvant::getName();
+        $this->userEmail = EmailEvant::getEmail();
         $this->sendEmail();
     }
     
