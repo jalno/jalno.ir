@@ -1,22 +1,22 @@
 # [ایجاد درخواست‌های اینترنتی](#create_request_internet)
-در جالنو برای ایجاد درخواست های اینترنتی کلاس `packages\base\http\Client` ایجاد شده است. 
-این کلاس به عنوان یک wrapper عمل میکند و میتواند در خواست‌های اینترنتی مختلف ایجاد کند. 
+در جالنو برای ایجاد درخواست های اینترنتی کلاس `packages\base\http\Client` ایجاد شده است. این کلاس با استفاده از سایر کتابخانه ها میتواند یک درخواست اینترنتی POST و یا GET ایجاد کند.
 در حال حاضر جالنو تنها از کتابخانه CURL برای ایجاد درخواست استفاده میکند; برای این منظور کلاس `packages\base\http\CURL` ایجاد شده است.
 
+**نکته**: استفاده از Client بجای استفاده مستقیم از کلاس CURL این امکان را به شما میدهد تا در هر زمان بدون تغییر در کد ها، کتابخانه ی جدیدی اضافه کرده و از آن پس از آن استفاده کنید.
+
 ### [معرفی کتابخانه CURL](#curl)
-برای بازیابی محتوایات یک صفحه در php از روش ها و متدهای مختلفی (مانند file_get_contents("http://www.google.com") ) استفاده میشود. اما گاها لازم است هنگام بازیابی صفحه از کوکی ها استفاده شود یا اطلاعاتی به فرمی ارسال شود و یا عملیات احراز‌هویت انجام شود. که برای انجام این دسته از عملیات در php کتابخانه [`CURL`](http://docs.php.net/manual/en/book.curl.php) ایجاد شده است. 
+برای دریافت محتوایات یک صفحه در php از روش ها و متدهای مختلفی مانند   
+<code class="display-block ltr">file_get_contents("http://www.google.com")</code>
+استفاده میشود. اما گاها لازم است هنگام دریافت صفحه از کوکی ها استفاده شود یا اطلاعاتی به فرمی ارسال شود و یا عملیات احراز‌هویت انجام شود  که برای انجام این دسته از عملیات در php کتابخانه [`CURL`](http://docs.php.net/manual/en/book.curl.php) ایجاد شده است. 
 
 ## [ایجاد درخواست](#create_request)
-برای ایجاد یک درخواست لازم است ابتدا شئ از کلاس `packages\base\http\Client` ایجاد شود. 
-
-یک درخواست میتواند یکی از انواع `get` یا `post` باشد. به همین منظور در کلاس Client دو متد get و post ایجاد شده است که متناسب با نوع درخواست، متد مربوطه فراخوانی میشود. 
-
+برای ایجاد یک درخواست لازم است ابتدا شئ از کلاس `packages\base\http\Client` ایجاد شود.    
+یک درخواست میتواند یکی از انواع `get` یا `post` باشد. به همین منظور در کلاس Client دو متد get و post ایجاد شده است که متناسب با نوع درخواست، متد مربوطه فراخوانی میشود.    
 متدهای get و post دو آرگومان ورودی میگیرند. آرگومان اول آدرس URL که باید بصورت کامل وارد شود و آرگومان دوم آرایه‌ای از تنظیمات درخواست میباشد. 
 خروجی متدها شئ از کلاس `packages\base\http\Response` میباشد.
 
-**توجه :** بهتر است زمان کار با کلاس  Client از لاگ ها استفاده کنید، که در صورت نیاز بتوانید به راحتی برنامه را دیباگ کنید.
-
-برای اطلاعات بیشتر به صفحه [لاگ‌ها](log.md) مراجعه کنید.
+**توجه :** بهتر است زمان کار با کلاس  Client از لاگ ها استفاده کنید، که در صورت نیاز بتوانید به راحتی برنامه را دیباگ کنید.    
+**برای اطلاعات بیشتر به صفحه [لاگ‌ها](log.md) مراجعه کنید.**
 
 **مثال**
 ```php
@@ -47,7 +47,7 @@ class Main extends Controller {
     }
 }
 ```
-در مثال فوق صفحه اول گوگل را گرفته و با فراخوانی متد getbody() که در کلاس [Response](#response) تعریف شده است میتوانید آن را نمایش دهید.
+در مثال فوق صفحه اول گوگل را گرفته و با فراخوانی متد <span class="d-inline ltr">getbody()</span> که در کلاس [Response](#response) تعریف شده است میتوانید آن را نمایش دهید.
 در صورتی که روند اجرا بدرستی پیش نرود و استثنا پرتاب شود کد وضعیت خطا را نمایش میدهد.
 
 
@@ -66,22 +66,22 @@ class Main extends Controller {
 
 |   تنظیم   |    کاربرد   |
 |-------------|-----------|
-| base_uri    |    (مشخص کردن دامنه اصلی سایت (برای ارسال چند درخواست روی یک سایت      |
-| allow_redirects    |     مجوز دنبال کردن صفحاتی که سرور به عنوان بخشی از هدر HTTP ارسال می کند مقدار پیش‌فرض آن true است.       |
-| auth    |      آرایه‌ای از مشخصات احرازهویت     |
-| cookies    |    مجوز ذخیره کوکی       |
-| connect_timeout    |      مدت زمان انتظار برای اتصال به سرور برحسب ثانیه    |
-| delay    |     ایجاد تاخیر در روند اجرا برحسب میکرو‌ثانیه      |
-| form_params    |      ارسال داده‌های متنی     |
-| headers    |     ثبت پارامترهای header درخواست      |
-| json    |       ارسال داده‌هایی با فرمت json    |
-| multipart    |   ارسال فایل     |
-| proxy    |     آرایه‌ای از مشخصات پروکسی       |
-| query    |      آرایه‌ای از متغیر‌هایی که در آدرس URL اضافه می‌شود     |
-| ssl_verify    |      تعیین استفاده یا عدم استفاده از ssl verify (مقدار پیش فرض true است)    |
-| timeout    |      مدت زمان انتظار برای دریافت پاسخ برحسب ثانیه    |
-| save_as    |     مشخص کردن محل ذخیره فایل دانلود شده      |
-| outgoing_ip    |    مشخص کردن IP برای سرورهایی که چند آدرس IP دارند       |
+| <span class="display-block ltr">base_uri</span>    |    مشخص کردن دامنه اصلی سایت.    |
+| <span class="display-block ltr">allow_redirects</span>    |     مجوز دنبال کردن صفحاتی که سرور به عنوان بخشی از هدر HTTP ارسال می کند مقدار پیش‌فرض آن true است.       |
+| <span class="display-block ltr">auth</span>    |      آرایه‌ای از مشخصات احرازهویت     |
+| <span class="display-block ltr">cookies</span>    |    مجوز ذخیره کوکی و یا مشخص کردن مسیر فایل کوکی       |
+| <span class="display-block ltr">connect_timeout</span>    |      مدت زمان انتظار برای اتصال به سرور برحسب ثانیه    |
+| <span class="display-block ltr">delay</span>    |     ایجاد تاخیر در روند اجرا برحسب میکرو‌ثانیه      |
+| <span class="display-block ltr">form_params</span>    |      ارسال داده‌های متنی     |
+| <span class="display-block ltr">headers</span>    |     ثبت پارامترهای header درخواست      |
+| <span class="display-block ltr">json</span>    |       ارسال داده‌هایی با فرمت json    |
+| <span class="display-block ltr">multipart</span>    |   ارسال فایل     |
+| <span class="display-block ltr">proxy</span>    |     آرایه‌ای از مشخصات پروکسی       |
+| <span class="display-block ltr">query</span>    |      آرایه‌ای از متغیر‌هایی که در آدرس URL اضافه می‌شود     |
+| <span class="display-block ltr">ssl_verify</span>    |      اعتبارسنجی گواهینامه سایت (مقدار پیش فرض true است)    |
+| <span class="display-block ltr">timeout</span>    |      مدت زمان انتظار برای دریافت پاسخ برحسب ثانیه    |
+| <span class="display-block ltr">save_as</span>    |     مشخص کردن محل ذخیره فایل دانلود شده      |
+| <span class="display-block ltr">outgoing_ip</span>    |    مشخص کردن IP برای سرورهایی که چند آدرس IP دارند       |
 
 ### [auth](#auth) 
 برای اتصال به برخی از سرورها نیاز به نام کاربری و رمز عبور برای احراز‌هویت میباشد. برای این منظور کلید auth آرایه‌ای از نام کاربری و رمز‌عبور میگیرد. 
@@ -215,12 +215,15 @@ $client->get('userpanel/documents', [
 ```
 
 ```php
-$client = new Client('http://www.example.com/');
+$client = new Client(array(
+	'base_uri' => 'http://www.example.com/',
+));
 
 $client->post('register', [
 	'json' => [
 		'name' => "John",
-		'email' => "john@yahoo.com"
+		'email' => "john@yahoo.com",
+		'password' => '000',
 	]
 ]);
 $client->get('userpanel/tickets', ["query" => ["ajax" => 1]]);
@@ -232,6 +235,7 @@ $client->get('userpanel/tickets', ["query" => ["ajax" => 1]]);
 ```php
 <?php
 namespace packages\packagename\controllers;
+
 use packages\base\{Controller, Log, IO\File, Http};
 
 class FileManager extends Controller {
@@ -255,16 +259,16 @@ class FileManager extends Controller {
 			$log->info("send http request for download php_manual_en.html.gz from php.net");
 
 			$response = $client->get("https://www.php.net/distributions/manual/php_manual_en.html.gz", $params);
+			
 		} catch (Http\ClientException $e) {
 			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
-			
 		} catch (Http\ServerException $e) {
 			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
 		}
     }
 }
 ```
-کد فوق فایل با فرمت gz را دانلود میکند. فایل در محلی که توسط ورودی متد downloadPHPDoc مشخص شده است ($source) و به کلید save_as داده شده است ذخیره می‌شود.
+کد فوق فایل با فرمت gz را دانلود میکند. فایل در محلی که توسط ورودی متد downloadPHPDoc مشخص شده است <span class="d-inline ltr">$source</span> و به کلید save_as داده شده است ذخیره می‌شود.
 
 **مثال 2**
 ```php
@@ -354,7 +358,7 @@ class FileManager extends Controller {
 	}
 }
 ```
-در کد فوق کاربر به پروکسی مشخص شده متصل میشود و سپس فایل داده شده به کلید multipart برای سرور ($url) ارسال می‌شود.
+در کد فوق کاربر به پروکسی مشخص شده متصل میشود و سپس فایل داده شده به کلید multipart برای سرور <span class="d-inline ltr">$url</span> ارسال می‌شود.
 
 **مثال 4**
 ```php
@@ -443,7 +447,7 @@ class Users extends Controller {
 ```
 
 ## [کلاس Response](#response)
-درخواست‌های اینترنتی با فراخوانی متد‌های get , post کلاس `packages\base\http\Client` ارسال میشود. خروجی متدها شئ از کلاس `packages\base\http\Response` میباشد. 
+درخواست‌های اینترنتی با فراخوانی متد‌های get , post کلاس Client ارسال میشود. خروجی متدها شئ از کلاس `packages\base\http\Response` میباشد. 
 با فراخوانی متدهای کلاس Response میتوانید به اطلاعاتی مانند کد وضعیت، هدر پاسخ و اطلاعاتی که از سمت سرور ارسال شده است دسترسی داشته باشید. 
 
 همچنین در استثناهای پرتاب شده با فراخوانی متد `getResponse()` روی شئ استثنا، میتوانید به کلاس Response دسترسی داشته باشید.
@@ -452,11 +456,11 @@ class Users extends Controller {
 
 |   متد   |    کاربرد   |
 |-------------|-----------|
-| getStatusCode()   |      خواندن کد وضعیت     |
-| getHeader($name)    |     خواندن یکی از پارامترهای هدر     |
-| getHeaders()    |      خواندن پارامترهای هدر   |
-| getBody()    |   دریافت اطلاعات ارسال شده از سمت سرور       |
-| getPrimaryIP()    |      خواندن IP |
+| <span class="display-block ltr">getStatusCode()</span>   |      خواندن کد وضعیت     |
+| <span class="display-block ltr">getHeader($name)</span>    |     خواندن یکی از پارامترهای هدر     |
+| <span class="display-block ltr">getHeaders()</span>    |      خواندن پارامترهای هدر   |
+| <span class="display-block ltr">getBody()</span>    |   دریافت اطلاعات ارسال شده از سمت سرور       |
+| <span class="display-block ltr">getPrimaryIP()</span>    |      خواندن IP |
 
 
 **مثال**
@@ -490,10 +494,10 @@ class Main extends Controller {
 			 * output:
 			 * Fri, 20 Nov 2020 17:25:27 GMT
 			 * Array
-				(
-					[status] => your register is completed.
-				)
-			*/
+			 *	(
+			 *		[status] => your register is completed.
+			 *	)
+			 */
 		} catch (Http\ClientException $e) {
 			echo "Error {$e->getResponse()->getStatusCode()} has occurred";
 		} catch (Http\ServerException $e) {
@@ -512,19 +516,19 @@ class Main extends Controller {
 
 |   متد   |    کاربرد   |
 |-------------|-----------|
-| getMethod()   |      نوع درخواست (GET یا POST)     |
-| getHost()    |     گرفتن قسمت هاست آدرس     |
-| getURI()    |      گرفتن قسمت URI آدرس   |
-| getQuery()    |   گرفتن پارامترهای آدرس      |
-| getURL()    |      گرفتن آدرس بطور کامل  |
-| getPort()    |      گرفتن پورت |
-| getIP()    |      گرفتن IP |
-| getHeader(string $name)    |      گرفتن پارامتر مشخصی از هدر |
-| getHeaders()    |      گرفتن پارامترهای هدر |
-| getBody()   |      گرفتن داده‌های ارسالی در درخواست |
-| getProxy()    |      گرفتن پروکسی تنظیم شده |
-| getSaveAs()   |      گرفتن فایل مشخص شده برای ذخیره فایل دانلود شده |
-| getOutgoingIP   |       گرفتن IP مشخص شده از بین IP های سرور|
+| <span class="display-block ltr">getMethod()</span>   |      نوع درخواست (GET یا POST)     |
+| <span class="display-block ltr">getHost()</span>    |     گرفتن قسمت هاست آدرس     |
+| <span class="display-block ltr">getURI()</span>    |      گرفتن قسمت URI آدرس   |
+| <span class="display-block ltr">getQuery()</span>    |   گرفتن پارامترهای آدرس      |
+| <span class="display-block ltr">getURL()</span>    |      گرفتن آدرس بطور کامل  |
+| <span class="display-block ltr">getPort()</span>    |      گرفتن پورت |
+| <span class="display-block ltr">getIP()</span>    |      گرفتن IP |
+| <span class="display-block ltr">getHeader(string $name)</span>    |      گرفتن پارامتر مشخصی از هدر |
+| <span class="display-block ltr">getHeaders()</span>    |      گرفتن پارامترهای هدر |
+| <span class="display-block ltr">getBody()</span>   |      گرفتن داده‌های ارسالی در درخواست |
+| <span class="display-block ltr">getProxy()</span>    |      گرفتن پروکسی تنظیم شده |
+| <span class="display-block ltr">getSaveAs()</span>   |      گرفتن فایل مشخص شده برای ذخیره فایل دانلود شده |
+| <span class="display-block ltr">getOutgoingIP()</span>   |       گرفتن IP مشخص شده از بین IP های سرور|
 
 
 **مثال**
