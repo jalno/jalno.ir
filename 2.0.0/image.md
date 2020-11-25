@@ -226,7 +226,9 @@ class Drawing extends controller{
 
 تصویر ایجاد شده در کد فوق بصورت زیر می‌باشد.
 
-![closeSign](./images/closeSign.png)
+<div class="display-block text-center">
+    <img src="/packages/docboard/storage/public/docs/2.0.0/images/closeSign.png" alt="closeSign" class="img-responsive d-inline">
+</div>
 
 
 ### خواندن رنگ پیکسل 
@@ -307,8 +309,10 @@ class Drawing extends controller{
 
 تصاویر ایجاد شده بصورت زیر میباشند.
 
-![square](./images/square.png)
-![square](./images/new_square.png)
+<div class="display-block text-center">
+    <img src="/packages/docboard/storage/public/docs/2.0.0/images/square.png" alt="square" class="img-responsive d-inline">
+    <img src="/packages/docboard/storage/public/docs/2.0.0/images/new_square.png" alt="square" class="img-responsive d-inline">
+</div>
 
 ## [تغییر اندازه](#resize)
 برای تغییر اندازه تصویر متد `resize` ایجاد شده است. دو آرگومان ورودی میگیرد که آرگومان اول اندازه عرض و آرگومان دوم ارتفاع میباشد. 
@@ -406,10 +410,10 @@ class Picture extends controller{
 ```
 
 تصویر ایجاد شده در کد فوق بصورت زیر می‌باشد.
-
-![phpLogo](./images/phpLogo.png)
-![newPhpLogo](./images/newPhpLogo.png)
-
+<div class="display-block text-center">
+    <img src="/packages/docboard/storage/public/docs/2.0.0/images/phpLogo.png" alt="phpLogo" class="img-responsive d-inline">
+    <img src="/packages/docboard/storage/public/docs/2.0.0/images/newPhpLogo.png" alt="newPhpLogo" class="img-responsive d-inline">
+</div>
 ## [تبدیل شئ فایل به شئ کلاس تصویر](#convert_file_to_image)
 گاها لازم است تصویری که شئ از جنس کلاس [File](file.md) است به شئ از کلاس Image تبدیل شود; برای این منظور دو متد `fromFormat` و `fromContent` ایجاد شده است. 
 
