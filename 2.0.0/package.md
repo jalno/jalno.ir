@@ -137,6 +137,14 @@ git clone https://github.com/yeganemehr/PhpParser.git
 }
 ```
 
+## فایل Bootstrap
+در فرمورک کلیدی تحت عنوان bootstrap تعریف شده است. در این کلید آدرس فایل php را معرفی میکنید و فرمورک بعد از لود شدن کامل پکیج و قبل از پیدا کردن آدرس‌ها و کنترلرها این فایل را فراخوانی و اجرا میکند. 
+از این فایل برای انجام عمیاتی مانند بررسی ‌‌‌IP کاربر که قبل از اجرای برنامه باید چک شود استفاده می‌شود. 
+
+```json
+"bootstrap": "bootup/checkAccess.php"
+```
+
 نمونه کامل فایل
 ```json
 {
@@ -155,7 +163,7 @@ git clone https://github.com/yeganemehr/PhpParser.git
 			"name":"\\packages\\base\\view\\events\\afterLoad",
 			"listener": "listeners\\Stats@watch"
 		}
-	]
+	],
+	"bootstrap": "bootup/checkAccess.php"
 }
 ```
-
