@@ -4,14 +4,14 @@
 
 این کلاس توسط فرمورک استفاده میشود اما این امکان فراهم شده است تا زمانی که برنامه نویس قصد انجام عملیاتی خارج از روال فرمورک را دارد بتواند آزادانه با استفاده از این کلاس اقدام کند.
 
-**در کلاس Packages .متدهای زیر تعریف شده است** متدها برای سهولت استفاده بصورت **استاتیک** تعریف شده‌اند
+در کلاس Packages .متدهای زیر تعریف شده است متدها برای سهولت استفاده بصورت **استاتیک** تعریف شده‌اند
 
 |  متد  | کاربرد  |
 |---------|-------|
-| package($name) |  دسترسی به پکیج‌ |
-| get() | دسترسی به تمامی پکیج‌های فعال |
-| register()  | ثبت پکیج  |
-| registerTranslates($code) | فعال سازی زبان پیشفرض |
+| <span class="display-block ltr">package(string $name): ?Package</span> |  دسترسی به پکیج‌ |
+| <span class="display-block ltr">get(?array $names): array</span> | دسترسی به تمامی پکیج‌های فعال |
+| <span class="display-block ltr">register(Package $package)</span>  | ثبت پکیج  |
+| <span class="display-block ltr">registerTranslates(string $code)</span> | فعال سازی زبان پیشفرض |
 
 ## [دسترسی به پکیج‌ها](#packages_access)
 در کلاس Packages متد‌های `package` و `get` برای دسترسی به پکیج‌ها تعریف شده‌اند. 
