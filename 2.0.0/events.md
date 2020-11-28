@@ -27,26 +27,25 @@ namespace مربوط به هر event را در کلید `name` و شنونده �
 	"languages": {
 		"fa_IR": "langs/fa_IR.json"
 	},
-	"events": [
-		"events": [
-            {
-                "name":"packages/userpanel/events/search",
-                "listener": "listeners/search@find"
-            },
-            {
-                "name":"packages/userpanel/events/search",
-                "listener": "listeners/users@list"
-            },
-            {
-                "name":"packages/sms/events/templates",
-                "listener": "listeners/sms@templates"
-            },
-            {
-                "name":"packages/email/events/templates",
-                "listener": "listeners/email@templates"
-            }
-        ]
-	]
+    "events": [
+        {
+            "name":"packages/userpanel/events/search",
+            "listener": "listeners/search@find"
+        },
+        {
+            "name":"packages/userpanel/events/search",
+            "listener": "listeners/users@list"
+        },
+        {
+            "name":"packages/sms/events/templates",
+            "listener": "listeners/sms@templates"
+        },
+        {
+            "name":"packages/email/events/templates",
+            "listener": "listeners/email@templates"
+        }
+    ]
+}
 ```
 در مثال فوق برای رویداد packages/userpanel/events/search دو شنونده مجزا listeners/search@find و listeners/users@list تعریف شده است.
 
@@ -114,7 +113,6 @@ namespace packages\packagename\events;
 
 use packages\base\Event;
 use packages\packagename\User;
-use packages\notifications\Notifiable;
 
 class Email extends Event {
 	private $user;
@@ -122,11 +120,11 @@ class Email extends Event {
 		$this->user = $user;
     }
     
-    public static function getName(): string {
+    public function getName(): string {
         return $this->user->name.' '.$this->user->lastname ;
     }
 
-    public static function getEmail(): string {
+    public function getEmail(): string {
         return $this->user->email;
     }
 }
@@ -158,9 +156,9 @@ class Email {
     public $name;
     const $SENDER = "email@example.com";
 
-	public function templates(Email $event){
-        $this->name = EmailEvant::getName();
-        $this->userEmail = EmailEvant::getEmail();
+	public function templates(EmailEvant $event){
+        $this->name = $event->getName();
+        $this->userEmail = $event->getEmail();
         $this->sendEmail();
     }
     
@@ -304,7 +302,7 @@ class Setting {
 namespace packages\packagename\listeners;
 
 use ackages\packagename\Usertype;
-use packages\packagename\{events\Settings as SettingsEvent};
+use packages\packagename\events\Settings as SettingsEvent;
 
 class Settings {
 	
