@@ -17,9 +17,12 @@
 	- [اعتبار سنجی](validation.md)
 	- [فرم ها](form.md)
 	- [نشست](session.md)
+	- [درخواست های اینترنتی](client.md)
+	- [کار با تصاویر](image.md)
 + __[قالب](#clickable)__
 	- [معرفی قالب](frontend.md)
 	- [خطاها در قالب](view_error.md)
+	- [داده‌های پویا](dynamicdata.md)
 	- [Webpack](webpack.md)
 	- [NPM](npm.md)
 	- [Node Webpack](node_webpack.md)
