@@ -24,7 +24,7 @@
 | addFrontend() | افزودن پکیج قالب |
 | getFrontends() | گرفتن نام پکیج‌های معرفی شده برای قالب |
 | setBootstrap($bootstrap) | افزودن فایل bootstrap |
-| bootup() | گرفتن فایل‌های bootstrap |
+| bootup() |  فراخوانی فایل bootstrap در صورتی که در پکیج تنظیم شده باشد. |
 | setRouting($routing) | تنظیم فایل مسیریابی |
 | getRouting() | گرفتن فایل مسیریابی |
 | getRoutingRules() | گرفتن آدرس‌های مسیریابی مشخص شده در فایل routing.json   |
@@ -143,6 +143,56 @@ __برای اطلاعات بیشتر به صفحه [پاسخ](response.md) مر�
 ````
 http://domain.com/packages/packagename/storage/public/7bbfc6eb592cf82d4fb0ca9cc343335d.png
 ````
+
+**مثال 3** استفاده از متد url در قالب
+```php
+<?php
+namespace themes\themename\views\profile;
+
+use packages\base\Packages;
+use packages\base\frontend\Theme;
+use packages\base\views\Form;
+use themes\clipone\{ViewTrait, views\FormTrait, views\TabTrait};
+
+class edit extends Form{
+
+	use ViewTrait,FormTrait, TabTrait;
+    
+    function __beforeLoad(){
+		$this->setTitle(array(
+			t('profile.edit')
+		));
+
+		$this->addBodyClass('profile');
+		$this->addBodyClass('profile_edit');
+	}
+	
+	protected function getAvatarURL(){
+		if($this->getUserData('avatar')){
+			return Packages::package('userpanel')->url($this->getUserData('avatar'));
+		}else{
+			return Theme::url('assets/images/defaultavatar.jpg');
+		}
+    }
+    
+    public function setUserData($data){
+		$this->setData($data, 'user');
+	}
+	public function getUserData($key){
+		return($this->data['user']->$key);
+	}
+}
+```
+
+```html
+<div class="img-profile">
+    <img class="img-responsive img-circle" src="<?php echo $this->getAvatarURL(); ?>">
+    <h4 class="user-name">
+        <i class="fa fa-user"></i>
+        username				
+    </h4>
+</div>
+```
 
 ## خواندن محتویات صفحه 
 متد `getFileContents` برای خواندن محتویات فایل تعریف شده است. 
@@ -284,3 +334,15 @@ class Users extends Controller {
 ```
 متد `getHome()` پکیج را بصورت شئ از کلاس [Directory](directory.md) برمیگرداند. با فراخوانی متد getPath به آدرس دایرکتوری دسترسی داریم (packages/packagename).
 سپس با فراخوانی متد getOption به آدرس محل ذخیره فایل‌های آپلود شده که در فایل package.json تنظیم شده است دسترسی خواهیم داشت. سپس در متد setData نام تصویر ذخیره شده در دیتابیس به آدرس اضافه شده و تحت عنوان کلید avatar به view منتقل می‌شود.
+
+
+## فایل bootstrap 
+در فرمورک کلیدی تحت عنوان bootstrap تعریف شده است. در این کلید آدرس فایل php را معرفی میکنید و فرمورک بعد از لود شدن کامل پکیج و قبل از پیدا کردن آدرس‌ها و کنترلرها این فایل را فراخوانی و اجرا میکند. 
+از این فایل برای انجام عمیاتی مانند بررسی ‌‌‌IP کاربر که قبل از اجرای برنامه باید چک شود استفاده می‌شود. 
+
+فرمورک عملیات اضافه کردن فایل bootstrap و فراخوانی آن را با استفاده از متدهای `setBootstrap` و `bootup` انجام میدهد.
+
+**معرفی فایل bootstrap در فایل package.json**
+```json
+"bootstrap": "bootup/checkAccess.php"
+```
