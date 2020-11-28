@@ -20,29 +20,16 @@
 
 |	متد   |	کاربرد  |
 |--------------|--------|
-<<<<<<< HEAD
-| addDependency($dependency) | اضافه کردن پکیج وابسته |
-| getDependencies() | گرفتن نام پکیج‌های وابسته |
-| addFrontend() | افزودن پکیج قالب |
-| getFrontends() | گرفتن نام پکیج‌های معرفی شده برای قالب |
-| setBootstrap($bootstrap) | افزودن فایل bootstrap |
-| bootup() |  فراخوانی فایل bootstrap در صورتی که در پکیج تنظیم شده باشد. |
-| setRouting($routing) | تنظیم فایل مسیریابی |
-| getRouting() | گرفتن فایل مسیریابی |
-| getRoutingRules() | گرفتن آدرس‌های مسیریابی مشخص شده در فایل routing.json   |
-| getConfigFile() | گرفتن فایل پیکربندی (package.json) پیکج |
-=======
 | <span class="display-block ltr">addDependency(string $dependency)</span> | اضافه کردن پکیج وابسته |
 | <span class="display-block ltr">getDependencies(): array</span> | گرفتن نام پکیج‌های وابسته |
 | <span class="display-block ltr">addFrontend(string $source)</span> | افزودن پکیج قالب |
 | <span class="display-block ltr">getFrontends(): array</span> | گرفتن نام پکیج‌های معرفی شده برای قالب |
 | <span class="display-block ltr">setBootstrap(string $bootstrap)</span> | افزودن فایل bootstrap |
-| <span class="display-block ltr">bootup()</span> | گرفتن فایل‌های bootstrap |
+| <span class="display-block ltr">bootup()</span> | فراخوانی فایل bootstrap در صورتی که در پکیج تنظیم شده باشد |
 | <span class="display-block ltr">setRouting(string $routing)</span> | تنظیم فایل مسیریابی |
 | <span class="display-block ltr">getRouting(): ?File</span> | گرفتن فایل مسیریابی |
 | <span class="display-block ltr">getRoutingRules(): array</span> | گرفتن آدرس‌های مسیریابی مشخص شده در فایل routing.json   |
 | <span class="display-block ltr">getConfigFile(): File</span> | گرفتن فایل پیکربندی (package.json) پیکج |
->>>>>>> 327baee5ef5e0c428f0973a6ac987cbbed865401
 
 
 ## دسترسی به پکیج 
@@ -164,7 +151,6 @@ class Albums extends Controller {
 
 __برای اطلاعات بیشتر به صفحه [پاسخ](response.md) مراجعه کنید.__
 
-<<<<<<< HEAD
 خروجی متد url بصورت زیر میباشد. 
 ````
 http://domain.com/packages/packagename/storage/public/7bbfc6eb592cf82d4fb0ca9cc343335d.png
@@ -221,9 +207,6 @@ class edit extends Form{
 ```
 
 ## خواندن محتویات صفحه 
-=======
-## [خواندن محتویات فایل](#get_file_content) 
->>>>>>> 327baee5ef5e0c428f0973a6ac987cbbed865401
 متد `getFileContents` برای خواندن محتویات فایل تعریف شده است. 
 این متد به عنوان آرگومان ورودی آدرس و نام فایل موجود در پکیج را بصورت رشته دریافت میکند. در صورتی که فایل موجود نباشد استثنا `packages\base\IO\NotFoundException` پرتاب می‌شود. 
 
