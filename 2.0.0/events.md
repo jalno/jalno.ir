@@ -12,8 +12,6 @@
 
 namespace مربوط به هر event را در کلید `name` و شنونده مربوط به آن در کلید `listener` معرفی میشود.
 
-**نکته :** اگر هر کدام از رویداد یا شنونده، در پکیج اصلی پروژه تعریف شده باشد لازم به نوشتن `packages/packagename` در ابتدای namespace آن نیست.
-
 **نمونه فایل package.json**
 ```json
 {
@@ -61,19 +59,21 @@ namespace مربوط به هر event را در کلید `name` و شنونده �
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\packagename\events\Email;
-use packages\packagename\User;
-use packages\base\{View, Http, Controller};
+
 use themes\themename\views;
+use packages\packagename\User as Model;
+use packages\packagename\events\Email as Event;
+use packages\base\{Controller, Response, View, Http};
 
 class Users extends Controller {
 
-    public function insert() {
+    public function insert(): Response {
+
         $view = View::byName(views\users\Insert::class);
         $this->response->setView($view);
         
-        if(Http::is_post()) {
-            $rules = array(
+        if (Http::is_post()) {
+            $inputs = $this->checkInputs(array(
                 'name' => array(
                     'type' => 'string',
                 ),
@@ -84,27 +84,27 @@ class Users extends Controller {
                 'email' => array(
                     'type' => 'email',
                 )
-            );
-            $inputs = $this->checkInputs($rules);
-            $user = new User($inputs);
+            ));
+
+            $user = new Model($inputs);
             $user->save();
 
-            $emailEvent = new Email($user);
-            $emailEvent->trigger();
+            $event = new Event($user);
+            $event->trigger();
         }
 
+        $this->response->setStatus(true);
         return $this->response;
     }
 }
 ```
 در مثال فوق کاربر ثبت شده به شئ رویداد Email داده میشود.
+
  __برای اطلاعات بیشتر در رابطه با کار با پایگاه داده به صفحه [ارتباط شئ گرا پایگاه داده](dbObject.md) مراجعه کنید.__
 
 
 ## [ایجاد کلاس رویداد](#create_event)
-بهتر است کلاس هایی که برای رویدادها تعریف میشود در پوشه events ایجاد شوند. 
-
-باید کلاس رویداد از کلاس `packages\base\event` ارث بری کند.
+بهتر است کلاس هایی که برای رویدادها تعریف میشود در پوشه events ایجاد شوند. باید کلاس رویداد از کلاس `packages\base\event` ارث بری کند.
 
 **مثال** 
 ```php
@@ -112,18 +112,16 @@ class Users extends Controller {
 namespace packages\packagename\events;
 
 use packages\base\Event;
-use packages\packagename\User;
+use packages\packagename\User as Model;
 
 class Email extends Event {
 	private $user;
-	public function __construct(User $user) {
+	public function __construct(Model $user) {
 		$this->user = $user;
     }
-    
     public function getName(): string {
-        return $this->user->name.' '.$this->user->lastname ;
+        return $this->user->name . ' ' . $this->user->lastname ;
     }
-
     public function getEmail(): string {
         return $this->user->email;
     }
@@ -135,28 +133,43 @@ class Email extends Event {
 
 هنگام معرفی رویداد‌‌ها در فایل package.json برای شنونده‌‌ها متد مشخص شده است. ورودی این متد شئ از کلاس رویداد است که از طریق آن میتوان به متغیرها و متدهای کلاس دسترسی داشت.
 
+**نمونه فایل package.json**
+```json
+{
+	"permissions": "*",
+	"routing": "routing.json",
+	"frontend": ["frontend", "panel", "userpanel"],
+	"autoload": {
+		"directories": ["controllers", "Models", "listeners", "events"]
+	},
+	"dependencies": ["userpanel", "sms", "email"],
+	"languages": {
+		"fa_IR": "langs/fa_IR.json"
+	},
+    "events": [
+        {
+            "name": "packages/packagename/events/Email",
+            "listener": "listeners/Email@templates"
+        }
+    ]
+}
+```
+
 **مثال**
 ```php
-/**
- * نمونه فایل package.json
- * 
- * [
- *  {
- *      "name":"packages\packagename\events\Email",
- *      "listener": "listeners/Email@templates"
- *  }
- * ]
- **/
 <?php
 namespace packages\packagename\listeners;
-use packages\packagename\events\Email as EmailEvant;
+
+use packages\packagename\events\Email as Event;
 
 class Email {
-    public $userEmail;
-    public $name;
-    const $SENDER = "email@example.com";
 
-	public function templates(EmailEvant $event){
+    const SENDER = "email@example.com";
+
+    public $name;
+    public $userEmail;
+
+	public function templates(Event $event){
         $this->name = $event->getName();
         $this->userEmail = $event->getEmail();
         $this->sendEmail();
@@ -203,23 +216,28 @@ class Email {
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\packagename\events\Settings as SettingsEvent;
-use packages\base\{View, Http, Controller};
+
 use themes\themename\views;
+use packages\base\{Controller, Response, View, Http};
+use packages\packagename\events\Settings as SettingsEvent;
 
 class Settings extends Controller {
 
-    public function view() {
+    public function view(): Response {
+
         $view = View::byName(views\Settings::class);
         $this->response->setView($view);
         
         $event = new SettingsEvent();
-		$event->trigger();
+        $event->trigger();
+
 		if (!$event->get()) {
 			throw new NotFound();
-		}
+        }
+
 		$view->setSettings($event->get());
 
+        $this->response->setStatus(true);
         return $this->response;
     }
 }
@@ -231,10 +249,12 @@ class Settings extends Controller {
 ```php
 <?php
 namespace packages\packagename\events;
-use packages\packagename\events\settings\Setting;
-use packages\base\event;
 
-class Settings extends event {
+use packages\base\Event;
+use packages\packagename\events\settings\Setting;
+
+class Settings extends Event {
+
     private $settings = [];
     
 	public function addSetting(Setting $setting) {
@@ -246,17 +266,16 @@ class Settings extends event {
 	}
 }
 ```
-در این رویداد دو متد تعریف شده. متد addSetting برای اضافه کردن تنظیم ایجاد شده است که از متدهای کلاس Setting نیز استفاده میکنم. کلاس Setting به عنوان کلاس کمکی تعریف شده است.
-
-متد get تنظیمات ایجاد شده را برمیگرداند. 
+در این رویداد دو متد تعریف شده. متد addSetting برای اضافه کردن تنظیم ایجاد شده است که ورودی آن شئ از کلاس Setting می باشد.
+متد get تنظیمات اضافه شده را برمیگرداند. 
 
 **کلاس کمکی Setting**
 ```php
 <?php
 namespace packages\packagename\events\settings;
-use packages\base\event;
 
 class Setting {
+
 	private $name;
 	private $package;
 	private $inputs = [];
@@ -264,24 +283,21 @@ class Setting {
 	private $controller;
 	private $data = [];
     
-    function __construct($name) {
+    public function __construct($name) {
 		$this->setName($name);
 	}
-    
     public function setName(string $name) {
 		$this->name = $name;
 	}
 	public function getName():string {
 		return $this->name;
 	}
-    
     public function addField(array $field) {
 		$this->fields[] = $field;
 	}
 	public function getFields():array {
 		return $this->fields;
 	}
-	
 	public function setDataForm(string $name, $value) {
 		$this->data[$name] = $value;
 	}
@@ -301,7 +317,8 @@ class Setting {
 <?php
 namespace packages\packagename\listeners;
 
-use ackages\packagename\Usertype;
+use ackages\packagename\User as UserModel;
+use ackages\packagename\Usertype as UsertypeModel;
 use packages\packagename\events\Settings as SettingsEvent;
 
 class Settings {
@@ -350,7 +367,7 @@ class Settings {
     
 	private function getUserTypesForSelect(): array {
 		$options = array();
-		foreach (Usertype::get() as $type) {
+		foreach (UsertypeModel::get() as $type) {
 			$options[] = array(
 				"title" => $type->title,
 				"value" => $type->id,
@@ -363,15 +380,15 @@ class Settings {
 		return array(
 			array(
 				"title" => t("active"),
-				"value" => 1,
+				"value" => UserModel::ACTIVE,
 			),
 			array(
 				"title" => t("deactive"),
-				"value" => 2,
+				"value" => UserModel::SUSPEND,
 			),
 			array(
 				"title" => t("suspend"),
-				"value" => 3,
+				"value" => UserModel::DEACTIVE,
 			),
 		);
 	}
@@ -390,8 +407,9 @@ class Settings {
 ```php
 <?php
 namespace themes\packagename\views;
+
 use packages\base\views\Form;
-use themes\clipone\{ViewTrait, views\FormTrait};
+use themes\clipone\{ViewTrait, views\FormTrait}; // Clipone is Userpanel package theme name
 
 class Settings extends Form {
 	use ViewTrait, FormTrait;
@@ -410,7 +428,6 @@ class Settings extends Form {
 	protected function getSettings(): array {
 		return $this->settings;
     }
-    
 	private function initFormData() {
 		foreach ($this->getSettings() as $setting) {
 			foreach ($setting->getFields() as $input) {
@@ -437,15 +454,15 @@ use packages\base;
 <?php
 $this->setHorizontalForm("md-4 sm-5", "md-8 sm-7");
 foreach ($this->getSettings() as $tuning) {
-	echo '<div class="settings-row">';
-	foreach ($tuning->getFields() as $field) {
-		echo '<div class="settings-row-item">';
-		$this->createField($field);
-		echo "</div>";
-	}
-	echo "</div>";
-}
 ?>
+	<div class="settings-row">
+    <?php foreach ($tuning->getFields() as $field) { ?>
+		<div class="settings-row-item">
+		<?php $this->createField($field); ?>
+		</div>
+	<?php } ?>
+	</div>
+<?php } ?>
 	<div class="row">
 		<div class="col-sm-4 col-sm-offset-8">
 			<button class="btn btn-success btn-block" type="submit">
@@ -461,4 +478,4 @@ foreach ($this->getSettings() as $tuning) {
 __برای اطلاعات بیشتر از نحوه ایجاد فرم‌ها به صفحه [فرم‌‌ها](form.md) مراجعه کنید.__
 
 نتیجه‌ی مثال فوق فرم زیر میباشد. 
-![form](images/form.png)
+![form](/packages/docboard/storage/public/docs/2.0.0/images/form.png)
