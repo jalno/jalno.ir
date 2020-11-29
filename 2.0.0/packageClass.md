@@ -15,6 +15,7 @@
 | <span class="display-block ltr">getFileContents(string $file): string</span> | خواندن محتویات فایل |
 | <span class="display-block ltr">getOption(string $name): ?mixed</span> | گرفتن تنظیم تعریف شده برای پکیج |
 | <span class="display-block ltr">setOption(string $name, mixed $value)</span> | افزودن تنظیم جدید برای پکیج |
+| <span class="display-block ltr">bootup()</span> | فراخوانی فایل bootstrap در صورتی که در پکیج تنظیم شده باشد<br>**این متد توسط فرم ورک و در زمان بارگذاری پکیج ها فراخوانی میشود** |
 
  **فرمورک از متدهای getter , setter زیر برای کامل کردن اطلاعات پیکج استفاده میکند.**
 
@@ -25,12 +26,10 @@
 | <span class="display-block ltr">addFrontend(string $source)</span> | افزودن پکیج قالب |
 | <span class="display-block ltr">getFrontends(): array</span> | گرفتن نام پکیج‌های معرفی شده برای قالب |
 | <span class="display-block ltr">setBootstrap(string $bootstrap)</span> | افزودن فایل bootstrap |
-| <span class="display-block ltr">bootup()</span> | فراخوانی فایل bootstrap در صورتی که در پکیج تنظیم شده باشد |
 | <span class="display-block ltr">setRouting(string $routing)</span> | تنظیم فایل مسیریابی |
 | <span class="display-block ltr">getRouting(): ?File</span> | گرفتن فایل مسیریابی |
 | <span class="display-block ltr">getRoutingRules(): array</span> | گرفتن آدرس‌های مسیریابی مشخص شده در فایل routing.json   |
 | <span class="display-block ltr">getConfigFile(): File</span> | گرفتن فایل پیکربندی (package.json) پیکج |
-
 
 ## دسترسی به پکیج 
 در کلاس packages\base\Package متد `fromName` برای دسترسی به پکیج‌های پروژه تعریف شده است. 
@@ -110,8 +109,8 @@ class Albums extends Controller {
 	}
 }
 ```
-در مثال فوق ابتدا در $path آدرس محل ذخیره فایل را ایجاد میکنیم
-سپس $path را به متد getFilePath داده که آدرس دقیق فایل مطابق package موردنظر ایجاد شود.
+در مثال فوق ابتدا در <span class="d-inline ltr">$path</span> آدرس محل ذخیره فایل را ایجاد میکنیم
+سپس <span class="d-inline ltr">$path</span> را به متد getFilePath داده که آدرس دقیق فایل مطابق package موردنظر ایجاد شود.
 
 خروجی متد getFilePath بصورت زیر میباشد.
 ````
@@ -151,47 +150,38 @@ class Albums extends Controller {
 
 __برای اطلاعات بیشتر به صفحه [پاسخ](response.md) مراجعه کنید.__
 
-خروجی متد url بصورت زیر میباشد. 
-````
-http://domain.com/packages/packagename/storage/public/7bbfc6eb592cf82d4fb0ca9cc343335d.png
-````
-
 **مثال 3** استفاده از متد url در قالب
 ```php
 <?php
 namespace themes\themename\views\profile;
 
-use packages\base\Packages;
-use packages\base\frontend\Theme;
-use packages\base\views\Form;
-use themes\clipone\{ViewTrait, views\FormTrait, views\TabTrait};
+use packages\packagename\User as Model;
+use packages\base\{Packages, frontend\Theme, views\Form};
+use themes\clipone\{ViewTrait, views\FormTrait, views\TabTrait}; // Clipone is userpanel package theme name
 
-class edit extends Form{
+class edit extends Form {
 
-	use ViewTrait,FormTrait, TabTrait;
+	use ViewTrait, FormTrait, TabTrait;
+
+	protected $user;
     
-    function __beforeLoad(){
-		$this->setTitle(array(
-			t('profile.edit')
-		));
+    public function __beforeLoad(){
+		$this->setTitle(t('profile.edit'));
 
 		$this->addBodyClass('profile');
 		$this->addBodyClass('profile_edit');
 	}
 	
-	protected function getAvatarURL(){
-		if($this->getUserData('avatar')){
-			return Packages::package('userpanel')->url($this->getUserData('avatar'));
-		}else{
-			return Theme::url('assets/images/defaultavatar.jpg');
+	protected function getAvatarURL(): string {
+		if ($this->user->avatar_path) {
+			return Packages::package('userpanel')->url($this->user->avatar_path);
 		}
+
+		return Theme::url('assets/images/defaultavatar.jpg');
     }
     
-    public function setUserData($data){
-		$this->setData($data, 'user');
-	}
-	public function getUserData($key){
-		return($this->data['user']->$key);
+    public function setUser(Model $user) {
+		$this->user = $user;
 	}
 }
 ```
@@ -201,14 +191,14 @@ class edit extends Form{
     <img class="img-responsive img-circle" src="<?php echo $this->getAvatarURL(); ?>">
     <h4 class="user-name">
         <i class="fa fa-user"></i>
-        username				
+	<?php echo $this->user->name; ?>
     </h4>
 </div>
 ```
 
 ## خواندن محتویات صفحه 
 متد `getFileContents` برای خواندن محتویات فایل تعریف شده است. 
-این متد به عنوان آرگومان ورودی آدرس و نام فایل موجود در پکیج را بصورت رشته دریافت میکند. در صورتی که فایل موجود نباشد استثنا `packages\base\IO\NotFoundException` پرتاب می‌شود. 
+این متد به عنوان آرگومان ورودی آدرس و نام فایل موجود در پکیج را بصورت رشته دریافت میکند. در صورتی که فایل موجود نباشد استثنا `packages\base\IO\NotFoundException` پرتاب می‌شود.
 
 **مثال**
 ```php
@@ -376,17 +366,49 @@ class Users extends Controller {
 	}
 }
 ```
-متد `getHome()` پکیج را بصورت شئ از کلاس [Directory](directory.md) برمیگرداند. با فراخوانی متد getPath به آدرس دایرکتوری دسترسی داریم (packages/packagename).
-سپس با فراخوانی متد getOption به آدرس محل ذخیره فایل‌های آپلود شده که در فایل package.json تنظیم شده است دسترسی خواهیم داشت. سپس در متد setData نام تصویر ذخیره شده در دیتابیس به آدرس اضافه شده و تحت عنوان کلید avatar به view منتقل می‌شود.
-
 
 ## فایل bootstrap 
-در فرمورک کلیدی تحت عنوان bootstrap تعریف شده است. در این کلید آدرس فایل php را معرفی میکنید و فرمورک بعد از لود شدن کامل پکیج و قبل از پیدا کردن آدرس‌ها و کنترلرها این فایل را فراخوانی و اجرا میکند. 
-از این فایل برای انجام عمیاتی مانند بررسی ‌‌‌IP کاربر که قبل از اجرای برنامه باید چک شود استفاده می‌شود. 
+در فرمورک کلیدی تحت عنوان bootstrap تعریف شده است. در این کلید آدرس فایل php را معرفی میکنید و فرمورک بعد از بارگذاری پکیج و قبل از پیدا کردن آدرس‌ها و کنترلرها این فایل را فراخوانی و اجرا میکند.
+از این فایل برای انجام عمیاتی مانند بررسی ‌‌‌IP کاربر که قبل از اجرای برنامه باید چک شود استفاده می‌شود.
 
-فرمورک عملیات اضافه کردن فایل bootstrap و فراخوانی آن را با استفاده از متدهای `setBootstrap` و `bootup` انجام میدهد.
+فرمورک عملیات اضافه کردن فایل bootstrap و فراخوانی آن را با استفاده از متدهای `setBootstrap` و `bootup` به صورت خودکار انجام میدهد.
 
 **معرفی فایل bootstrap در فایل package.json**
 ```json
-"bootstrap": "bootup/checkAccess.php"
+{
+	"permissions": "*",
+	"routing": "routing.json",
+	"frontend": "frontend",
+	"autoload": {
+		"directories": ["controllers", "Models", "listeners", "events", "bootstraps"]
+	},
+	"dependencies": ["userpanel"],
+	"languages":{
+		"fa_IR": "langs/fa_IR.json",
+		"en_US": "langs/en_US.json"
+	},
+	"events": [
+		{
+			"name": "packages/userpanel/events/usertype_permissions_list",
+			"listener": "listeners/settings/usertypes/Permissions@list"
+		}
+	],
+	"bootstrap": "bootstraps/checkAccess.php"
+}
+```
+**نمونه فایل bootstrap**
+```php
+<?php
+namespace packages\packagename\bootstraps;
+
+use packages\base\{Http, NotFound};
+use packages\packagename\BannedIP as Model;
+
+$userIP = Http::$client["ip"];
+
+$model = new Model();
+$model->where("ip", $userIP);
+if ($model->has()) {
+	throw new NotFound();
+}
 ```

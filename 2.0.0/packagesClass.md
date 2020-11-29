@@ -26,6 +26,73 @@ use packages\base\Packages;
 
 $package = Packages::package("packagename");
 ```
+**نمونه فایل package.json**
+```json
+{
+	"permissions": "*",
+	"routing": "routing.json",
+	"frontend": "frontend",
+	"autoload": {
+		"directories": ["controllers", "Models", "listeners", "events"]
+	},
+	"dependencies": ["userpanel"],
+	"languages":{
+		"fa_IR": "langs/fa_IR.json",
+		"en_US": "langs/en_US.json"
+	},
+	"events": [
+		{
+			"name": "packages/userpanel/events/usertype_permissions_list",
+			"listener": "listeners/settings/usertypes/Permissions@list"
+		}
+	],
+	"upload_path": "storage/public/upload/"
+}
+```
+**نمونه فایل کنترلر و دسترسی به اطلاعات پکیج**
+```php
+<?php
+namespace packages\packagename\controllers;
+
+use themes\themename\views;
+use packages\base\{Controller, Response, View, Packages, IO\File};
+
+class Albums extends Controller {
+
+	public function insertImg(): Response {
+
+		$view = view::byName(views\Albums\InsertImg::class);
+		$this->response->setView($view);
+
+		if (Http::is_post()){
+			$inputs = $this->checkinputs([
+				'img' =>[
+					'type' => 'image',
+					"max-size" => 2097152 // Byte
+					"obj" => true,
+					"extension" => array('jpeg', 'jpg']
+				]
+			]);
+
+			$package = Packages::package('packagename');
+
+			$path = $package->getOption("upload_path") . $inputs['img']->getFile()->md5() . '.' . $inputs['img']->getExtension();
+
+			$img = $package->getFile($path);
+
+			$directory = $img->getDirectory();
+			if (!$directory->exists()) {
+				$directory->make(true);
+			}
+
+			$inputs['img']->saveToFile($img);
+		}
+
+		$this->response->setStatus(true);
+		return $this->response;
+	}
+}
+```
 
 متد `get` برای دسترسی به تمامی پکیج‌های فعال تعریف شده است. خروجی متد `get` آرایه‌ای از شئ‌های کلاس Package میباشد. میتوانید به آرگومان ورودی متد get آرایه‌ای از نام پکیج‌های مورد نیاز را بدهید در اینصورت خروجی متد آرایه‌ای از پکیج‌های خواسته شده میباشد. 
 
@@ -45,7 +112,7 @@ Packages::get(["my_package", "PhpParser"]);
 
 
 ## [فعال کردن زبان پکیج](#registerTranslates)
-متد `registerTranslates` کد زبان کامل را گرفته و در پکیج‌ها فعال میکند. 
+متد `registerTranslates` کد زبان کامل را گرفته و فایل های ترجمه ی پکیج‌ها با آن کد زبان را خوانده و فعال میکند.
 کد زبان میتواند زبان پیشفرض، زبان فعال و یا زبان دلخواه باشد.
 
 از متد registerTranslates نیز زمان لود و ثبت پکیج‌ها در کلاس `packages\base\Loader` استفاده میشود.
