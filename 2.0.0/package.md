@@ -118,8 +118,8 @@ git clone https://github.com/yeganemehr/PhpParser.git
 	"permissions": "*",
 	"events": [
 		{
-			"name":"\\packages\\base\\view\\events\\afterLoad",
-			"listener": "listeners\\Stats@watch"
+			"name":"/packages/base/view/events/afterLoad",
+			"listener": "listeners/Stats@watch"
 		}
 	]
 }
@@ -137,7 +137,15 @@ git clone https://github.com/yeganemehr/PhpParser.git
 }
 ```
 
-نمونه کامل فایل
+## فایل Bootstrap
+در فرمورک کلیدی تحت عنوان bootstrap تعریف شده است. در این کلید آدرس فایل php را معرفی میکنید و فرمورک بعد از بارگذاری پکیج و قبل از پیدا کردن آدرس‌ها و کنترلرها این فایل را فراخوانی و اجرا میکند.
+از این فایل برای انجام عمیاتی مانند بررسی ‌‌‌IP کاربر که قبل از اجرای برنامه باید چک شود استفاده می‌شود.
+
+```json
+"bootstrap": "bootup/checkAccess.php"
+```
+
+**نمونه کامل فایل تنظیمات پکیج**
 ```json
 {
 	"permissions": "*",
@@ -152,10 +160,26 @@ git clone https://github.com/yeganemehr/PhpParser.git
 	},
 	"events": [
 		{
-			"name":"\\packages\\base\\view\\events\\afterLoad",
-			"listener": "listeners\\Stats@watch"
+			"name":"/packages/base/view/events/afterLoad",
+			"listener": "listeners/Stats@watch"
 		}
-	]
+	],
+	"bootstrap": "bootup/checkAccess.php"
 }
 ```
+**نمونه فایل bootstrap**
+```php
+<?php
+namespace packages\packagename\bootstraps;
 
+use packages\base\{Http, NotFound};
+use packages\packagename\BannedIP as Model;
+
+$userIP = Http::$client["ip"];
+
+$model = new Model();
+$model->where("ip", $userIP);
+if ($model->has()) {
+	throw new NotFound();
+}
+```
