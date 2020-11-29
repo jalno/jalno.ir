@@ -19,6 +19,9 @@
 	- [نشست](session.md)
 	- [درخواست های اینترنتی](client.md)
 	- [کار با تصاویر](image.md)
+	- [رویداد ها و شنونده ها](events.md)
+	- [کار با پکیج](packageClass.md)
+	- [کار با پکیج ها](packagesClass.md)
 + __[قالب](#clickable)__
 	- [معرفی قالب](frontend.md)
 	- [خطاها در قالب](view_error.md)
@@ -37,6 +40,7 @@
 	- [روند](process.md)
 	- [کار با پوشه ها](directory.md)
 	- [لاگ ها](log.md)
+	- [کار با خط فرمان CLI](cli.md)
 + __[پایگاه داده](#clickable)__
 	- [ارتباط مستقیم](db.md)
 	- [ارتباط شئ گرا](dbObject.md)
