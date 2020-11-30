@@ -6,17 +6,18 @@
 
 |  متد   |    کاربرد   |
 |------------|---------|
-| AuthByPassword(string $username,string $password) | احرازهویت  |
+| AuthByPassword(string $username,string $password):bool | احرازهویت  |
 | execute($comment) | اجرا دستور  |
-| connection() |  |
-| getHost() |  گرفتن آدرس هاست  |
-| getPort() | گرفتن پورت  |
-| getUsername() | گرفتن نام کاربری  |
-| getPassword()  |  گرفتن رمز عبور  |
+| connection() | اتصال ایجاد شده را برمیگرداند |
+| getHost():string |  گرفتن آدرس هاست  |
+| getPort():int | گرفتن پورت  |
+| getUsername():string | گرفتن نام کاربری  |
+| getPassword():string  |  گرفتن رمز عبور  |
 
 
 ## [برقراری ارتباط با سرور](#connection)
 برای برقراری ارتباط با سرور لازم است ابتدا شئ از کلاس SSH ایجاد کنید و آدرس هاست و پورت مربوطه را به آن بدهید. 
+اتصال ایجاد شده در متغیر $connection کلاس ذخیره میشود و با فراخوانی متد `connection()` میتوانید به آن دسترسی داشته باشید.
 
 اگر آدرس هاست یا پورت وارد شده نادرست باشد استثنا `packages\base\ssh\ConnectionException` پرتاب میشود.
 
@@ -43,7 +44,7 @@ class Main extends Process {
 ```
 
 ## [اجرا دستورات](#execute)
-برای اجرای دستورات متد `execute` تعریف شده است. ورودی متد دستور مورد نظر به‌صورت رشته میباشد. 
+برای اجرای دستورات متد `execute` تعریف شده است. ورودی متد دستوری است که قصد اجرای آن را در سرور دارید و به‌صورت رشته میباشد. 
 خروجی متد نتیجه‌ی دستور ارسال شده است.
 
 لازم است قبل از اجرای دستورات، خروجی متد AuthByPassword بررسی شود. اگر خروجی متد AuthByPassword برابر `false` باشد و متد `execute` فراخوانی شود `Warning` دریافت میکنید. 
