@@ -16,78 +16,84 @@ $response = new Response(true);
 
 | متد    |    کاربرد   | 
 |---------------------|---------------------|
-| is_ajax()  |  مشخص کننده نوع درخواست‌های ajax  |
-| is_api()  |  مشخص کننده نوع درخواست‌های api  |
-| setView(view $view)  | تنظیم کلاس ظاهر | 
-| getView()  |  شئ از کلاس ظاهر تعیین شده را بر‌میگرداند |
-| setFile(File $file) |  تنظیم یک فایل |
-| setStatus($status) | تنظیم وضعیت پاسخ  |
-| getStatus() |  وضعیت پاسخ را برمیگرداند  |
-| setData($data, $key) | تنظیم داده | 
-| getData($key) | داده های تنظیم شده را بر‌میگرداند  | 
-| json()  | وضعیت پاسخ و داده‌های تنظیم شده را با فرمت json بر‌میگرداند |
-| go($url) | انتقال کاربر | 
-| rawOutput($output) |  چاپ کردن متن در خروجی |
-| setHeader($key, $value) | تنظیم مشخصه‌های header |
-| setHttpCode($code) | مشخص کردن کد وضعیت پاسخ | 
-| setMimeType($type, $charset = null) |  تنظیم مشخصه های content-type و charset در header |
-| forceDownload() | مشخص میکند که فایل تنظیم شده برای دانلود می‌باشد  |
+| <span class="display-block ltr">is_ajax(): bool</span>  |  مشخص کننده نوع درخواست‌های ajax  |
+| <span class="display-block ltr">is_api(): bool</span>  |  مشخص کننده نوع درخواست‌های api  |
+| <span class="display-block ltr">setView([View](view.md) $view): void</span>  | تنظیم کلاس ظاهر |
+| <span class="display-block ltr">getView(): ?[View](view.md)</span>  |  شئ از کلاس ظاهر تعیین شده را بر‌میگرداند |
+| <span class="display-block ltr">setFile(File $file): void</span> |  تنظیم یک فایل |
+| <span class="display-block ltr">setStatus(bool $status): void</span> | تنظیم وضعیت پاسخ  |
+| <span class="display-block ltr">getStatus(): bool</span> |  وضعیت پاسخ را برمیگرداند  |
+| <span class="display-block ltr">setData(mixed $data, string $key): void</span> | تنظیم داده |
+| <span class="display-block ltr">getData(string $key): mixed</span> | داده های تنظیم شده را بر‌میگرداند  |
+| <span class="display-block ltr">json(): string</span>  | وضعیت پاسخ و داده‌های تنظیم شده را با فرمت json بر‌میگرداند |
+| <span class="display-block ltr">go(string $url): void</span> | انتقال کاربر |
+| <span class="display-block ltr">rawOutput(string $output): void</span> |  چاپ کردن متن در خروجی |
+| <span class="display-block ltr">setHeader(string $key, string $value): void</span> | تنظیم مشخصه‌های header |
+| <span class="display-block ltr">setHttpCode(int $code): void</span> | مشخص کردن کد وضعیت پاسخ |
+| <span class="display-block ltr">setMimeType(string $type, ?string $charset = null): void</span> |  تنظیم مشخصه های content-type و charset در header |
+| <span class="display-block ltr">forceDownload(): void</span> | مشخص میکند که فایل تنظیم شده برای دانلود می‌باشد  |
 
 ## [صفحات وب](#webpage)
 اگر شما یک شئ از کلاس `View` را در اختیار داشته باشید و قصد دارید تا آن را به کاربر نشان دهید، از متد `setView`  کلاس `Response`  استفاده کنید و فریمورک پس از تمام شدن اجرای کنترلر آن را به کاربر نشان خواهد داد . 
 
-**1 مثال**
+**مثال 1**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, View};
+
 use themes\themename\views;
-class Main extends controller {
+use packages\base\{Controller, Response, View};
+
+class Main extends Controller {
+
     public function index(): Response {
 		$view = View::byName(views\Index::class);
 		$response = new Response(true);
 		$response->setView($view);
 		return $response;
     }
- }
+}
 ```
 
-**2 مثال**
+**مثال 2**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, View};
+
 use themes\theme\views;
+use packages\base\{Controller, Response, View};
+
 class Main extends controller {
+
     public function index(): Response {
 		$view = View::byName(views\Index::class);
 		$this->response->setStatus(true);
 		$this->response->setView($view);
 		return $this->response;
     }
- }
+}
 ```
 
 ## [فایل](#file)
 پاسخ ها میتوانند از جنس فایل ها باشند و فایل ها میتوانند دانلود شوند (مثل فایل های فشرده، برنامه ها یا ...) و یا میتواند بلافاصله به کاربر نشان داده شوند (مثل تصاویر و یا فایل های صوتی و تصویری) .
 برای این منظور میتوانید از متد `setFile` از کلاس `Response` استفاده کنید .
 
-اگر بخواهید فایل تنها امکان دانلود داشته و در مرورگر اجرا نشود (مانند فایل های صوتی و تصویری) باید متد `forceDownload()` از کلاس Response را فراخوانی کنید. با فراخوانی این متد مشخصه content-disposition در header برابر مقدار attachment شده و دیگر فایل در مرورگر اجرا نمیشود.
+اگر بخواهید فایل تنها امکان دانلود داشته و در مرورگر نمایش داده نشود (مانند فایل های صوتی و تصویری) باید متد `forceDownload()` از کلاس Response را فراخوانی کنید. با فراخوانی این متد مشخصه content-disposition در header برابر مقدار attachment شده و دیگر فایل در مرورگر اجرا نمیشود.
 
 باید مشخصات فایلی که به کاربر داده میشود تعیین شود این کار با استفاده از متدهای کلاس `packages\base\response\File` انجام میشود.
 
-**1 مثال**
+**مثال 1**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, NotFound};
+
 use packages\packagename\Ticket;
+use packages\base\{Controller, Response, NotFound};
 
 class Main extends controller {
 
 	public function getTicketFile($data): Response {
-		$file = new Ticket\File();
-		$file = $file->byId($data['id']);
+		$file = Ticket\File::byId($data['id']);
 		if (!$file) {
 			throw new NotFound();
 		}
@@ -97,22 +103,23 @@ class Main extends controller {
 		$responsefile->setSize($file->size);
 		$responsefile->setName($file->name);
 		$response->setFile($responsefile);
+		$response->setStatus(true);
 		return $response;
 	}
 }
 ```
 
-**2 مثال**
+**مثال 2**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, NotFound, Packages};
+
 use packages\packagename\File as Model;
+use packages\base\{Controller, Response, NotFound, Packages};
 
 class Main extends controller {
 
-	public function download($data)
-	{
+	public function download($data): Response {
 		$file = Model::byId($data['id']);
 		if(!$file) {
 			throw new NotFound();
@@ -123,6 +130,7 @@ class Main extends controller {
 		$responsefile->setSize($file->size());
 		$this->response->forceDownload();
 		$this->response->setFile($responsefile);
+		$this->response->setStatus(true);
 		return $response;
 	}
 }
@@ -138,34 +146,39 @@ class Main extends controller {
 با فراخوانی متد `getData` میتوانید به داده‌های تنظیم شده دسترسی داشته باشید. پارامتر ورودی این متد کلید داده‌ میباشد. اگر به متد getData پارامتری ارسال نشود آرایه‌ای از داده‌های تنظیم شده برمیگرداند.
 
 
-**1 مثال**
+**مثال 1**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, Http};
+
 use packages\packagename\state;
+use packages\base\{Controller, Response};
+
 class API extends controller {
-	public function getCities(): response {
+
+	public function getCities($data): Response {
 		$response = new Response(true);
 		$city = new state\City();
-		$city->where("state", Http::getData("state"));
+		$city->where("state", $data["state"]);
 		$city->orderBy("title_fa", "ASC");
-		$response->setData($city->get(), "cities");
+		$city->ArrayBuilder();
+		$response->setData($city->get(null, ["id", "title_fa"]), "cities");
 		return $response;
 	}
 }
 ```
 
-**2 مثال**
+**مثال 2**
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, View};
+
 use themes\themename\views;
+use packages\base\{Controller, Response, View};
+
 class Dashboard extends controller {
 
 	public function forbidden(): Response {
-
 		$this->response->setStatus(false);
 		$this->response->setHttpCode(403);
 		$view = View::byName(views\Forbidden::class);
@@ -185,16 +198,16 @@ class Dashboard extends controller {
 ```php
 <?php
 namespace packages\packagename\controllers;
+
 use packages\base\{Controller, Response, HTTP};
 
 class Dashboard extends Controller {
 
 	public function checkAccess(): Response {
-		if(Http::$client["ip"] == "127.0.0.1") {
+		if (Http::$client["ip"] == "127.0.0.1") {
 			$this->response->setStatus(false);
 			$this->response->setHttpCode(403);
-			$error = "<h1>403 Forbidden page</h1>";
-			$this->response->rawOutput($error);
+			$this->response->rawOutput("<h1>403 Forbidden page</h1>");
 		}
 		return $this->response;
 	}
@@ -210,36 +223,34 @@ __برای اطلاعات بیشتر از نحوه‌ آدرس دهی به صف�
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base;
-use packages\base\{Controller, Response, View, InputValidation, views\FormError};
-use packages\packagename\User;
+
 use themes\themename\views;
+use function packages\base\url;
+use packages\packagename\User;
+use packages\base\{Controller, Response, View, InputValidationException};
 
 class Main extends controller {
+
 	public function login(): Response {
-		$response = new Response();
 		$view = View::byName(views\Login::class);
+		$this->response->setView($view);
 		$inputRules = array(
 			"username" => array(
 				"type" => "email",
 			),
 			"password" => array()
 		);
-		try {
-			$inputs = $this->checkinputs($inputRules);
-			$user = new User();
-			$user->where("email", $inputs["username"]);
-			$user->where("password", md5($inputs["password"]));
-			if (!$user = $user->getOne()) {
-				throw new InputValidation("username");
-			}
-			$response->setStatus(true);
-			$response->Go(base\url("userpanel"));
-		} catch(InputValidation $error) {
-			$view->setFormError(FormError::fromException($error));
+		$inputs = $this->checkinputs($inputRules);
+		$user = new User();
+		$user->where("email", $inputs["username"]);
+		$user->where("password", md5($inputs["password"]));
+		$user = $user->getOne()
+		if (!$user) {
+			throw new InputValidationException("username");
 		}
-		$response->setView($view);
-		return $response;
+		$this->response->setStatus(true);
+		$this->response->Go(url("userpanel"));
+		return $this->response;
 	}
 }
 ```
@@ -254,19 +265,18 @@ class Main extends controller {
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response};
+
 use packages\packagename\User;
+use packages\base\{Controller, Response};
 
 class Users extends controller {
 
     public function getUser($data): Response {
-
 		$user = User::byId($data['id']);
-		if($user) {
+		$this->response->setStatus(false);
+		if ($user) {
 			$this->response->setStatus(true);
 			$this->response->setData($user, "user");
-		}else {
-			$this->response->setStatus(false);
 		}
 		return $this->response;
     }
@@ -282,6 +292,7 @@ class Users extends controller {
 ```php
 <?php
 namespace packages\packagename\controllers;
+
 use packages\base\{Controller, Response};
 
 class Dashboard extends controller {
@@ -303,9 +314,10 @@ class Dashboard extends controller {
 ```php
 <?php
 namespace packages\packagename\controllers;
-use packages\base\{Controller, Response, View, NotFound};
-use packages\packagename\Post;
+
 use themes\themename\views;
+use packages\packagename\Post;
+use packages\base\{Controller, Response, View, NotFound};
 
 class News extends controller {
 
@@ -316,8 +328,8 @@ class News extends controller {
 		}
 		
 		$view = View::byName(views\news\Post::class);
-		$view->setData($post, "post");
 		$this->response->setView($view);
+		$view->setData($post, "post");
 		$this->response->setHeader("author", $post->author);
 		return $this->response;
 	}
