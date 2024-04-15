@@ -1,0 +1,48 @@
+{
+	"docs": [
+		"getstarted",
+		"installation",
+		"lifecycle",
+		"package",
+		"autoloader",
+		"routing",
+		{
+			"type": "category",
+			"label": "MVC",
+			"link": {
+				"type": "doc",
+				"id": "mvc"
+			},
+			"items": [
+				"controller",
+				"view",
+				"frontend"
+			]
+		},
+		"response",
+		{
+			"type": "category",
+			"label": "پایگاه داده",
+			"link": {
+				"type": "generated-index"
+			},
+			"items": [
+				"db",
+				"dbObject"
+			]
+		},
+		"validation",
+		"http",
+		"json",
+		"cache",
+		"date",
+		"options",
+		"password",
+		"process",
+		"safe",
+		"translator",
+		"webpack",
+		"npm",
+		"tutorials"
+	]
+}

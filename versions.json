@@ -1,13 +1,4 @@
-{
-	"versions": [
-		{
-			"version": "2.0.0",
-			"file": "storage/public/docs/2.0.0/installation.md",
-			"latest": true
-		},
-		{
-			"version": "1.0.0",
-			"file": "storage/public/docs/1.0.0/getstarted.md"
-		}
-	]
-}
+[
+	"2.x",
+	"1.x"
+]
