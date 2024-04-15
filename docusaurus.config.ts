@@ -2,8 +2,19 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const defaultLocale = 'fa';
+let currentLocale = process.env.DOCUSAURUS_CURRENT_LOCALE ?? defaultLocale;
+if (currentLocale === 'undefined') {
+  currentLocale = defaultLocale;
+}
+
+const title = {
+  fa: "جالنو",
+  en: "Jalno"
+};
+
 const config: Config = {
-  title: 'جالنو',
+  title: title[currentLocale],
   favicon: 'img/logo.png',
 
   url: 'https://jalno.ir',
@@ -14,8 +25,8 @@ const config: Config = {
   onBrokenMarkdownLinks: 'warn',
 
   i18n: {
-    defaultLocale: 'fa',
-    locales: ['fa'],
+    defaultLocale,
+    locales: ['fa', 'en'],
     localeConfigs: {
       fa: {
         direction: 'rtl',
@@ -73,6 +84,10 @@ const config: Config = {
           type: 'docsVersionDropdown',
           position: 'right',
           className: "versions-dropdown"
+        },
+        {
+          type: 'localeDropdown',
+          position: 'right',
         },
         {
           href: 'https://github.com/jalno',

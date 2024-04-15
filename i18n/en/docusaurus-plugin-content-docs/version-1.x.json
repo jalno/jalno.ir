@@ -1,0 +1,14 @@
+{
+  "version.label": {
+    "message": "1.0.0",
+    "description": "The label for version 1.x"
+  },
+  "sidebar.docs.category.MVC": {
+    "message": "MVC",
+    "description": "The label for category MVC in sidebar docs"
+  },
+  "sidebar.docs.category.پایگاه داده": {
+    "message": "پایگاه داده",
+    "description": "The label for category پایگاه داده in sidebar docs"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "version.label": {
+    "message": "2.0.0",
+    "description": "The label for version 2.x"
+  },
+  "sidebar.docs.category.docs": {
+    "message": "docs",
+    "description": "The label for category docs in sidebar docs"
+  },
+  "sidebar.docs.category.شروع": {
+    "message": "Getting Started",
+    "description": "The label for category شروع in sidebar docs"
+  },
+  "sidebar.docs.category.معماری": {
+    "message": "Architecture",
+    "description": "The label for category معماری in sidebar docs"
+  },
+  "sidebar.docs.category.مفاهیم پایه": {
+    "message": "The Basics",
+    "description": "The label for category مفاهیم پایه in sidebar docs"
+  },
+  "sidebar.docs.category.قالب": {
+    "message": "Frontend",
+    "description": "The label for category قالب in sidebar docs"
+  },
+  "sidebar.docs.category.امنیت": {
+    "message": "Security",
+    "description": "The label for category امنیت in sidebar docs"
+  },
+  "sidebar.docs.category.مفاهیم تخصصی": {
+    "message": "Digging Deeper",
+    "description": "The label for category مفاهیم تخصصی in sidebar docs"
+  },
+  "sidebar.docs.category.پایگاه داده": {
+    "message": "Database",
+    "description": "The label for category پایگاه داده in sidebar docs"
+  },
+  "sidebar.docs.category.آموزش ها": {
+    "message": "Tutorials",
+    "description": "The label for category آموزش ها in sidebar docs"
+  }
+}
