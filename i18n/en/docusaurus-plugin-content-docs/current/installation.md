@@ -20,7 +20,7 @@ You can always download the latest version of the framework from its main reposi
 
 [Download ZIP](https://github.com/jalno/base/archive/master.zip)
 
-Or clone the repository completely:
+Or clone the repository:
 
 ```bash
 git clone https://github.com/jalno/base.git
